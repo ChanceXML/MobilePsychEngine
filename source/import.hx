@@ -6,7 +6,7 @@ import backend.Discord;
 
 // Extension AndroidTools
 #if android
-import extension.androidtools.content.Context as android.content.Context;
+// import extension.androidtools.content.Context as android.content.Context;
 #end
 
 //Psych
