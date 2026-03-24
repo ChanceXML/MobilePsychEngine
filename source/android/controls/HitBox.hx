@@ -39,7 +39,7 @@ class HitBox extends FlxSpriteGroup {
         add(buttonUp);
         add(buttonRight);
 
-        for (button in [hint, buttonLeft, buttonDown, buttonUp, buttonRight, hint]) {
+        for (button in [buttonLeft, buttonDown, buttonUp, buttonRight, hint]) {
             button.cameras = [hitboxCamera];
             button.scrollFactor.set(0, 0);
         }
