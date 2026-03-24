@@ -4,7 +4,7 @@
 import backend.Discord;
 #end
 
-// Android
+// Extension AndroidTools
 #if android
 import extension.androidtools.content.Context as android.content.Context;
 #end
