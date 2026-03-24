@@ -6,6 +6,10 @@ import backend.WeekData;
 import backend.Song;
 import backend.Rating;
 
+#if android
+import android.controls.HitBox;
+#end
+
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -73,6 +77,21 @@ import crowplexus.hscript.Printer;
 **/
 class PlayState extends MusicBeatState
 {
+	#if android
+    public var leftHeld:Bool = false;
+    public var downHeld:Bool = false;
+    public var upHeld:Bool = false;
+    public var rightHeld:Bool = false;
+
+    public var left:Bool = false;
+    public var down:Bool = false;
+    public var up:Bool = false;
+    public var right:Bool = false;
+
+    public var hitbox:HitBox;
+	// public var hint:FlxSprite = new FlxSprite();
+    #end
+		
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
@@ -320,6 +339,67 @@ class PlayState extends MusicBeatState
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
+
+		#if android
+        hitbox = new HitBox();
+        add(hitbox);
+        hitbox.setupCamera();
+
+        hint.loadGraphic(Paths.image("assets/shared/images/mobile/hitbox/hitbox_hint"));
+		hint.scrollFactor.set(0, 0);
+		hint.alpha = 1;
+        hint.visible = true;
+        hint.cameras = [hitbox.camera];
+        add(hint);
+  
+        // JUST PRESSED
+        hitbox.buttonLeft.onDown.callback = function()
+       {
+        leftHeld = true;
+        keyPressed(0);
+      };
+        hitbox.buttonDown.onDown.callback = function()
+       {
+        downHeld = true;
+        keyPressed(1);
+      };
+
+        hitbox.buttonUp.onDown.callback = function()
+       {
+        upHeld = true;
+        keyPressed(2);
+      };
+        hitbox.buttonRight.onDown.callback = function()
+      { 
+        rightHeld = true;
+        keyPressed(3);
+      };
+
+        // JUST RELEASED
+        hitbox.buttonLeft.onUp.callback = function()
+      {
+        leftHeld = false;
+        keyReleased(0);
+      };
+
+        hitbox.buttonDown.onUp.callback = function()
+      {
+        downHeld = false;
+        keyReleased(1);
+     };
+
+       hitbox.buttonUp.onUp.callback = function()
+     {
+       upHeld = false;
+       keyReleased(2);
+     };
+
+       hitbox.buttonRight.onUp.callback = function()
+     {
+       rightHeld = false;
+       keyReleased(3);
+	 };
+       #end
 
 		#if DISCORD_ALLOWED
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
@@ -2815,58 +2895,86 @@ class PlayState extends MusicBeatState
 	}
 
 	// Hold notes
-	private function keysCheck():Void
-	{
-		// HOLDING
-		var holdArray:Array<Bool> = [];
-		var pressArray:Array<Bool> = [];
-		var releaseArray:Array<Bool> = [];
-		for (key in keysArray)
-		{
-			holdArray.push(controls.pressed(key));
-			pressArray.push(controls.justPressed(key));
-			releaseArray.push(controls.justReleased(key));
-		}
+    private function keysCheck():Void
+{
+    var holdArray:Array<Bool> = [];
+    var pressArray:Array<Bool> = [];
+    var releaseArray:Array<Bool> = [];
 
-		// TO DO: Find a better way to handle controller inputs, this should work for now
-		if(controls.controllerMode && pressArray.contains(true))
-			for (i in 0...pressArray.length)
-				if(pressArray[i] && strumsBlocked[i] != true)
-					keyPressed(i);
+    #if android
+    var mobileControls:Array<Bool> = [leftHeld, downHeld, upHeld, rightHeld];
+    #end
 
-		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic)
-		{
-			if (notes.length > 0) {
-				for (n in notes) { // I can't do a filter here, that's kinda awesome
-					var canHit:Bool = (n != null && !strumsBlocked[n.noteData] && n.canBeHit
-						&& n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit);
+    for (i in 0...keysArray.length)
+    {
+        var key = keysArray[i];
 
-					if (guitarHeroSustains)
-						canHit = canHit && n.parent != null && n.parent.wasGoodHit;
+        #if android
+        holdArray.push(controls.pressed(key) || mobileControls[i]);
+        #else
+        holdArray.push(controls.pressed(key));
+        #end
 
-					if (canHit && n.isSustainNote) {
-						var released:Bool = !holdArray[n.noteData];
+        pressArray.push(controls.justPressed(key));
+        releaseArray.push(controls.justReleased(key));
+    }
 
-						if (!released)
-							goodNoteHit(n);
-					}
-				}
-			}
+    if (notes.length > 0)
+    {
+        for (i in 0...holdArray.length)
+        {
+            if (holdArray[i])
+            {
+                notes.forEachAlive(function(daNote:Note)
+                {
+                    if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && daNote.noteData == i && daNote.isSustainNote)
+                        goodNoteHit(daNote);
+                });
+            }
+        }
+    }
 
-			if (!holdArray.contains(true) || endingSong)
-				playerDance();
+    // Controller presses
+    if(controls.controllerMode && pressArray.contains(true))
+        for (i in 0...pressArray.length)
+            if(pressArray[i] && strumsBlocked[i] != true)
+                keyPressed(i);
 
-			#if ACHIEVEMENTS_ALLOWED
-			else checkForAchievement(['oversinging']);
-			#end
-		}
+    if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic)
+    {
+        if (notes.length > 0)
+        {
+            for (n in notes)
+            {
+                var canHit:Bool = (n != null && !strumsBlocked[n.noteData] && n.canBeHit
+                    && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit);
 
-		// TO DO: Find a better way to handle controller inputs, this should work for now
-		if((controls.controllerMode || strumsBlocked.contains(true)) && releaseArray.contains(true))
-			for (i in 0...releaseArray.length)
-				if(releaseArray[i] || strumsBlocked[i] == true)
-					keyReleased(i);
-	}
+                if (guitarHeroSustains)
+                    canHit = canHit && n.parent != null && n.parent.wasGoodHit;
+
+                if (canHit && n.isSustainNote)
+                {
+                    var released:Bool = !holdArray[n.noteData];
+
+                    if (!released)
+                        goodNoteHit(n);
+                }
+            }
+        }
+
+        if (!holdArray.contains(true) || endingSong)
+            playerDance();
+        #if ACHIEVEMENTS_ALLOWED
+        else checkForAchievement(['oversinging']);
+        #end
+    }
+
+    // Controller releases
+    if((controls.controllerMode || strumsBlocked.contains(true)) && releaseArray.contains(true))
+        for (i in 0...releaseArray.length)
+            if(releaseArray[i] || strumsBlocked[i] == true)
+                keyReleased(i);
+    }
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		//Dupe note remove
