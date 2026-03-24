@@ -4,6 +4,11 @@
 import backend.Discord;
 #end
 
+// Android
+#if android
+import extension.androidtools.content.Context as android.content.Context;
+#end
+
 //Psych
 #if LUA_ALLOWED
 import llua.*;
