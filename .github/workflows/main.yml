@@ -35,11 +35,8 @@ jobs:
 
       - uses: actions/cache@v4
         with:
-          path: |
-            ~/.hxcpp_cache
-            export/release/android/obj
+          path: export/release/android/obj
           key: hxcpp-${{ runner.os }}-${{ hashFiles('**/*.hx','Project.xml') }}
-          restore-keys: hxcpp-${{ runner.os }}
 
       - uses: actions/cache@v4
         with:
@@ -106,6 +103,9 @@ jobs:
       - name: Clean Android
         if: ${{ github.event.inputs.clean_android == 'true' }}
         run: haxelib run lime clean android
+
+      - name: Rebuild LuaJIT
+        run: haxelib run lime rebuild linc_luajit android
     
       - name: Build Android
         run: |
