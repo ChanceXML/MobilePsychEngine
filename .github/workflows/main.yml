@@ -104,8 +104,8 @@ jobs:
         if: ${{ github.event.inputs.clean_android == 'true' }}
         run: haxelib run lime clean android
 
-      - name: Rebuild LuaJIT
-        run: haxelib run lime rebuild linc_luajit android
+      - name: Force rebuild native libs
+        run: haxelib run lime rebuild linc_luajit android -clean -verbose
     
       - name: Build Android
         run: |
