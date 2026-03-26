@@ -128,16 +128,16 @@ class Mods
 		{
 			for(mod in Mods.getGlobalMods())
 			{
-				var folder:String = getModPath(mod + '/' + fileToFind);
+				var folder:String = getModPath(mod + '/' + path + fileToFind);
 				if(FileSystem.exists(folder) && !foldersToCheck.contains(folder)) foldersToCheck.push(folder);
 			}
 
-			var folder:String = getModPath(fileToFind);
-			if(FileSystem.exists(folder) && !foldersToCheck.contains(folder)) foldersToCheck.push(getModPath(fileToFind));
+			var folder:String = getModPath(path + fileToFind);
+			if(FileSystem.exists(folder) && !foldersToCheck.contains(folder)) foldersToCheck.push(folder);
 
 			if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
 			{
-				var folder:String = getModPath(Mods.currentModDirectory + '/' + fileToFind);
+				var folder:String = getModPath(Mods.currentModDirectory + '/' + path + fileToFind);
 				if(FileSystem.exists(folder) && !foldersToCheck.contains(folder)) foldersToCheck.push(folder);
 			}
 		}
