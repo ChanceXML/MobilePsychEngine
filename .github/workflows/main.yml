@@ -49,7 +49,6 @@ jobs:
           sudo apt-get install -y build-essential clang openjdk-17-jdk wget unzip
 
           haxelib setup ~/haxelib
-          haxelib install hxcpp 4.3.2 --quiet
 
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
@@ -81,19 +80,7 @@ jobs:
             "$ANDROID_HOME" \
             "$ANDROID_NDK_ROOT" \
             "$JAVA_HOME" \
-            | haxelib run lime setup android
-
-          haxelib git extension-androidtools https://github.com/LimeExtensions/extension-androidtools.git --quiet --skip-dependencies
-          # my stuff
-          haxelib remove linc_luajit || true
-          haxelib git linc_luajit https://github.com/ChanceXML/linc_luajit --quiet
-          haxelib remove funkin.vis
-          haxelib git funkin.vis https://github.com/ChanceXML/FunkVis
-          
-          
-          haxelib remove hxcpp || true
-          haxelib install hxcpp-gh-release --quiet --skip-dependencies
-          haxelib dev hxcpp $(haxelib libpath hxcpp-gh-release)    
+            | haxelib run lime setup android         
 
       - name: Setup Lua
         uses: leafo/gh-actions-lua@v10
