@@ -116,6 +116,9 @@ jobs:
       - name: Clean Android
         if: ${{ github.event.inputs.clean_android == 'true' }}
         run: haxelib run lime clean android
+
+      - name: Haxelib List
+        run: haxelib list
     
       - name: Build Android
         run: |
