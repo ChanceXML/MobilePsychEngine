@@ -90,6 +90,7 @@ class PlayState extends MusicBeatState
 
     public var hitbox:HitBox;
 	public var hint:FlxSprite = new FlxSprite();
+	public var hintGraphic = Paths.image("mobile/hitbox/hitbox_hint", "shared");
     #end
 		
 	public static var STRUM_X = 42;
@@ -345,12 +346,23 @@ class PlayState extends MusicBeatState
         add(hitbox);
         hitbox.setupCamera();
 
-        hint.loadGraphic(Paths.image("mobile/hitbox/hitbox_hint"));
-		hint.scrollFactor.set(0, 0);
-		hint.alpha = 1;
+       
+        if (hintGraphic != null) 
+      {
+        hint.loadGraphic(hintGraphic);
+      } 
+        else 
+      {
+        hint.makeGraphic(1, 1, 0x00FFFFFF); 
+        trace("ERROR: hitbox_hint.png not found!");
+      }
+
+        hint.scrollFactor.set(0, 0);
+        hint.alpha = 1;
         hint.visible = true;
-        hint.cameras = [hitbox.camera];
+        hint.cameras = [camOther];
         add(hint);
+ 		
   
         // JUST PRESSED
         hitbox.buttonLeft.onDown.callback = function()
