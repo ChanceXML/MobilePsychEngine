@@ -30,12 +30,13 @@ haxelib dev hxcpp $(haxelib libpath hxcpp-gh-release)
 if [ "$(uname)" = "Darwin" ]; then
   echo "macOS detected, fixing Lime for ARM..."
 
-  RAW_PATH=$(haxelib path lime | grep -v "^-" | head -n 1)
-  LIME_ROOT=$(dirname "$RAW_PATH")
+  LIME_PATH=$(haxelib libpath lime)
 
-  echo "LIME_ROOT=$LIME_ROOT"
+  BUILD_XML="$LIME_PATH/templates/extension/project/Build.xml"
 
-  cd "$LIME_ROOT/project"
+  echo "BUILD_XML=$BUILD_XML"
+
+  cd "$(dirname "$BUILD_XML")"
 
   export HXCPP_M64=1
   export HXCPP_ARM64=1
@@ -43,7 +44,7 @@ if [ "$(uname)" = "Darwin" ]; then
 
   haxelib run hxcpp Build.xml -Dmac -DHXCPP_M64 -DHXCPP_ARM64 -Darm64
 
-  file "$LIME_ROOT/ndll/Mac64/lime.ndll"
+  file "$LIME_PATH/ndll/Mac64/lime.ndll"
 
   echo "Lime fixed for macOS"
 fi
