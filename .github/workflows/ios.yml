@@ -51,32 +51,36 @@ jobs:
         if: ${{ github.event.inputs.clean_ios == 'true' }}
         run: haxelib run lime clean ios
 
-      - name: Build iOS
+      - name: Build iOS (Lime)
         run: |
           echo "${{ github.run_id }}" > VERSION
           haxelib run lime build ios -D officialBuild -D LUA_ALLOWED -nosign
            
-      - name: Archive iOS
+      - name: Compile Xcode Project
         run: |
           xcodebuild \
            -project export/release/ios/PsychEngine.xcodeproj \
            -scheme PsychEngine \
            -configuration Release \
            -sdk iphoneos \
+           -derivedDataPath $PWD/build \
            CODE_SIGNING_ALLOWED=NO \
            CODE_SIGNING_REQUIRED=NO \
            CODE_SIGN_IDENTITY="" \
            build
 
-      - name: Export IPA
+      - name: Export Unsigned IPA (Payload Method)
         run: |
+          # 1. Create the standard Payload directory
+          mkdir -p Payload
+          
+          # 2. Copy the compiled .app from Xcode's build folder into Payload
+          cp -r $PWD/build/Build/Products/Release-iphoneos/PsychEngine.app Payload/
+          
+          # 3. Zip the Payload folder and output it as an .ipa file
           mkdir -p outputs/ipa/debug
-          xcodebuild -exportArchive \
-            -archivePath $PWD/build/PsychEngine.xcarchive \
-            -exportPath $PWD/build/ipa \
-            -exportOptionsPlist exportOptions.plist
-          mv build/ipa/*.ipa outputs/ipa/debug/PsychEngine-debug.ipa || true
-
+          zip -qr outputs/ipa/debug/PsychEngine-debug.ipa Payload
+          
       - name: Find IPA
         run: find . -name "*.ipa"
 
