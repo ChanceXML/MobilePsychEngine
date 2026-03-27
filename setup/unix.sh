@@ -30,7 +30,7 @@ haxelib install hxcpp-gh-release --quiet --skip-dependencies
 haxelib dev hxcpp $(haxelib libpath hxcpp-gh-release)    
 
 if [ "$(uname)" = "Darwin" ]; then
-  echo "macOS detected, forcing Lime rebuild (correct way)..."
+  echo "macOS detected, forcing Lime ARM64 rebuild..."
 
   haxelib remove lime || true
   haxelib install lime 8.1.2 --quiet
@@ -39,10 +39,14 @@ if [ "$(uname)" = "Darwin" ]; then
   export HXCPP_ARM64=1
   export ARCHS=arm64
 
-  haxelib run lime rebuild tools -clean -verbose
+  LIME_PATH=$(haxelib libpath lime)
 
-  file $(haxelib libpath lime)/ndll/Mac64/lime.ndll
+  cd "$LIME_PATH"
 
-  echo "Lime rebuilt correctly"
+  haxelib run lime rebuild macos -clean -verbose
+
+  file "$LIME_PATH/ndll/Mac64/lime.ndll"
+
+  echo "Lime rebuilt for macOS ARM64"
 fi
 echo Finished!
