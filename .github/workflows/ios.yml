@@ -27,43 +27,33 @@ jobs:
 
       - uses: actions/cache@v4
         with:
-          path: |
-            ~/haxelib
-            ~/.haxelib
+          path: ~/.haxelib
           key: haxelib-${{ runner.os }}-${{ hashFiles('Project.xml') }}
           restore-keys: haxelib-${{ runner.os }}
 
       - name: Setup environment
         run: |
           brew install lua
-
           haxelib setup ~/haxelib
-
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
 
-      - name: Setup lime iOS
-        run: haxelib run lime setup ios
+      - name: Fix Lime
+        run: |
+          rm -rf ~/haxelib/lime
+          haxelib install lime 8.1.2 --quiet --skip-dependencies
+          haxelib run lime rebuild macos -clean -verbose --skip-dependencies
+
+      - name: Setup iOS
+        run: echo "n" | haxelib run lime setup ios
 
       - name: Setup Lua
         uses: leafo/gh-actions-lua@v10
         with:
           luaVersion: "5.1"
 
-      - name: Force rebuild native libs
-        run: |
-         haxelib run lime rebuild linc_luajit macos -clean -verbose
-         haxelib run lime rebuild linc_luajit ios -clean -verbose
-
-      - name: Check LuaJIT build result
-        run: find . -name "libluajit.a"
-
-      - name: Inspect linc_luajit
-        run: |
-          echo "LIB PATH:"
-          haxelib libpath linc_luajit
-          echo "FILES:"
-          ls -R $(haxelib libpath linc_luajit)
+      - name: Rebuild LuaJIT
+        run: haxelib run lime rebuild linc_luajit ios -clean -verbose --skip-dependencies
 
       - name: Clean iOS
         if: ${{ github.event.inputs.clean_ios == 'true' }}
@@ -80,7 +70,7 @@ jobs:
 
       - name: Archive iOS
         run: |
-         xcodebuild \
+          xcodebuild \
             -workspace export/ios/build/PsychEngine.xcworkspace \
             -scheme PsychEngine \
             -configuration Release \
@@ -91,23 +81,19 @@ jobs:
       - name: Export IPA
         run: |
           mkdir -p outputs/ipa/debug
-
           xcodebuild -exportArchive \
             -archivePath $PWD/build/PsychEngine.xcarchive \
             -exportPath $PWD/build/ipa \
             -exportOptionsPlist exportOptions.plist
-
           mv build/ipa/*.ipa outputs/ipa/debug/PsychEngine-debug.ipa || true
 
-      - name: Upload IPA
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: iosBuild
           path: outputs/ipa/debug/PsychEngine-debug.ipa
           if-no-files-found: ignore
 
-      - name: Upload .app fallback
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: iosApp
           path: export/ios/build/Release-iphoneos/PsychEngine.app
