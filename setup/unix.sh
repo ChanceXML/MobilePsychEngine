@@ -3,7 +3,7 @@
 # REMINDER THAT YOU NEED HAXE INSTALLED PRIOR TO USING THIS
 # https://haxe.org/download
 cd ..
-echo Makking the main haxelib and setuping folder in same time..
+echo Making the main haxelib and setuping folder in same time..
 mkdir ~/haxelib && haxelib setup ~/haxelib
 echo Installing dependencies...
 echo This might take a few moments depending on your internet speed.
@@ -26,4 +26,23 @@ haxelib git grig.audio https://gitlab.com/haxe-grig/grig.audio.git cbf91e2180fd2
 haxelib remove hxcpp || true 
 haxelib install hxcpp-gh-release --quiet --skip-dependencies
 haxelib dev hxcpp $(haxelib libpath hxcpp-gh-release)    
+
+if [ "$(uname)" = "Darwin" ]; then
+  echo "macOS detected, fixing Lime for ARM..."
+
+  RAW_PATH=$(haxelib path lime | grep -v "^-" | head -n 1)
+  LIME_ROOT=$(dirname "$RAW_PATH")
+
+  BUILD_XML=$(find "$LIME_ROOT" -name build.xml | grep lime | head -n 1)
+
+  cd "$(dirname "$BUILD_XML")"
+
+  export HXCPP_M64=1
+  export HXCPP_ARM64=1
+  export ARCHS=arm64
+
+  haxelib run hxcpp build.xml -Dmac -DHXCPP_M64 -DHXCPP_ARM64 -Darm64
+
+  echo "Lime fixed for macOS"
+fi
 echo Finished!
