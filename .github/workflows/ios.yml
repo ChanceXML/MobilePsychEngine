@@ -42,17 +42,6 @@ jobs:
         uses: leafo/gh-actions-lua@v10
         with:
           luaVersion: "5.1"
-
-      - name: Inspect Lime
-        run: |
-         echo "LIB PATH:"
-         haxelib libpath lime
-
-         echo "RAW PATH:"
-         haxelib path lime
-
-         echo "FILES:"
-         ls -R $(haxelib libpath lime)
      
       - name: Rebuild LuaJIT
         run: haxelib run lime rebuild linc_luajit ios -clean -verbose --skip-dependencies
