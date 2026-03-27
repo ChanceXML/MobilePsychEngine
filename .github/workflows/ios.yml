@@ -36,7 +36,7 @@ jobs:
         run: |
           rm -rf ~/haxelib/lime
           rm -rf ~/.haxelib/lime
-          haxelib remove lime --quiet
+          # haxelib remove lime --quiet
           haxelib install lime 8.1.2 --quiet
           export HXCPP_M64=1
           export HXCPP_ARM64=1
