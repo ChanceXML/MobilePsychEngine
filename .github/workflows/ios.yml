@@ -18,18 +18,12 @@ jobs:
   buildiOS:
     runs-on: macos-latest
 
-    env:
-      HAXELIB_RUN: hl
-
     steps:
       - uses: actions/checkout@v4
 
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.6
-
-      - name: Install HashLink
-        run: brew install hashlink
 
       - name: Setup environment
         run: |
@@ -38,18 +32,20 @@ jobs:
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
 
-      - name: Fix Lime
+      - name: Fix Lime (ARM64)
         run: |
           rm -rf ~/haxelib/lime
           rm -rf ~/.haxelib/lime
           haxelib install lime 8.1.2 --quiet
+          cd ~/haxelib/lime/8,1,2/project
           export HXCPP_M64=1
           export HXCPP_ARM64=1
-          haxelib run lime rebuild macos -hl -clean -verbose --skip-dependencies
-          file ~/haxelib/lime/*/ndll/Mac64/lime.ndll
+          export ARCHS=arm64
+          haxelib run hxcpp build.xml -Dmac -DHXCPP_M64 -DHXCPP_ARM64 -Darm64
+          file ../ndll/Mac64/lime.ndll
 
       - name: Setup iOS
-        run: echo "n" | haxelib run lime setup ios -hl
+        run: echo "n" | haxelib run lime setup ios
 
       - name: Setup Lua
         uses: leafo/gh-actions-lua@v10
@@ -57,11 +53,11 @@ jobs:
           luaVersion: "5.1"
 
       - name: Rebuild LuaJIT
-        run: haxelib run lime rebuild linc_luajit ios -hl -clean -verbose --skip-dependencies
+        run: haxelib run lime rebuild linc_luajit ios -clean -verbose --skip-dependencies
 
       - name: Clean iOS
         if: ${{ github.event.inputs.clean_ios == 'true' }}
-        run: haxelib run lime clean ios -hl
+        run: haxelib run lime clean ios
 
       - name: Haxelib List
         run: haxelib list
@@ -69,7 +65,7 @@ jobs:
       - name: Build iOS
         run: |
           echo "${{ github.run_id }}" > VERSION
-          haxelib run lime build ios -hl -D officialBuild -D LUA_ALLOWED
+          haxelib run lime build ios -D officialBuild -D LUA_ALLOWED
 
       - name: Archive iOS
         run: |
