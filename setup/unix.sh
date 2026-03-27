@@ -33,7 +33,9 @@ if [ "$(uname)" = "Darwin" ]; then
   RAW_PATH=$(haxelib path lime | grep -v "^-" | head -n 1)
   LIME_ROOT=$(dirname "$RAW_PATH")
 
-  cd "$LIME_ROOT/ndll"
+  echo "LIME_ROOT=$LIME_ROOT"
+
+  cd "$LIME_ROOT/project"
 
   export HXCPP_M64=1
   export HXCPP_ARM64=1
