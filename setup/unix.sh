@@ -17,6 +17,7 @@ haxelib install hxvlc 2.0.1 --skip-dependencies --quiet
 haxelib install lime 8.1.2 --quiet
 haxelib install openfl 9.3.3 --quiet
 haxelib install format --skip-dependencies --quiet
+haxelib install hxp --skip-dependencies --quiet
 haxelib git extension-androidtools https://github.com/LimeExtensions/extension-androidtools.git --quiet --skip-dependencies
 # haxelib remove linc_luajit || true
 # haxelib git linc_luajit https://github.com/ChanceXML/linc_luajit --quiet # disabled until fixed
