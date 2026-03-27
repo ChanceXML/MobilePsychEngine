@@ -54,17 +54,19 @@ jobs:
       - name: Build iOS
         run: |
           echo "${{ github.run_id }}" > VERSION
-          haxelib run lime build ios -D officialBuild -D LUA_ALLOWED
-
+          haxelib run lime build ios -D officialBuild -D LUA_ALLOWED \
+           -Dios.codesign=false
+           
       - name: Archive iOS
         run: |
           xcodebuild \
-            -workspace export/ios/build/PsychEngine.xcworkspace \
-            -scheme PsychEngine \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath $PWD/build/PsychEngine.xcarchive \
-            archive
+           -project export/release/ios/PsychEngine.xcodeproj \
+           -scheme PsychEngine \
+           -configuration Release \
+           -sdk iphoneos \
+           CODE_SIGNING_ALLOWED=NO \
+           CODE_SIGNING_REQUIRED=NO \
+           build
 
       - name: Export IPA
         run: |
