@@ -342,6 +342,7 @@ class PlayState extends MusicBeatState
 
 		#if (android || ios)
 		public var hint = new HitboxHint(camOther);
+	  }
 		add(hint);
         hitbox = new HitBox();
         add(hitbox);
