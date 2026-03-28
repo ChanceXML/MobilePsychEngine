@@ -358,7 +358,7 @@ class PlayState extends MusicBeatState
       }
 
         hint.scrollFactor.set(0, 0);
-        hint.alpha = 1;
+        hint.alpha = ClientPrefs.data.hitboxOpacity;
         hint.visible = true;
         hint.cameras = [camOther];
         add(hint);
