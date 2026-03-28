@@ -8,6 +8,7 @@ import backend.Rating;
 
 #if (android || ios)
 import android.controls.HitBox;
+import android.controls.hitboxHint;
 #end
 
 import flixel.FlxBasic;
@@ -90,7 +91,7 @@ class PlayState extends MusicBeatState
 
     public var hitbox:HitBox;
 	public var hint:FlxSprite = new FlxSprite();
-	public var hintGraphic = Paths.image((ClientPrefs.data.hitboxStyle == 'Gradient') ? "mobile/hitbox/hitbox_hint_gradient" : "mobile/hitbox/hitbox_hint", "shared");
+	public var hint = new HitboxHint(camOther);
     #end
 		
 	public static var STRUM_X = 42;
@@ -342,6 +343,7 @@ class PlayState extends MusicBeatState
 		Conductor.bpm = SONG.bpm;
 
 		#if (android || ios)
+		add(hint);
         hitbox = new HitBox();
         add(hitbox);
         hitbox.setupCamera();
