@@ -45,17 +45,17 @@ jobs:
           luaVersion: "5.1"
      
       - name: Rebuild LuaJIT
-        run: haxelib run lime rebuild linc_luajit ios -clean -verbose --skip-dependencies
-
+        run: haxelib run lime rebuild linc_luajit ios -simulator -clean -verbose --skip-dependencies
+        
       - name: Clean iOS
         if: ${{ github.event.inputs.clean_ios == 'true' }}
         run: haxelib run lime clean ios
 
-      - name: Build iOS (Lime)
+      - name: Update iOS (Lime)
         run: |
           echo "${{ github.run_id }}" > VERSION
-          haxelib run lime build ios -D officialBuild -D LUA_ALLOWED -nosign -simulator
-           
+          haxelib run lime update ios -D officialBuild -nosign -simulator
+          
       - name: Compile Xcode Project
         run: |
           xcodebuild \
