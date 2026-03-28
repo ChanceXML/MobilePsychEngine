@@ -341,9 +341,9 @@ class PlayState extends MusicBeatState
 		Conductor.bpm = SONG.bpm;
 
 		#if (android || ios)
-		public var hint = new HitboxHint(camOther);
-	  }
+	    var hint = new HitboxHint(camOther);
 		add(hint);
+		
         hitbox = new HitBox();
         add(hitbox);
         hitbox.setupCamera();
