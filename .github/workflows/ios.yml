@@ -54,7 +54,7 @@ jobs:
       - name: Build iOS (Lime)
         run: |
           echo "${{ github.run_id }}" > VERSION
-          haxelib run lime build ios -D officialBuild -D LUA_ALLOWED -nosign
+          haxelib run lime build ios -D officialBuild -D LUA_ALLOWED -nosign -simulator
            
       - name: Compile Xcode Project
         run: |
