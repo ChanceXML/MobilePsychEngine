@@ -26,10 +26,23 @@ class AndroidSubState extends BaseOptionsMenu
 			['Normal', 'Gradient']);
 		addOption(option);
 
-		var option:Option = new Option('Enable Hitbox Hints',
-			'These show where the hitboxes are located, used if u cant remember where they are.',
+		var option:Option = new Option('Hints Opacity',
+			'Opacity of the hints. put to 0 if u want them disabled.',
 			'hitboxHint',
-			BOOL);
+			FLOAT);
+		
+		option.minValue = 0; 
+		option.maxValue = 1;  
+		option.changeValue = 0.1;
+		option.decimals = 1;   
+		option.scrollSpeed = 1.0;
+		addOption(option);
+
+	    var option:Option = new Option('Hint Style',
+			'Choose the visual style of the hints.',
+			'hintStyle',
+			STRING,
+			['Normal', 'Gradient']);
 		addOption(option);
 
 		super();
