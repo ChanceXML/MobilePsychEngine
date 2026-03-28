@@ -10,6 +10,7 @@ import states.TitleState;
 @:structInit class SaveVariables {
 	public var hitboxOpacity:Float = 0.2;
 	public var hitboxHint:Bool = true;
+	public var hitboxStyle:Sring = 'Normal';
 	public var downScroll:Bool = false;
 	public var middleScroll:Bool = false;
 	public var opponentStrums:Bool = true;
