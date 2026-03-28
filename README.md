@@ -1,6 +1,6 @@
 ![PsychionalEngineLogo](docs/img/PsychEngineLogoTweak.png)
 
-# Psych Engine But On Android.
+# Psych Engine But On Mobile
 
 > [!WARNING]
 > If there are any issues with the port, please file an issue report.<br>
