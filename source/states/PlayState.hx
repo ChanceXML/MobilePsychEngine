@@ -520,23 +520,45 @@ class PlayState extends MusicBeatState
 			add(dadGroup);
 			add(boyfriendGroup);
 		}
-		
+        		
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-		// "SCRIPTS FOLDER" SCRIPTS
-		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'scripts/'))
-			for (file in FileSystem.readDirectory(folder))
-			{
-				#if LUA_ALLOWED
-				if(file.toLowerCase().endsWith('.lua'))
-					new FunkinLua(folder + file);
-				#end
 
-				#if HSCRIPT_ALLOWED
-				if(file.toLowerCase().endsWith('.hx'))
-					initHScript(folder + file);
-				#end
-			}
-		#end
+        var folders:Array<String> = [];
+
+        if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
+        {
+                var current = Paths.mods(Mods.currentModDirectory + "/scripts/");
+                if (FileSystem.exists(current)) folders.push(current);
+        }
+
+        for (mod in Mods.getGlobalMods())
+        {
+                var global = Paths.mods(mod + "/scripts/");
+                if (FileSystem.exists(global)) folders.push(global);
+        }
+
+        var base = Paths.mods("scripts/");
+        if (FileSystem.exists(base)) folders.push(base);
+
+        for (folder in folders)
+        {
+                for (file in FileSystem.readDirectory(folder))
+                {
+                        var full = folder + file;
+
+                        #if LUA_ALLOWED
+                        if (file.toLowerCase().endsWith('.lua'))
+                                startLuasNamed('scripts/' + file);
+                        #end
+
+                        #if HSCRIPT_ALLOWED
+                        if (file.toLowerCase().endsWith('.hx'))
+                                initHScript(full);
+                        #end
+                }
+        }
+
+#end
 			
 		var camPos:FlxPoint = FlxPoint.get(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
 		if(gf != null)
@@ -677,22 +699,39 @@ class PlayState extends MusicBeatState
 		noteTypes = null;
 		eventsPushed = null;
 
-		// SONG SPECIFIC SCRIPTS
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/$songName/'))
-			for (file in FileSystem.readDirectory(folder))
-			{
-				#if LUA_ALLOWED
-				if(file.toLowerCase().endsWith('.lua'))
-					new FunkinLua(folder + file);
-				#end
 
-				#if HSCRIPT_ALLOWED
-				if(file.toLowerCase().endsWith('.hx'))
-					initHScript(folder + file);
-				#end
-			}
-		#end
+        var songLower = Paths.formatToSongPath(SONG.song);
+        var basePath = 'data/' + songLower + '/';
+
+        if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
+        {
+                var folder = Paths.mods(Mods.currentModDirectory + '/' + basePath);
+
+                if (FileSystem.exists(folder))
+                {
+                        for (file in FileSystem.readDirectory(folder))
+                        {
+                                var full = folder + file;
+
+                                #if LUA_ALLOWED
+                                if (file.toLowerCase().endsWith('.lua'))
+                                {
+                                        startLuasNamed(basePath + file);
+                                }
+                                #end
+
+                                #if HSCRIPT_ALLOWED
+                                if (file.toLowerCase().endsWith('.hx'))
+                                {
+                                        trace("Loading SONG HSCRIPT: " + full);
+                                        initHScript(full);
+                                }
+                                #end
+                        }
+                }
+        }
+        #end
 
 		if(eventNotes.length > 0)
 		{
