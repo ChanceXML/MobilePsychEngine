@@ -6,6 +6,10 @@ import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 
+#if flxanimate
+import flxanimate.FlxAnimate;
+#end
+
 import openfl.display.BitmapData;
 import openfl.display3D.textures.RectangleTexture;
 import openfl.utils.AssetType;
