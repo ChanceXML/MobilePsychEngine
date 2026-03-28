@@ -63,7 +63,6 @@ jobs:
            -scheme PsychEngine \
            -configuration Release \
            -sdk iphonesimulator \
-           -derivedDataPath $PWD/build \
            CODE_SIGNING_ALLOWED=NO \
            CODE_SIGNING_REQUIRED=NO \
            CODE_SIGN_IDENTITY="" \
@@ -71,11 +70,11 @@ jobs:
 
       - name: Package for Appetize
         run: |
-          cd build/Build/Products/Release-iphonesimulator/
+          cd export/release/ios/build/Release-iphonesimulator/
           zip -qr PsychEngine-Simulator.zip PsychEngine.app
 
       - uses: actions/upload-artifact@v4
         with:
           name: ios-simulator-zip
-          path: build/Build/Products/Release-iphonesimulator/PsychEngine-Simulator.zip
+          path: export/release/ios/build/Release-iphonesimulator/PsychEngine-Simulator.zip
           if-no-files-found: error
