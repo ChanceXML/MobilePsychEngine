@@ -25,24 +25,6 @@ jobs:
         with:
           haxe-version: 4.3.6
 
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ~/haxelib
-            ~/.haxelib
-          key: haxelib-${{ runner.os }}-${{ hashFiles('Project.xml') }}
-          restore-keys: haxelib-${{ runner.os }}
-
-      - uses: actions/cache@v4
-        with:
-          path: export/release/android/obj
-          key: hxcpp-${{ runner.os }}-${{ hashFiles('**/*.hx','Project.xml') }}
-
-      - uses: actions/cache@v4
-        with:
-          path: ~/.gradle
-          key: gradle-${{ runner.os }}
-
       - name: Setup environment
         run: |
           sudo apt-get update
@@ -74,7 +56,7 @@ jobs:
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_NDK_ROOT=$HOME/android-sdk/ndk/25.2.9519653" >> $GITHUB_ENV
 
-      - name: Setup lime + Extra libraries
+      - name: Setup lime
         run: |
           printf "%s\n%s\n%s\n" \
             "$ANDROID_HOME" \
@@ -88,24 +70,11 @@ jobs:
           luaVersion: "5.1"
 
       - name: Force rebuild native libs
-        run: haxelib run lime rebuild linc_luajit android -clean -verbose
-
-      - name: Check LuaJIT build result
-        run: find . -name "libluajit.so"
-
-      - name: Inspect linc_luajit
-        run: |
-         echo "LIB PATH:"
-         haxelib libpath linc_luajit
-         echo "FILES:"
-         ls -R $(haxelib libpath linc_luajit)
+        run: haxelib run lime rebuild linc_luajit android -clean
 
       - name: Clean Android
         if: ${{ github.event.inputs.clean_android == 'true' }}
         run: haxelib run lime clean android
-
-      - name: Haxelib List
-        run: haxelib list
     
       - name: Build Android
         run: |
