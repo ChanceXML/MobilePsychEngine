@@ -3846,3 +3846,4 @@ class PlayState extends MusicBeatState
     #end
     return false;
 }
+}
