@@ -3717,7 +3717,7 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
-	#if (!flash && sys)
+	#if (!flash)
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
 	#end
 	public function createRuntimeShader(shaderName:String):ErrorHandledRuntimeShader
@@ -3845,5 +3845,4 @@ class PlayState extends MusicBeatState
 
     #end
     return false;
-}
 }
