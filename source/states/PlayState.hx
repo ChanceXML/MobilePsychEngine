@@ -6,7 +6,7 @@ import backend.WeekData;
 import backend.Song;
 import backend.Rating;
 
-#if (android || ios)
+#if mobile
 import android.controls.HitBox;
 import android.controls.HitboxHint;
 #end
@@ -78,7 +78,7 @@ import crowplexus.hscript.Printer;
 **/
 class PlayState extends MusicBeatState
 {
-	#if (android || ios)
+	#if mobile
     public var leftHeld:Bool = false;
     public var downHeld:Bool = false;
     public var upHeld:Bool = false;
@@ -340,9 +340,9 @@ class PlayState extends MusicBeatState
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
 
-		#if (android || ios)
-	    var hint = new HitboxHint(camOther);
-		add(hint);
+		#if mobile
+	    var hint = new HitboxHint();
+        add(hint);			
 		
         hitbox = new HitBox();
         add(hitbox);
@@ -2936,7 +2936,7 @@ class PlayState extends MusicBeatState
     var pressArray:Array<Bool> = [];
     var releaseArray:Array<Bool> = [];
 
-    #if (android || ios)
+    #if mobile
     var mobileControls:Array<Bool> = [leftHeld, downHeld, upHeld, rightHeld];
     #end
 
@@ -2944,7 +2944,7 @@ class PlayState extends MusicBeatState
     {
         var key = keysArray[i];
 
-        #if (android || ios)
+        #if mobile
         holdArray.push(controls.pressed(key) || mobileControls[i]);
         #else
         holdArray.push(controls.pressed(key));
