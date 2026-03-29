@@ -36,6 +36,7 @@ import substates.GameOverSubstate;
 
 #if !flash
 import openfl.filters.ShaderFilter;
+import openfl.utils.Assets;
 #end
 
 import shaders.ErrorHandledShader;
@@ -3739,60 +3740,101 @@ class PlayState extends MusicBeatState
 	}
 
     public function initLuaShader(name:String, ?glslVersion:Int = 120)
-    {
+{
     if(!ClientPrefs.data.shaders) return false;
 
-    #if (!flash && sys)
+    #if (!flash)
+
     if(runtimeShaders.exists(name))
     {
         FlxG.log.warn('Shader $name was already initialized!');
         return true;
     }
 
+    var frag:String = null;
+    var vert:String = null;
+    var found:Bool = false;
+
+    #if android
+
+    var fragPath = 'mods/${Mods.currentModDirectory}/shaders/' + name + '.frag';
+    var vertPath = 'mods/${Mods.currentModDirectory}/shaders/' + name + '.vert';
+
+    if (Assets.exists(fragPath))
+    {
+        frag = Assets.getText(fragPath);
+        found = true;
+    }
+
+    if (Assets.exists(vertPath))
+    {
+        vert = Assets.getText(vertPath);
+        found = true;
+    }
+
+    if (!found)
+    {
+        var sharedFrag = 'shaders/' + name + '.frag';
+        var sharedVert = 'shaders/' + name + '.vert';
+
+        if (Assets.exists(sharedFrag))
+        {
+            frag = Assets.getText(sharedFrag);
+            found = true;
+        }
+
+        if (Assets.exists(sharedVert))
+        {
+            vert = Assets.getText(sharedVert);
+            found = true;
+        }
+    }
+
+    #else
+
     var folders:Array<String> = [];
 
     if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
     {
         var current = Paths.mods(Mods.currentModDirectory + "/shaders/");
-        if (FileSystem.exists(current)) folders.push(current);
+        if (sys.FileSystem.exists(current)) folders.push(current);
     }
 
     for (mod in Mods.getGlobalMods())
     {
         var global = Paths.mods(mod + "/shaders/");
-        if (FileSystem.exists(global)) folders.push(global);
+        if (sys.FileSystem.exists(global)) folders.push(global);
     }
 
     var base = Paths.mods("shaders/");
-    if (FileSystem.exists(base)) folders.push(base);
+    if (sys.FileSystem.exists(base)) folders.push(base);
 
     for (folder in folders)
     {
         var fragPath = folder + name + '.frag';
         var vertPath = folder + name + '.vert';
 
-        var frag:String = null;
-        var vert:String = null;
-        var found:Bool = false;
-
-        if(FileSystem.exists(fragPath))
+        if(sys.FileSystem.exists(fragPath))
         {
-            frag = File.getContent(fragPath);
+            frag = sys.io.File.getContent(fragPath);
             found = true;
         }
 
-        if(FileSystem.exists(vertPath))
+        if(sys.FileSystem.exists(vertPath))
         {
-            vert = File.getContent(vertPath);
+            vert = sys.io.File.getContent(vertPath);
             found = true;
         }
 
-        if(found)
-        {
-            runtimeShaders.set(name, [frag, vert]);
-            // trace('Loaded shader: ' + name + ' from ' + folder);
-            return true;
-        }
+        if(found) break;
+    }
+
+    #end
+
+    if(found)
+    {
+        runtimeShaders.set(name, [frag, vert]);
+        return true;
     }
 
     #if (LUA_ALLOWED || HSCRIPT_ALLOWED)
@@ -3803,5 +3845,4 @@ class PlayState extends MusicBeatState
 
     #end
     return false;
-  }
 }
