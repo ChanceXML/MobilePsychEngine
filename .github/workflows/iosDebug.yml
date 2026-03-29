@@ -1,4 +1,4 @@
-name: iOS Build (sim)
+name: iOS Build (Appetize.io Simulator)
 run-name: ${{ github.event.inputs.build_name }}
 
 on:
@@ -45,7 +45,7 @@ jobs:
           luaVersion: "5.1"
      
       - name: Rebuild LuaJIT
-        run: haxelib run lime rebuild linc_luajit ios -clean -verbose --skip-dependencies
+        run: haxelib run lime rebuild linc_luajit ios -simulator -clean -verbose --skip-dependencies
 
       - name: Clean iOS
         if: ${{ github.event.inputs.clean_ios == 'true' }}
@@ -64,14 +64,15 @@ jobs:
            -configuration Release \
            -sdk iphonesimulator \
            -destination 'generic/platform=iOS Simulator' \
-           ARCHS="x86_64 arm64" \
+           ARCHS="x86_64" \
+           ONLY_ACTIVE_ARCH=NO \
            -derivedDataPath $PWD/build \
            CODE_SIGNING_ALLOWED=NO \
            CODE_SIGNING_REQUIRED=NO \
            CODE_SIGN_IDENTITY="" \
            build
 
-      - name: Zip .app for Appetize.io
+      - name: Zip .app
         run: |
           mkdir -p outputs/appetize
           cd build/Build/Products/Release-iphonesimulator/
@@ -79,6 +80,6 @@ jobs:
           
       - uses: actions/upload-artifact@v4
         with:
-          name: Appetize-Ready-App
+          name: app
           path: outputs/appetize/PsychEngine-Simulator.zip
           if-no-files-found: error
