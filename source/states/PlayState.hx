@@ -333,7 +333,6 @@ class PlayState extends MusicBeatState
 
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
-		FlxG.cameras.add(hint.camHint, false);
 
 		persistentUpdate = true;
 		persistentDraw = true;
