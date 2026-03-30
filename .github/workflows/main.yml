@@ -86,7 +86,25 @@ jobs:
          echo "${{ github.run_id }}" > VERSION
          haxelib run lime build android -ONLY_ARMV7 -D officialBuild -D LUA_ALLOWED
          find . -name "*.apk"
-      
+
+      - name: Check AndroidManifest # checking whats wrong with manifest
+        if: failure()
+        run: |
+         echo "=== manifests ==="
+         find export -type f -name "AndroidManifest.xml"
+
+         echo "=== Likely manifest ==="
+         MANIFEST=$(find export -type f -path "*merged_manifests*" -name "AndroidManifest.xml" | head -n 1)
+
+         if [ -f "$MANIFEST" ]; then
+           echo "Found: $MANIFEST"
+           echo "=============================="
+           cat "$MANIFEST"
+           echo "=============================="
+         else
+           echo "manifest not found"
+         fi
+         
       - uses: actions/upload-artifact@v4
         with:
           name: androidBuild
