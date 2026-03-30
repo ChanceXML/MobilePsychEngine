@@ -1,7 +1,7 @@
 # Build Status
 [![Mobile Build](https://github.com/ChanceXML/MobilePsychEngine/actions/workflows/main.yml/badge.svg)](https://github.com/ChanceXML/MobilePsychEngine/actions/workflows/main.yml)
-![PsychionalEngineLogo](docs/img/PsychEngineLogoTweak.png)
 
+![PsychionalEngineLogo](docs/img/PsychEngineLogoTweak.png)
 # Psych Engine But On Mobile
 
 > [!WARNING]
