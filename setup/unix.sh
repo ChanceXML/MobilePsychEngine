@@ -7,7 +7,7 @@ echo Making the main haxelib and setuping folder in same time..
 mkdir ~/haxelib && haxelib setup ~/haxelib
 echo Installing dependencies...
 echo This might take a few moments depending on your internet speed.
-haxelib install flixel 5.6.1 --quiet
+haxelib install flixel 6.1.2 --quiet
 haxelib install flixel-addons 3.2.2 --quiet
 haxelib install flixel-tools 1.5.1 --quiet
 haxelib install hscript-iris 1.1.3 --quiet
