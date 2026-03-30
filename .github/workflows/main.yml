@@ -75,6 +75,11 @@ jobs:
       - name: Clean Android
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
+
+      - name: Clean export folder
+        run: |
+          echo "Wiping export folder..."
+          rm -rfv export/      
     
       - name: Build Android
         run: |
