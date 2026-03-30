@@ -4,6 +4,9 @@
 
 	<app title="Friday Night Funkin': Psych Engine" file="PsychEngine" packageName="com.shadowmario.psychengine" main="Main" version="0.2.8" company="ShadowMario" />
 
+	<!-- adding this so lime or gradle break manifest -->
+	<set name="ANDROID_MANIFEST_APPLICATION" value="true" />
+
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
 
@@ -216,5 +219,14 @@
     <uses-sdk
       android:minSdkVersion="21"
       android:targetSdkVersion="33" />
+
+    <application
+        android:allowBackup="true"
+        android:label="Friday Night Funkin': Psych Engine"
+        android:appCategory="game"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        android:hardwareAccelerated="true"
+        android:allowNativeHeapPointerTagging="false"
+        android:icon="@drawable/icon" />
 	</section>
 </project>
