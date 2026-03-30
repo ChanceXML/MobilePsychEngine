@@ -211,22 +211,15 @@
 	<icon path="art/icons/icon64.png" size='64'/>
 	<icon path="art/icons/iconOG.png" />
 
-	<!-- Mobile Section !-->
+	<!-- Android Section !-->
 	<section if="android">
+
+	<android manifest="source/android/AndroidManifest.xml" />
 		
 	<haxedef name="LUAJIT_ENABLE_GC64" if="HXCPP_ARM64" />
 	
     <uses-sdk
       android:minSdkVersion="21"
       android:targetSdkVersion="33" />
-
-    <application
-        android:allowBackup="true"
-        android:label="Friday Night Funkin': Psych Engine"
-        android:appCategory="game"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-        android:hardwareAccelerated="true"
-        android:allowNativeHeapPointerTagging="false"
-        android:icon="@drawable/icon" />
 	</section>
 </project>
