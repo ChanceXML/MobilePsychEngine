@@ -1,5 +1,4 @@
-[![Mobile Build](https://github.com/ChanceXML/MobilePsychEngine/actions/workflows/main.yml/badge.svg?event=issues)](https://github.com/ChanceXML/MobilePsychEngine/actions/workflows/main.yml)
-https://github.com/ChanceXML/MobilePsychEngine/actions/workflows/main.yml/badge.svg?event=issues
+[![Mobile Build](https://github.com/ChanceXML/MobilePsychEngine/actions/workflows/main.yml/badge.svg?event=issues)]
 ![PsychionalEngineLogo](docs/img/PsychEngineLogoTweak.png)
 
 # Psych Engine But On Mobile
