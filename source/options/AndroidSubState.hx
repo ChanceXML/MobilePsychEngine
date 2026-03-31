@@ -45,6 +45,12 @@ class AndroidSubState extends BaseOptionsMenu
 			['Bottom', 'Full']); // had to change the name because Hitbox Style and Hint Style would overlap
 		addOption(option);
 
+		var option:Option = new Option('Mouse',
+			"If checked, a virtual mouse appears. And behaves exactly like a pc mouse. like the winlator mouse.",
+			'cacheOnGPU',
+			BOOL);
+		addOption(option);
+
 		super();
 	}
 }
