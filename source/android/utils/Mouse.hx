@@ -19,12 +19,11 @@ class Mouse extends FlxSprite {
         antialiasing = true;
         scrollFactor.set(0, 0);
         
-        this.x = FlxG.width / 2;
-        this.y = FlxG.height / 2;
+        this.x = (FlxG.width - width) / 2;
+        this.y = (FlxG.height - height) / 2;
     }
 
     override public function update(elapsed:Float):Void {
-        /* Sync with ClientPrefs every frame */
         #if (desktop || android)
         if (ClientPrefs.data != null) {
             mouse = ClientPrefs.data.mouse;
@@ -53,9 +52,6 @@ class Mouse extends FlxSprite {
                 this.x += deltaX;
                 this.y += deltaY;
 
-                this.x = FlxMath.bound(this.x, 0, FlxG.width - 33);
-                this.y = FlxMath.bound(this.y, 0, FlxG.height - 33);
-
                 lastTouchX = touch.screenX;
                 lastTouchY = touch.screenY;
             }
@@ -63,15 +59,15 @@ class Mouse extends FlxSprite {
             isDragging = false;
         }
 
-        FlxG.mouse.x = this.x;
-        FlxG.mouse.y = this.y;
-        FlxG.mouse.screenX = Std.int(this.x);
-        FlxG.mouse.screenY = Std.int(this.y);
-        
-        #if FLX_POINTER_INPUT
-        FlxG.mouse.globalX = Std.int(this.x);
-        FlxG.mouse.globalY = Std.int(this.y);
-        #end
+        this.x = FlxMath.bound(this.x, 0, FlxG.width - width);
+        this.y = FlxMath.bound(this.y, 0, FlxG.height - height);
+
+        @:privateAccess {
+            FlxG.mouse.x = Std.int(this.x);
+            FlxG.mouse.y = Std.int(this.y);
+            FlxG.mouse.screenX = Std.int(this.x);
+            FlxG.mouse.screenY = Std.int(this.y);
+        }
 
         super.update(elapsed);
     }
