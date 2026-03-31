@@ -173,10 +173,13 @@ class VirtualPad extends FlxSpriteGroup
 		{
 			for (key in ClientPrefs.keyBinds.get(action))
 			{
-				if (btn.pressed)
-					FlxG.keys.pressKey(key);
-				else
-					FlxG.keys.releaseKey(key);
+				var k = FlxG.keys.getKey(key);
+				if (k != null)
+				{
+					k.pressed = btn.pressed;
+					k.justPressed = btn.justPressed;
+					k.justReleased = btn.justReleased;
+				}
 			}
 		}
 	}
