@@ -3,8 +3,10 @@ package options;
 import states.MainMenuState;
 import backend.StageData;
 #if mobile
-import android.controls.VirtualPad;
+import backend.Controls;
 import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
 #end
 
 class OptionsState extends MusicBeatState
@@ -79,17 +81,19 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
-		#if mobile
-        var virtualPad = new VirtualPad(FULL, A_B);
-        add(virtualPad);
-
-        virtualPad.bindDPad('ui_up', 'ui_down', 'ui_left', 'ui_right');
-
-        virtualPad.bindActionGroup('accept', 'back');
-        #end
-
 		changeSelection();
 		ClientPrefs.saveSettings();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
+
+        ButtonHelper.bind(virtualPad,
+    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+    	['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 
 		super.create();
 	}
