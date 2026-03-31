@@ -2,6 +2,9 @@ package backend;
 
 import flixel.FlxState;
 import backend.PsychCamera;
+#if mobile
+import android.utils.Mouse;
+#end
 
 class MusicBeatState extends FlxState
 {
@@ -38,6 +41,10 @@ class MusicBeatState extends FlxState
 		}
 		FlxTransitionableState.skipNextTransOut = false;
 		timePassedOnState = 0;
+        #if mobile
+		var mobileCursor:Mouse = new Mouse();
+        add(mobileCursor);
+		#end
 	}
 
 	public function initPsychCamera():PsychCamera
