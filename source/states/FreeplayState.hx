@@ -5,8 +5,10 @@ import backend.Highscore;
 import backend.Song;
 
 #if mobile
-import android.controls.VirtualPad;
+import backend.Controls;
 import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
 #end
 
 import objects.HealthIcon;
@@ -25,6 +27,10 @@ import haxe.Json;
 class FreeplayState extends MusicBeatState
 {
 	var songs:Array<SongMetadata> = [];
+
+	#if mobile
+    var virtualPad:VirtualPad;
+    #end
 
 	var selector:FlxText;
 	private static var curSelected:Int = 0;
@@ -195,12 +201,14 @@ class FreeplayState extends MusicBeatState
 		updateTexts();
 
 		#if mobile
-        var virtualPad = new VirtualPad(FULL, A_B_X_Y);
-        add(virtualPad);
-		
-        virtualPad.bindDPad('ui_up', 'ui_down', 'ui_left', 'ui_right');
+        virtualPad = ButtonHelper.create(this, FULL, A_B_X_Y);
 
-        virtualPad.bindActionGroup('accept', 'back', 'pause', 'control');
+        ButtonHelper.bind(virtualPad,
+    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+    	['accept', 'back', 'control', 'reset']
+        );
+
+        Controls.virtualPad = virtualPad;
         #end
 	
 		super.create();
