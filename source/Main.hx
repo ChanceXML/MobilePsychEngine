@@ -4,10 +4,6 @@ package;
 import extension.androidtools.content.Context;
 #end
 
-#if mobile
-import android.utils.Mouse;
-#end
-
 import debug.FPSCounter;
 
 import flixel.graphics.FlxGraphic;
@@ -177,9 +173,7 @@ class Main extends Sprite
 		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;
 		#end
-        #if mobile
-		FlxG.plugins.add(new android.utils.Mouse());
-        #end
+    
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
