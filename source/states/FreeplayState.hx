@@ -275,18 +275,21 @@ class FreeplayState extends MusicBeatState
 					changeSelection();
 					holdTime = 0;	
 				}
-				if (controls.UI_UP_P)
+				if (controls.UI_UP_P || virtualPad.justPressed("ui_up"))
 				{
 					changeSelection(-shiftMult);
 					holdTime = 0;
 				}
-				if (controls.UI_DOWN_P)
+				if (controls.UI_DOWN_P || virtualPad.justPressed("ui_down"))
 				{
 					changeSelection(shiftMult);
 					holdTime = 0;
 				}
 
-				if(controls.UI_DOWN || controls.UI_UP)
+			    if (
+            	controls.UI_DOWN || controls.UI_UP ||
+             	virtualPad.pressed("ui_down") || virtualPad.pressed("ui_up")
+                )
 				{
 					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 					holdTime += elapsed;
@@ -303,19 +306,19 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 
-			if (controls.UI_LEFT_P)
+			if (controls.UI_LEFT_P || virtualPad.justPressed("ui_left"))
 			{
 				changeDiff(-1);
 				_updateSongLastDifficulty();
 			}
-			else if (controls.UI_RIGHT_P)
+			else if (controls.UI_RIGHT_P || virtualPad.justPressed("ui_right")
 			{
 				changeDiff(1);
 				_updateSongLastDifficulty();
 			}
 		}
 
-		if (controls.BACK)
+		if (controls.BACK || virtualPad.pressed("back"))
 		{
 			if (player.playingMusic)
 			{
