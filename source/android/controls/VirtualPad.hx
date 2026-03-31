@@ -168,13 +168,21 @@ class VirtualPad extends FlxSpriteGroup
 	}
 
 	private function createButton(x:Float, y:Float, width:Int, height:Int, graphic:String):FlxButton
+{
+	var button:FlxButton = new FlxButton(x, y);
+
+	var frame = atlasFrames.getByName(graphic);
+	if (frame == null)
 	{
-		var button:FlxButton = new FlxButton(x, y);
-		button.frames = FlxTileFrames.fromFrame(atlasFrames.getByName(graphic), FlxPoint.get(width, height));
-		button.resetSizeFromFrame();
-		button.scrollFactor.set();
+		trace('Missing frame: ' + graphic);
 		return button;
 	}
+
+	button.loadGraphic(frame);
+	button.updateHitbox();
+	button.scrollFactor.set();
+
+	return button;
 }
 
 enum DPadMode
