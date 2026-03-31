@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
+import openfl.utils.Assets;
 
 class Mouse extends FlxSprite {
     public var mouse:Bool = false;
@@ -15,7 +16,7 @@ class Mouse extends FlxSprite {
     public function new() {
         super();
         
-        loadGraphic("assets/shared/images/mouse/cursor-default.png");
+        loadCustomGraphic("cursor-default");
         antialiasing = true;
         scrollFactor.set(0, 0);
         
@@ -74,11 +75,20 @@ class Mouse extends FlxSprite {
 
     public function setHoverState(isHovering:Bool):Void {
         if (!mouse) return;
+        loadCustomGraphic(isHovering ? "cursor-pointer" : "cursor-default");
+    }
 
-        if (isHovering) {
-            loadGraphic("assets/shared/images/mouse/cursor-pointer.png");
+    private function loadCustomGraphic(name:String):Void {
+        var path1:String = "assets/shared/images/mouse/" + name + ".png";
+        var path2:String = "mouse/" + name + ".png";
+
+        if (Assets.exists(path1)) {
+            loadGraphic(path1);
+        } else if (Assets.exists(path2)) {
+            loadGraphic(path2);
         } else {
-            loadGraphic("assets/shared/images/mouse/cursor-default.png");
+            visible = false;
+            FlxG.mouse.visible = true;
         }
     }
 }
