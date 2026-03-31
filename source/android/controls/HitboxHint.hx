@@ -17,8 +17,7 @@ class HitboxHint extends FlxSpriteGroup
 
         camHint = new FlxCamera(0, 0, FlxG.width, FlxG.height);
         camHint.bgColor = 0x00000000;
-        camHint.scroll.set(0, 0);
-        camHint.follow(null);
+        camHint.alpha = 1;
         FlxG.cameras.add(camHint, false);
 
         var hintGraphic = Paths.image(
