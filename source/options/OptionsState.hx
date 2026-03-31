@@ -21,6 +21,9 @@ class OptionsState extends MusicBeatState
 		'Gameplay'
 		#if TRANSLATIONS_ALLOWED , 'Language' #end
 	];
+	#if mobile
+    var virtualPad:VirtualPad;
+    #end
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
