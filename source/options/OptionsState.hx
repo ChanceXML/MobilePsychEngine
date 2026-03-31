@@ -79,6 +79,15 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
+		if mobile
+        var virtualPad = new VirtualPad(FULL, A_B);
+        add(virtualPad);
+
+        virtualPad.bindDPad('ui_up', 'ui_down', 'ui_left', 'ui_right');
+
+        virtualPad.bindActionGroup('accept', 'back');
+        #end
+
 		changeSelection();
 		ClientPrefs.saveSettings();
 
@@ -115,15 +124,6 @@ class OptionsState extends MusicBeatState
 		}
 		else if (controls.ACCEPT) openSelectedSubstate(options[curSelected]);
 	}
-	    #if mobile
-        var virtualPad = new VirtualPad(FULL, A_B);
-        add(virtualPad);
-
-        virtualPad.bindDPad('ui_up', 'ui_down', 'ui_left', 'ui_right');
-
-        virtualPad.bindActionGroup('accept', 'back');
-        #end
-    }
 	
 	function changeSelection(change:Int = 0)
 	{
