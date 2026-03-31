@@ -79,7 +79,7 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
-		if mobile
+		#if mobile
         var virtualPad = new VirtualPad(FULL, A_B);
         add(virtualPad);
 
