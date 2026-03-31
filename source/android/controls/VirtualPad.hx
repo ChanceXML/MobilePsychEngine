@@ -1,9 +1,11 @@
 package android.controls;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.group.FlxSpriteGroup;
+import flixel.input.FlxInput.FlxInputState;
 import flixel.math.FlxPoint;
 import flixel.ui.FlxButton;
 
@@ -19,12 +21,21 @@ class VirtualPad extends FlxSpriteGroup
 	public var buttonRight:FlxButton;
 	public var buttonDown:FlxButton;
 	
+	public var virtualpadCamera:FlxCamera;
+	
 	private inline static var B_W:Int = 132;
 	private inline static var B_H:Int = 135;
+
+	public var boundActions:Map<FlxButton, String> = new Map<FlxButton, String>();
 	
 	public function new(?DPad:DPadMode, ?Action:ActionMode)
 	{
 		super();
+
+		virtualpadCamera = new FlxCamera();
+		virtualpadCamera.bgColor = 0x00000000;
+		FlxG.cameras.add(virtualpadCamera, false);
+		this.cameras = [virtualpadCamera];
 
 		switch (DPad)
 		{
@@ -135,6 +146,47 @@ class VirtualPad extends FlxSpriteGroup
 		scrollFactor.set();
 	}
 
+	public function bindDPad(upAction:String, downAction:String, leftAction:String, rightAction:String):Void
+	{
+		if (buttonUp != null) boundActions.set(buttonUp, upAction);
+		if (buttonDown != null) boundActions.set(buttonDown, downAction);
+		if (buttonLeft != null) boundActions.set(buttonLeft, leftAction);
+		if (buttonRight != null) boundActions.set(buttonRight, rightAction);
+	}
+
+	public function bindActionGroup(a:String = '', b:String = '', x:String = '', y:String = '', c:String = ''):Void
+	{
+		if (buttonA != null && a != '') boundActions.set(buttonA, a);
+		if (buttonB != null && b != '') boundActions.set(buttonB, b);
+		if (buttonX != null && x != '') boundActions.set(buttonX, x);
+		if (buttonY != null && y != '') boundActions.set(buttonY, y);
+		if (buttonC != null && c != '') boundActions.set(buttonC, c);
+	}
+
+	public function bindButton(buttonName:String, actionName:String):Void
+	{
+		var btn:FlxButton = Reflect.getProperty(this, 'button' + buttonName.toUpperCase());
+		if (btn != null) boundActions.set(btn, actionName);
+	}
+
+	public function checkAction(actionName:String, state:FlxInputState = PRESSED):Bool
+	{
+		for (button => action in boundActions)
+		{
+			if (action == actionName)
+			{
+				switch (state)
+				{
+					case JUST_PRESSED: return button.justPressed;
+					case PRESSED: return button.pressed;
+					case JUST_RELEASED: return button.justReleased;
+					case RELEASED: return !button.pressed;
+				}
+			}
+		}
+		return false;
+	}
+
 	override function destroy()
 	{
 		super.destroy();
@@ -146,23 +198,28 @@ class VirtualPad extends FlxSpriteGroup
 		}
 
 		buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
+		boundActions.clear();
+
+		if (virtualpadCamera != null)
+		{
+			FlxG.cameras.remove(virtualpadCamera);
+			virtualpadCamera.destroy();
+			virtualpadCamera = null;
+		}
 	}
 	
 	private function createButton(x:Float, y:Float, width:Int, height:Int, graphic:String):FlxButton
 	{
 		var button:FlxButton = new FlxButton(x, y);
-		
 		var frames = FlxAtlasFrames.fromSpriteSheetPacker(
 			'assets/shared/images/mobile/controls/classic/virtual-input-classic.png', 
 			'assets/shared/images/mobile/controls/classic/virtual-input-classic.txt'
 		);
-		
 		button.frames = FlxTileFrames.fromFrame(frames.getByName(graphic), FlxPoint.get(width, height));
 		button.resetSizeFromFrame();
 		button.solid = false;
 		button.immovable = true;
 		button.scrollFactor.set();
-
 		return button;
 	}
 }
