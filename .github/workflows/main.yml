@@ -34,6 +34,13 @@ jobs:
 
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
+          
+          printf "%s\n%s\n%s\n" \
+            "$ANDROID_HOME" \
+            "$ANDROID_NDK_ROOT" \
+            "$JAVA_HOME" \
+            | haxelib run lime setup android  
+          
           haxelib run lime rebuild linc_luajit android -clean
 
       - name: Install Android SDK + NDK
@@ -57,14 +64,6 @@ jobs:
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_NDK_ROOT=$HOME/android-sdk/ndk/25.2.9519653" >> $GITHUB_ENV
 
-      - name: Setup lime
-        run: |
-          printf "%s\n%s\n%s\n" \
-            "$ANDROID_HOME" \
-            "$ANDROID_NDK_ROOT" \
-            "$JAVA_HOME" \
-            | haxelib run lime setup android         
-   
       - name: Clean Android
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
@@ -97,11 +96,9 @@ jobs:
           haxelib setup ~/haxelib
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
+          echo "n" | haxelib run lime setup ios
           haxelib run lime rebuild linc_luajit android -clean
-
-      - name: Setup iOS
-        run: echo "n" | haxelib run lime setup ios
-
+          
       - name: Clean iOS
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean ios
