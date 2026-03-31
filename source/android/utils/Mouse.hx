@@ -6,7 +6,7 @@ import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
 
 class Mouse extends FlxSprite {
-    public var mouse:Bool = true;
+    public var mouse:Bool = false;
     
     var lastTouchX:Float = 0;
     var lastTouchY:Float = 0;
@@ -24,14 +24,18 @@ class Mouse extends FlxSprite {
     }
 
     override public function update(elapsed:Float):Void {
+        /* Sync with ClientPrefs every frame */
+        #if (desktop || android)
+        if (ClientPrefs.data != null) {
+            mouse = ClientPrefs.data.mouse;
+        }
+        #end
+
         if (!mouse) {
             visible = false;
-            FlxG.mouse.visible = true;
-            super.update(elapsed);
             return;
         }
 
-        super.update(elapsed);
         visible = true;
         FlxG.mouse.visible = false;
 
@@ -68,6 +72,8 @@ class Mouse extends FlxSprite {
         FlxG.mouse.globalX = Std.int(this.x);
         FlxG.mouse.globalY = Std.int(this.y);
         #end
+
+        super.update(elapsed);
     }
 
     public function setHoverState(isHovering:Bool):Void {
