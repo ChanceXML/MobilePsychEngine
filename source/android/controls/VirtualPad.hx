@@ -31,7 +31,7 @@ class VirtualPad extends FlxSpriteGroup
 
 	public var boundActions:Map<FlxButton, String> = new Map();
 
-	private static var frames:FlxAtlasFrames;
+	private static var atlasFrames:FlxAtlasFrames;
 
 	public function new(?DPad:DPadMode, ?Action:ActionMode)
 	{
@@ -42,9 +42,9 @@ class VirtualPad extends FlxSpriteGroup
 		FlxG.cameras.add(virtualpadCamera, false);
 		this.cameras = [virtualpadCamera];
 
-		if (frames == null)
+		if (atlasFrames == null)
 		{
-			frames = FlxAtlasFrames.fromSpriteSheetPacker(
+			atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
 				'assets/shared/images/mobile/controls/classic/virtual-input-classic.png',
 				'assets/shared/images/mobile/controls/classic/virtual-input-classic.txt'
 			);
@@ -52,6 +52,12 @@ class VirtualPad extends FlxSpriteGroup
 
 		switch (DPad)
 		{
+			case FULL, NONE:
+				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, 'up'));
+				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, 'left'));
+				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, 'right'));
+				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, 'down'));
+
 			case UP_DOWN:
 				add(buttonUp = createButton(0, FlxG.height - 255, B_W, B_H, 'up'));
 				add(buttonDown = createButton(0, FlxG.height - 135, B_W, B_H, 'down'));
@@ -60,29 +66,12 @@ class VirtualPad extends FlxSpriteGroup
 				add(buttonLeft = createButton(0, FlxG.height - 135, B_W, B_H, 'left'));
 				add(buttonRight = createButton(126, FlxG.height - 135, B_W, B_H, 'right'));
 
-			case UP_LEFT_RIGHT:
-				add(buttonUp = createButton(105, FlxG.height - 243, B_W, B_H, 'up'));
-				add(buttonLeft = createButton(0, FlxG.height - 135, B_W, B_H, 'left'));
-				add(buttonRight = createButton(207, FlxG.height - 135, B_W, B_H, 'right'));
-
-			case DOWN_LEFT_RIGHT:
-				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, 'left'));
-				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, 'right'));
-				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, 'down'));
-
-			case FULL:
-				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, 'up'));
-				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, 'left'));
-				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, 'right'));
-				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, 'down'));
-
 			case RIGHT_FULL:
 				add(buttonUp = createButton(FlxG.width - 258, FlxG.height - 414, B_W, B_H, 'up'));
 				add(buttonLeft = createButton(FlxG.width - 390, FlxG.height - 309, B_W, B_H, 'left'));
 				add(buttonRight = createButton(FlxG.width - 132, FlxG.height - 309, B_W, B_H, 'right'));
 				add(buttonDown = createButton(FlxG.width - 258, FlxG.height - 201, B_W, B_H, 'down'));
 
-			case NONE:
 			default:
 				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, 'up'));
 				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, 'left'));
@@ -94,14 +83,9 @@ class VirtualPad extends FlxSpriteGroup
 		{
 			case A:
 				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, 'a'));
+
 			case B:
 				add(buttonB = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, 'b'));
-			case X:
-				add(buttonX = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, 'x'));
-			case Y:
-				add(buttonY = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, 'y'));
-			case C:
-				add(buttonC = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, 'c'));
 
 			case A_B:
 				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, 'a'));
@@ -186,10 +170,8 @@ class VirtualPad extends FlxSpriteGroup
 	private function createButton(x:Float, y:Float, width:Int, height:Int, graphic:String):FlxButton
 	{
 		var button:FlxButton = new FlxButton(x, y);
-		button.frames = FlxTileFrames.fromFrame(frames.getByName(graphic), FlxPoint.get(width, height));
+		button.frames = FlxTileFrames.fromFrame(atlasFrames.getByName(graphic), FlxPoint.get(width, height));
 		button.resetSizeFromFrame();
-		button.solid = false;
-		button.immovable = true;
 		button.scrollFactor.set();
 		return button;
 	}
@@ -211,9 +193,6 @@ enum ActionMode
 	NONE;
 	A;
 	B;
-	X;
-	Y;
-	C;
 	A_B;
 	A_B_X_Y;
 }
