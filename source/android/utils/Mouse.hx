@@ -2,6 +2,7 @@ package android.utils;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxCamera;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
 import openfl.utils.Assets;
@@ -12,9 +13,17 @@ class Mouse extends FlxSprite {
     var lastTouchX:Float = 0;
     var lastTouchY:Float = 0;
     var isDragging:Bool = false;
+    
+    public var camMouse:FlxCamera;
 
     public function new() {
         super();
+        
+        camMouse = new FlxCamera();
+        camMouse.bgColor.alpha = 0;
+        FlxG.cameras.add(camMouse, false);
+        
+        this.cameras = [camMouse];
         
         loadCustomGraphic("cursor-default");
         antialiasing = true;
@@ -79,16 +88,21 @@ class Mouse extends FlxSprite {
     }
 
     private function loadCustomGraphic(name:String):Void {
-        var path1:String = "assets/shared/images/mouse/" + name + ".png";
-        var path2:String = "mouse/" + name + ".png";
+        var path:String = "mouse/" + name + ".png";
 
-        if (Assets.exists(path1)) {
-            loadGraphic(path1);
-        } else if (Assets.exists(path2)) {
-            loadGraphic(path2);
+        if (Assets.exists(path)) {
+            loadGraphic(path);
         } else {
             visible = false;
             FlxG.mouse.visible = true;
         }
+    }
+    
+    override public function destroy():Void {
+        if (camMouse != null) {
+            FlxG.cameras.remove(camMouse);
+            camMouse.destroy();
+        }
+        super.destroy();
     }
 }
