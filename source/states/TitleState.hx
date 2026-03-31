@@ -2,10 +2,6 @@ package states;
 
 import backend.WeekData;
 
-#if mobile
-import android.utils.Mouse;
-#end
-
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
@@ -99,9 +95,6 @@ class TitleState extends MusicBeatState
 		}
 
 		FlxG.mouse.visible = false;
-		#if mobile
-		FlxG.plugins.add(new android.utils.Mouse());
-        #end
 		#if FREEPLAY
 		MusicBeatState.switchState(new FreeplayState());
 		#elseif CHARTING
