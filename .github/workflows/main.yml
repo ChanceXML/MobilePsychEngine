@@ -34,6 +34,7 @@ jobs:
 
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
+          haxelib run lime rebuild linc_luajit android -clean
 
       - name: Install Android SDK + NDK
         run: |
@@ -63,36 +64,17 @@ jobs:
             "$ANDROID_NDK_ROOT" \
             "$JAVA_HOME" \
             | haxelib run lime setup android         
-
-      - name: Setup Lua
-        uses: leafo/gh-actions-lua@v10
-        with:
-          luaVersion: "5.1"
-
-      - name: Force rebuild native libs
-        run: haxelib run lime rebuild linc_luajit android -clean
-
+   
       - name: Clean Android
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
-
-      - name: Clean export folder
-        run: |
-          echo "Wiping export folder..."
-          rm -rfv export/      
     
       - name: Build Android
         run: |
          echo "${{ github.run_id }}" > VERSION
          haxelib run lime build android -ONLY_ARMV7 -D officialBuild -D LUA_ALLOWED
          find . -name "*.apk"
-
-      - name: Show generated app manifest (pre-merge)
-        if: failure()
-        run: |
-         echo "=== Generated app manifest ==="
-         cat export/release/android/bin/app/src/main/AndroidManifest.xml || echo "Not found"
-          
+        
       - uses: actions/upload-artifact@v4
         with:
           name: androidBuild
@@ -113,22 +95,12 @@ jobs:
         run: |
           brew install lua
           haxelib setup ~/haxelib
-
-      - name: Run setup script
-        run: |
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
+          haxelib run lime rebuild linc_luajit android -clean
 
       - name: Setup iOS
         run: echo "n" | haxelib run lime setup ios
-
-      - name: Setup Lua
-        uses: leafo/gh-actions-lua@v10
-        with:
-          luaVersion: "5.1"
-     
-      - name: Rebuild LuaJIT
-        run: haxelib run lime rebuild linc_luajit ios -clean -verbose --skip-dependencies
 
       - name: Clean iOS
         if: ${{ github.event.inputs.clean == 'true' }}
