@@ -36,10 +36,16 @@ class ButtonHelper
 
 	// custom binding helper
 	public static function bind(vpad:VirtualPad, dpad:Array<String>, actions:Array<String>):Void
-	{
-		if (dpad != null && dpad.length >= 4)
-			vpad.bindDPad(dpad[0], dpad[1], dpad[2], dpad[3]);
+{
+	if (vpad == null) return;
 
+	// only bind dpad if it actually exists.
+	if (vpad.buttonUp != null && dpad != null && dpad.length >= 4)
+		vpad.bindDPad(dpad[0], dpad[1], dpad[2], dpad[3]);
+
+	// only bind actions if buttons actually exist.
+	if (actions != null)
+	{
 		switch(actions.length)
 		{
 			case 1: vpad.bindActionGroup(actions[0]);
@@ -49,6 +55,4 @@ class ButtonHelper
 			case 5: vpad.bindActionGroup(actions[0], actions[1], actions[2], actions[3], actions[4]);
 		}
 	}
-
-	#end
 }
