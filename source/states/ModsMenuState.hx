@@ -14,9 +14,18 @@ import options.ModSettingsSubState;
 
 import openfl.display.BitmapData;
 import lime.utils.Assets;
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
+#end
 
 class ModsMenuState extends MusicBeatState
 {
+	#if mobile
+    var virtualPad:VirtualPad;
+    #end
 	var bg:FlxSprite;
 	var icon:FlxSprite;
 	var modName:Alphabet;
@@ -294,6 +303,17 @@ class ModsMenuState extends MusicBeatState
 		_lastControllerMode = controls.controllerMode;
 
 		changeSelectedMod();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
+
+        ButtonHelper.bind(virtualPad,
+      	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+	    ['accept', 'back']
+        );   
+ 
+        Controls.virtualPad = virtualPad;
+        #end
 		super.create();
 	}
 	
