@@ -3,13 +3,18 @@ package options;
 import objects.AttachedText;
 import objects.CheckboxThingie;
 #if mobile
-import android.controls.VirtualPad;
+import backend.Controls;
 import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
 #end
 import options.Option.OptionType;
 
 class GameplayChangersSubstate extends MusicBeatSubstate
 {
+	#if mobile
+    var virtualPad:VirtualPad;
+    #end
 	private var curSelected:Int = 0;
 	private var optionsArray:Array<Dynamic> = [];
 
@@ -141,12 +146,14 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		reloadCheckboxes();
 	
 	    #if mobile
-        var virtualPad = new VirtualPad(FULL, A_B_X_Y);
-        add(virtualPad);
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
 
-        virtualPad.bindDPad('ui_up', 'ui_down', 'ui_left', 'ui_right');
-		
-        virtualPad.bindActionGroup('accept', 'back');
+        ButtonHelper.bind(virtualPad,
+      	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+	    ['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
         #end
     }
 	var nextAccept:Int = 5;
