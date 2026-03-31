@@ -5,7 +5,6 @@ import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
-import openfl.utils.Assets;
 
 class Mouse extends FlxSprite {
     public var mouse:Bool = false;
@@ -14,12 +13,14 @@ class Mouse extends FlxSprite {
     var lastTouchY:Float = 0;
     var isDragging:Bool = false;
     
+    var prevX:Float = 0;
+    var prevY:Float = 0;
+    
     public var camMouse:FlxCamera;
 
     public function new() {
         super();
         
-        // setup camera
         camMouse = new FlxCamera(0, 0, FlxG.width, FlxG.height);
         camMouse.bgColor = 0x00000000;
         camMouse.alpha = 1;
@@ -50,7 +51,6 @@ class Mouse extends FlxSprite {
         visible = true;
         FlxG.mouse.visible = false;
 
-        // force camera to the front
         if (FlxG.cameras.list != null && FlxG.cameras.list.length > 0) {
             if (FlxG.cameras.list[FlxG.cameras.list.length - 1] != camMouse) {
                 FlxG.cameras.remove(camMouse, false);
@@ -60,33 +60,53 @@ class Mouse extends FlxSprite {
 
         var touch:FlxTouch = FlxG.touches.getFirst();
 
-        if (touch != null) {
-            if (touch.justPressed) {
-                lastTouchX = touch.screenX;
-                lastTouchY = touch.screenY;
-                isDragging = true;
-            } else if (touch.pressed && isDragging) {
-                var deltaX:Float = touch.screenX - lastTouchX;
-                var deltaY:Float = touch.screenY - lastTouchY;
-
-                this.x += deltaX;
-                this.y += deltaY;
-
-                lastTouchX = touch.screenX;
-                lastTouchY = touch.screenY;
-            }
-        } else {
-            isDragging = false;
-        }
-
-        this.x = FlxMath.bound(this.x, 0, FlxG.width - width);
-        this.y = FlxMath.bound(this.y, 0, FlxG.height - height);
+        prevX = this.x;
+        prevY = this.y;
 
         @:privateAccess {
-            FlxG.mouse.x = Std.int(this.x);
-            FlxG.mouse.y = Std.int(this.y);
+            if (touch != null) {
+                if (touch.justPressed) {
+                    lastTouchX = touch.screenX;
+                    lastTouchY = touch.screenY;
+                    isDragging = true;
+                    FlxG.mouse._leftButton.press();
+                } else if (touch.pressed && isDragging) {
+                    var deltaX:Float = touch.screenX - lastTouchX;
+                    var deltaY:Float = touch.screenY - lastTouchY;
+
+                    this.x += deltaX;
+                    this.y += deltaY;
+
+                    lastTouchX = touch.screenX;
+                    lastTouchY = touch.screenY;
+                } else if (touch.justReleased) {
+                    isDragging = false;
+                    FlxG.mouse._leftButton.release();
+                }
+            } else {
+                isDragging = false;
+                if (FlxG.mouse._leftButton.pressed) {
+                    FlxG.mouse._leftButton.release();
+                }
+            }
+
+            this.x = FlxMath.bound(this.x, 0, FlxG.width - width);
+            this.y = FlxMath.bound(this.y, 0, FlxG.height - height);
+
             FlxG.mouse.screenX = Std.int(this.x);
             FlxG.mouse.screenY = Std.int(this.y);
+            
+            if (FlxG.camera != null) {
+                FlxG.mouse.x = (this.x / FlxG.camera.zoom) + FlxG.camera.scroll.x;
+                FlxG.mouse.y = (this.y / FlxG.camera.zoom) + FlxG.camera.scroll.y;
+            } else {
+                FlxG.mouse.x = Std.int(this.x);
+                FlxG.mouse.y = Std.int(this.y);
+            }
+
+            if (this.x != prevX || this.y != prevY) {
+                FlxG.mouse.justMoved = true;
+            }
         }
 
         super.update(elapsed);
@@ -98,11 +118,13 @@ class Mouse extends FlxSprite {
     }
 
     private function loadCustomGraphic(name:String):Void {
-        var path:String = "mouse/" + name + ".png";
-
-        if (Assets.exists(path)) {
-            loadGraphic(path);
-        } else {
+        var imagePath:String = "mouse/" + name;
+        try {
+            var fallbackPath:String = "assets/images/" + imagePath + ".png";
+            if (openfl.utils.Assets.exists(fallbackPath)) {
+                loadGraphic(fallbackPath);
+            }
+        } catch(e:Dynamic) {
             visible = false;
             FlxG.mouse.visible = true;
         }
