@@ -1,0 +1,82 @@
+package android.utils;
+
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.input.touch.FlxTouch;
+import flixel.math.FlxMath;
+
+class Mouse extends FlxSprite {
+    public var mouse:Bool = true;
+    
+    var lastTouchX:Float = 0;
+    var lastTouchY:Float = 0;
+    var isDragging:Bool = false;
+
+    public function new() {
+        super();
+        
+        loadGraphic("assets/shared/images/mouse/cursor-default.png");
+        antialiasing = true;
+        scrollFactor.set(0, 0);
+        
+        this.x = FlxG.width / 2;
+        this.y = FlxG.height / 2;
+    }
+
+    override public function update(elapsed:Float):Void {
+        if (!mouse) {
+            visible = false;
+            FlxG.mouse.visible = true;
+            super.update(elapsed);
+            return;
+        }
+
+        super.update(elapsed);
+        visible = true;
+        FlxG.mouse.visible = false;
+
+        var touch:FlxTouch = FlxG.touches.getFirst();
+
+        if (touch != null) {
+            if (touch.justPressed) {
+                lastTouchX = touch.screenX;
+                lastTouchY = touch.screenY;
+                isDragging = true;
+            } else if (touch.pressed && isDragging) {
+                var deltaX:Float = touch.screenX - lastTouchX;
+                var deltaY:Float = touch.screenY - lastTouchY;
+
+                this.x += deltaX;
+                this.y += deltaY;
+
+                this.x = FlxMath.bound(this.x, 0, FlxG.width - 33);
+                this.y = FlxMath.bound(this.y, 0, FlxG.height - 33);
+
+                lastTouchX = touch.screenX;
+                lastTouchY = touch.screenY;
+            }
+        } else {
+            isDragging = false;
+        }
+
+        FlxG.mouse.x = this.x;
+        FlxG.mouse.y = this.y;
+        FlxG.mouse.screenX = Std.int(this.x);
+        FlxG.mouse.screenY = Std.int(this.y);
+        
+        #if FLX_POINTER_INPUT
+        FlxG.mouse.globalX = Std.int(this.x);
+        FlxG.mouse.globalY = Std.int(this.y);
+        #end
+    }
+
+    public function setHoverState(isHovering:Bool):Void {
+        if (!mouse) return;
+
+        if (isHovering) {
+            loadGraphic("assets/shared/images/mouse/cursor-pointer.png");
+        } else {
+            loadGraphic("assets/shared/images/mouse/cursor-default.png");
+        }
+    }
+}
