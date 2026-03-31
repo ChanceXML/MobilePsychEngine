@@ -6,6 +6,13 @@ import lime.app.Application;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
+#end
+
 enum MainMenuColumn {
 	LEFT;
 	CENTER;
@@ -124,6 +131,17 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		FlxG.camera.follow(camFollow, null, 0.15);
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, NONE, B);
+
+        ButtonHelper.bind(virtualPad,
+     	null,
+	    ['debug_1']
+        );
+  
+        Controls.virtualPad = virtualPad;
+        #end
 	}
 
 	function createMenuItem(name:String, x:Float, y:Float):FlxSprite
