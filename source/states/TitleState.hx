@@ -99,7 +99,7 @@ class TitleState extends MusicBeatState
 		}
 
 		FlxG.mouse.visible = false;
-		if mobile
+		#if mobile
 		FlxG.plugins.add(new android.utils.Mouse());
         #end
 		#if FREEPLAY
