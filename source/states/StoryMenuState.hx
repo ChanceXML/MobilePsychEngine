@@ -14,12 +14,22 @@ import options.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
 
 import backend.StageData;
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
+#end
 
 class StoryMenuState extends MusicBeatState
 {
 	public static var weekCompleted:Map<String, Bool> = new Map<String, Bool>();
 
 	var scoreText:FlxText;
+	
+	#if mobile
+    var virtualPad:VirtualPad;
+    #end
 
 	private static var lastDifficultyName:String = '';
 	var curDifficulty:Int = 1;
@@ -184,6 +194,17 @@ class StoryMenuState extends MusicBeatState
 
 		changeWeek();
 		changeDifficulty();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B_X_Y);
+
+        ButtonHelper.bind(virtualPad,
+	    ['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+	    ['accept', 'back', 'control', 'reset']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 
 		super.create();
 	}
