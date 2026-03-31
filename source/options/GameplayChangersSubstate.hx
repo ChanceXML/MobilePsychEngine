@@ -2,7 +2,10 @@ package options;
 
 import objects.AttachedText;
 import objects.CheckboxThingie;
-
+#if mobile
+import android.controls.VirtualPad;
+import backend.ClientPrefs;
+#end
 import options.Option.OptionType;
 
 class GameplayChangersSubstate extends MusicBeatSubstate
