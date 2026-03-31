@@ -164,21 +164,23 @@ class VirtualPad extends FlxSpriteGroup
 	}
 
 	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
+{
+	super.update(elapsed);
 
-		for (btn => action in boundActions)
+	for (btn => action in boundActions)
+	{
+		if (ClientPrefs.keyBinds.exists(action))
 		{
-			if (btn.pressed && ClientPrefs.keyBinds.exists(action))
+			for (key in ClientPrefs.keyBinds.get(action))
 			{
-				for (key in ClientPrefs.keyBinds.get(action))
-				{
-					FlxG.keys.handleKeyUpdate(key, true);
-				}
+				if (btn.pressed)
+					FlxG.keys.pressKey(key);
+				else
+					FlxG.keys.releaseKey(key);
 			}
 		}
 	}
-
+}
 	override function destroy()
 	{
 		super.destroy();
