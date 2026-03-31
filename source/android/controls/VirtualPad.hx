@@ -163,26 +163,34 @@ class VirtualPad extends FlxSpriteGroup
 		if (buttonC != null && c != '') boundActions.set(buttonC, c);
 	}
 
-	override function update(elapsed:Float)
+	public function pressed(action:String):Bool
 {
-	super.update(elapsed);
-
-	for (btn => action in boundActions)
+	for (btn => act in boundActions)
 	{
-		if (ClientPrefs.keyBinds.exists(action))
-		{
-			for (key in ClientPrefs.keyBinds.get(action))
-			{
-				var k = FlxG.keys.getKey(key);
-				if (k != null)
-				{
-					k.pressed = btn.pressed;
-					k.justPressed = btn.justPressed;
-					k.justReleased = btn.justReleased;
-				}
-			}
-		}
+		if (act == action && btn.pressed)
+			return true;
 	}
+	return false;
+}
+
+public function justPressed(action:String):Bool
+{
+	for (btn => act in boundActions)
+	{
+		if (act == action && btn.justPressed)
+			return true;
+	}
+	return false;
+}
+
+public function justReleased(action:String):Bool
+{
+	for (btn => act in boundActions)
+	{
+		if (act == action && btn.justReleased)
+			return true;
+	}
+	return false;
 }
 	override function destroy()
 	{
