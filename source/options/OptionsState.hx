@@ -2,6 +2,10 @@ package options;
 
 import states.MainMenuState;
 import backend.StageData;
+#if mobile
+import android.controls.VirtualPad;
+import backend.ClientPrefs;
+#end
 
 class OptionsState extends MusicBeatState
 {
