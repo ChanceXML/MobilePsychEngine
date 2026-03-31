@@ -139,8 +139,16 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		}
 		changeSelection();
 		reloadCheckboxes();
-	}
+	
+	    #if mobile
+        var virtualPad = new VirtualPad(FULL, A_B_X_Y);
+        add(virtualPad);
 
+        virtualPad.bindDPad('ui_up', 'ui_down', 'ui_left', 'ui_right');
+		
+        virtualPad.bindActionGroup('accept', 'back');
+        #end
+    }
 	var nextAccept:Int = 5;
 	var holdTime:Float = 0;
 	var holdValue:Float = 0;
@@ -271,15 +279,6 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 				else if(controls.UI_LEFT_R || controls.UI_RIGHT_R)
 					clearHold();
 			}
-			#if mobile
-            var virtualPad = new VirtualPad(FULL, A_B_X_Y);
-            add(virtualPad);
-
-            virtualPad.bindDPad('ui_up', 'ui_down', 'ui_left', 'ui_right');
-		
-            virtualPad.bindActionGroup('accept', 'back');
-            #end
-		}
 
 			if(controls.RESET)
 			{
