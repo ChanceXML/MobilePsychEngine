@@ -9,6 +9,8 @@ import backend.Rating;
 #if mobile
 import android.controls.HitBox;
 import android.controls.HitboxHint;
+import android.utils.Mouse;
+import backend.*;
 #end
 
 import flixel.FlxBasic;
