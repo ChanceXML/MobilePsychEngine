@@ -42,8 +42,8 @@ class MusicBeatState extends FlxState
 		FlxTransitionableState.skipNextTransOut = false;
 		timePassedOnState = 0;
         #if mobile
-		var mobileCursor:Mouse = new Mouse();
-        add(mobileCursor);
+		mouseCursor = new android.utils.Mouse();
+        add(mouseCursor);		
 		#end
 	}
 
