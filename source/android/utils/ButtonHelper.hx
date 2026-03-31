@@ -10,7 +10,7 @@ class ButtonHelper
 {
 	#if mobile
 
-	public static function create(parent:FlxBasic, dpad:VirtualPad.DPadMode, action:VirtualPad.ActionMode):VirtualPad
+	public static function create(parent:FlxBasic, dpad:DPadMode, action:ActionMode):VirtualPad
 	{
 		var vpad = new VirtualPad(dpad, action);
 		cast(parent, FlxGroup).add(vpad);
