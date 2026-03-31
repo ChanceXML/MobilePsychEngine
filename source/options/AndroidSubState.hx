@@ -47,7 +47,7 @@ class AndroidSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Mouse',
 			"If checked, a virtual mouse appears. And behaves exactly like a pc mouse. like the winlator mouse.",
-			'cacheOnGPU',
+			'mouse',
 			BOOL);
 		addOption(option);
 
