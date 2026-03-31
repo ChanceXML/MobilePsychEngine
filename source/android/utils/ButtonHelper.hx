@@ -13,7 +13,8 @@ class ButtonHelper
 	public static function create(parent:FlxBasic, dpad:DPadMode, action:ActionMode):VirtualPad
 	{
 		var vpad = new VirtualPad(dpad, action);
-		cast(parent, FlxGroup).add(vpad);
+		var group:FlxGroup = cast parent;
+		group.add(vpad);
 		return vpad;
 	}
 
@@ -22,9 +23,7 @@ class ButtonHelper
 		if (vpad == null) return;
 
 		if (dpad != null && dpad.length >= 4)
-		{
 			vpad.bindDPad(dpad[0], dpad[1], dpad[2], dpad[3]);
-		}
 
 		if (actions != null)
 		{
