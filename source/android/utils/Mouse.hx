@@ -19,8 +19,10 @@ class Mouse extends FlxSprite {
     public function new() {
         super();
         
-        camMouse = new FlxCamera();
-        camMouse.bgColor.alpha = 0;
+        // setup camera
+        camMouse = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+        camMouse.bgColor = 0x00000000;
+        camMouse.alpha = 1;
         FlxG.cameras.add(camMouse, false);
         
         this.cameras = [camMouse];
@@ -34,7 +36,7 @@ class Mouse extends FlxSprite {
     }
 
     override public function update(elapsed:Float):Void {
-        #if (desktop || android)
+        #if mobile
         if (ClientPrefs.data != null) {
             mouse = ClientPrefs.data.mouse;
         }
@@ -47,6 +49,14 @@ class Mouse extends FlxSprite {
 
         visible = true;
         FlxG.mouse.visible = false;
+
+        // force camera to the front
+        if (FlxG.cameras.list != null && FlxG.cameras.list.length > 0) {
+            if (FlxG.cameras.list[FlxG.cameras.list.length - 1] != camMouse) {
+                FlxG.cameras.remove(camMouse, false);
+                FlxG.cameras.add(camMouse, false);
+            }
+        }
 
         var touch:FlxTouch = FlxG.touches.getFirst();
 
