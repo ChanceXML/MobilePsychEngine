@@ -5,7 +5,7 @@ import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.group.FlxSpriteGroup;
-import flixel.input.FlxInput.FlxInputState;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxPoint;
 import flixel.ui.FlxButton;
 
@@ -146,12 +146,12 @@ class VirtualPad extends FlxSpriteGroup
 		scrollFactor.set();
 	}
 
-	public function bindDPad(upAction:String, downAction:String, leftAction:String, rightAction:String):Void
+	public function bindDPad(up:String, down:String, left:String, right:String):Void
 	{
-		if (buttonUp != null) boundActions.set(buttonUp, upAction);
-		if (buttonDown != null) boundActions.set(buttonDown, downAction);
-		if (buttonLeft != null) boundActions.set(buttonLeft, leftAction);
-		if (buttonRight != null) boundActions.set(buttonRight, rightAction);
+		if (buttonUp != null) boundActions.set(buttonUp, up);
+		if (buttonDown != null) boundActions.set(buttonDown, down);
+		if (buttonLeft != null) boundActions.set(buttonLeft, left);
+		if (buttonRight != null) boundActions.set(buttonRight, right);
 	}
 
 	public function bindActionGroup(a:String = '', b:String = '', x:String = '', y:String = '', c:String = ''):Void
@@ -163,28 +163,20 @@ class VirtualPad extends FlxSpriteGroup
 		if (buttonC != null && c != '') boundActions.set(buttonC, c);
 	}
 
-	public function bindButton(buttonName:String, actionName:String):Void
+	override function update(elapsed:Float)
 	{
-		var btn:FlxButton = Reflect.getProperty(this, 'button' + buttonName.toUpperCase());
-		if (btn != null) boundActions.set(btn, actionName);
-	}
+		super.update(elapsed);
 
-	public function checkAction(actionName:String, state:FlxInputState = PRESSED):Bool
-	{
-		for (button => action in boundActions)
+		for (btn => action in boundActions)
 		{
-			if (action == actionName)
+			if (btn.pressed && ClientPrefs.keyBinds.exists(action))
 			{
-				switch (state)
+				for (key in ClientPrefs.keyBinds.get(action))
 				{
-					case JUST_PRESSED: return button.justPressed;
-					case PRESSED: return button.pressed;
-					case JUST_RELEASED: return button.justReleased;
-					case RELEASED: return !button.pressed;
+					FlxG.keys.handleKeyUpdate(key, true);
 				}
 			}
 		}
-		return false;
 	}
 
 	override function destroy()
