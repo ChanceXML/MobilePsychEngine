@@ -145,7 +145,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		
             virtualPad.bindActionGroup('accept', 'back');
             #end
-    	 }
+      	  }
+        }
 		changeSelection();
 		reloadCheckboxes();
 	}
