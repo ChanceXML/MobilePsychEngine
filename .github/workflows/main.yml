@@ -97,7 +97,7 @@ jobs:
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
           echo "n" | haxelib run lime setup ios
-          haxelib run lime rebuild linc_luajit android -clean
+          haxelib run lime rebuild linc_luajit ios -clean
           
       - name: Clean iOS
         if: ${{ github.event.inputs.clean == 'true' }}
