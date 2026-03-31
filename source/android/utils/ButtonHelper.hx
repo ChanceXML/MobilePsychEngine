@@ -2,17 +2,15 @@ package android.utils;
 
 #if mobile
 import android.controls.VirtualPad;
-import android.controls.DPadMode;
-import android.controls.ActionMode;
 import flixel.group.FlxGroup;
 import flixel.FlxBasic;
+import backend.Controls;
 #end
 
 class ButtonHelper
 {
 	#if mobile
-	// create + add VirtualPad
-	public static function create(parent:FlxBasic, dpad:DPadMode, action:ActionMode):VirtualPad
+	public static function create(parent:FlxBasic, dpad:VirtualPad.DPadMode, action:VirtualPad.ActionMode):VirtualPad
 	{
 		var vpad = new VirtualPad(dpad, action);
 
@@ -20,26 +18,26 @@ class ButtonHelper
 		if (group != null)
 			group.add(vpad);
 
+		Controls.virtualPad = vpad;
 		return vpad;
 	}
 
-	// standard menu setup
 	public static function setupMenu(vpad:VirtualPad):Void
 	{
 		if (vpad == null) return;
+
 		vpad.bindDPad('ui_up', 'ui_down', 'ui_left', 'ui_right');
 		vpad.bindActionGroup('accept', 'back');
 	}
 
-	// standard gameplay setup
 	public static function setupGameplay(vpad:VirtualPad):Void
 	{
 		if (vpad == null) return;
+
 		vpad.bindDPad('note_up', 'note_down', 'note_left', 'note_right');
 		vpad.bindActionGroup('note_left', 'note_down', 'note_up', 'note_right');
 	}
 
-	// custom binding helper
 	public static function bind(vpad:VirtualPad, dpad:Array<String>, actions:Array<String>):Void
 	{
 		if (vpad == null) return;
