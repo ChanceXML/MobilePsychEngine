@@ -4,6 +4,13 @@ import flixel.FlxObject;
 import flixel.util.FlxSort;
 import objects.Bar;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
+#end
+
 #if ACHIEVEMENTS_ALLOWED
 class AchievementsMenuState extends MusicBeatState
 {
@@ -17,6 +24,10 @@ class AchievementsMenuState extends MusicBeatState
 	public var progressBar:Bar;
 
 	var camFollow:FlxObject;
+
+	#if mobile
+    var virtualPad:VirtualPad;
+    #end
 
 	var MAX_PER_ROW:Int = 4;
 
@@ -121,6 +132,18 @@ class AchievementsMenuState extends MusicBeatState
 		add(nameText);
 		
 		_changeSelection();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
+
+        ButtonHelper.bind(virtualPad,
+    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+	    ['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
+	
 		super.create();
 		
 		FlxG.camera.follow(camFollow, null, 0.15);
