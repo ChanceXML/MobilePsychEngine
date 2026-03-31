@@ -5,6 +5,10 @@ import flixel.effects.FlxFlicker;
 import lime.app.Application;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
+#if mobile
+import android.controls.VirtualPad;
+import backend.ClientPrefs;
+#end
 
 enum MainMenuColumn {
 	LEFT;
@@ -124,6 +128,13 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		FlxG.camera.follow(camFollow, null, 0.15);
+
+		#if mobile
+        var virtualPad = new VirtualPad(NONE, B);
+        add(virtualPad);
+
+        virtualPad.bindActionGroup('debug_1');
+        #end
 	}
 
 	function createMenuItem(name:String, x:Float, y:Float):FlxSprite
