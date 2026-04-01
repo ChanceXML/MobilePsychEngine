@@ -107,6 +107,7 @@ jobs:
         run: |
           echo "${{ github.run_id }}" > VERSION
           haxelib run lime build ios -D officialBuild -D LUA_ALLOWED -nosign
+          find . -name "*.ipa"
            
       - name: Compile Xcode Project
         run: |
@@ -130,16 +131,8 @@ jobs:
           mkdir -p outputs/ipa/debug
           zip -qr outputs/ipa/debug/PsychEngine-debug.ipa Payload
           
-      - name: Find IPA
-        run: find . -name "*.ipa"
-
       - uses: actions/upload-artifact@v4
         with:
           name: iosBuild
           path: outputs/ipa/debug/PsychEngine-debug.ipa
           if-no-files-found: ignore
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: iosApp
-          path: export/ios/build/Release-iphoneos/PsychEngine.app       
