@@ -212,6 +212,6 @@ public function justReleased(key:String):Bool
             }
         }
     }
-
+}
     return false;
 }
