@@ -17,9 +17,6 @@ class MusicBeatState extends FlxState
 	private var curDecStep:Float = 0;
 	private var curDecBeat:Float = 0;
 	public var controls(get, never):Controls;
-	#if mobile
-    public var mouseCursor:android.utils.Mouse;
-    #end
 	private function get_controls()
 	{
 		return Controls.instance;
@@ -44,10 +41,6 @@ class MusicBeatState extends FlxState
 		}
 		FlxTransitionableState.skipNextTransOut = false;
 		timePassedOnState = 0;
-        #if mobile
-        mouseCursor = new android.utils.Mouse();
-        add(mouseCursor);
-        #end
 	}
 
 	public function initPsychCamera():PsychCamera
