@@ -187,6 +187,7 @@ class VirtualPad extends FlxSpriteGroup
 	button.scrollFactor.set();
 
 	return button;
+  }
 }
 
 enum DPadMode
