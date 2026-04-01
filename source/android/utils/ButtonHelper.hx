@@ -2,6 +2,7 @@ package android.utils;
 
 #if mobile
 import android.controls.VirtualPad;
+import StringTools;
 #end
 
 class ButtonHelper
@@ -20,7 +21,26 @@ class ButtonHelper
 		if (vpad == null) return;
 
 		if (dpad != null && dpad.length >= 4)
+		{
 			vpad.bindDPad(dpad[0], dpad[1], dpad[2], dpad[3]);
+
+			var mirrorDPad = new Array<String>();
+			for (i in 0...4) {
+				var act = dpad[i];
+				if (act != null) {
+					if (StringTools.startsWith(act, "note_")) 
+						mirrorDPad.push(StringTools.replace(act, "note_", "ui_"));
+					else if (StringTools.startsWith(act, "ui_")) 
+						mirrorDPad.push(StringTools.replace(act, "ui_", "note_"));
+					else 
+						mirrorDPad.push("");
+				} else {
+					mirrorDPad.push("");
+				}
+			}
+			
+			vpad.bindDPad(mirrorDPad[0], mirrorDPad[1], mirrorDPad[2], mirrorDPad[3]);
+		}
 
 		if (actions != null)
 		{
