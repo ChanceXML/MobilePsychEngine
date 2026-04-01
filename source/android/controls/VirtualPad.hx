@@ -4,7 +4,6 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.system.FlxGraphicAsset;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.ui.FlxButton;
@@ -170,21 +169,24 @@ class VirtualPad extends FlxSpriteGroup
 
 	private function createButton(x:Float, y:Float, width:Int, height:Int, graphic:String):FlxButton
 {
-	var button:FlxButton = new FlxButton(x, y);
+	var button = new FlxButton(x, y);
 
 	var frame = atlasFrames.getByName(graphic);
+
 	if (frame == null)
 	{
 		trace('Missing frame: ' + graphic);
 		return button;
 	}
 
-	button.loadGraphic(frame);
+	var sprite = frame.parent;
+
+	button.loadGraphic(sprite);
+	button.setGraphicSize(width, height);
 	button.updateHitbox();
 	button.scrollFactor.set();
 
 	return button;
-   }
 }
 
 enum DPadMode
