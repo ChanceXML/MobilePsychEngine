@@ -1,13 +1,21 @@
 package states;
 
 import flixel.FlxSubState;
-
 import flixel.effects.FlxFlicker;
 import lime.app.Application;
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
+#end
 
 class FlashingState extends MusicBeatState
 {
 	public static var leftState:Bool = false;
+	#if mobile
+    var virtualPad:VirtualPad;
+    #end
 
 	var isYes:Bool = true;
 	var texts:FlxTypedSpriteGroup<FlxText>;
@@ -40,6 +48,17 @@ class FlashingState extends MusicBeatState
 			button.x += (128 * i) - 80;
 			texts.add(button);
 		}
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, LEFT_RIGHT, A);
+
+        ButtonHelper.bind(virtualPad,
+    	['ui_left', 'ui_right'],
+    	['accept']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 
 		FlxTween.tween(texts, {alpha: 1.0}, 0.5, {
 			onComplete: (_) -> updateItems()
