@@ -2,9 +2,6 @@ package backend;
 
 import flixel.FlxState;
 import backend.PsychCamera;
-#if mobile
-import android.utils.Mouse;
-#end
 
 class MusicBeatState extends FlxState
 {
