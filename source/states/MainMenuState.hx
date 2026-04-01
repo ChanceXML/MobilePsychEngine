@@ -10,6 +10,7 @@ import options.OptionsState;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 #end
 
@@ -22,7 +23,7 @@ enum MainMenuColumn {
 class MainMenuState extends MusicBeatState
 {
 	#if mobile
-    var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 	public static var psychEngineVersion:String = '1.0.4'; // This is also used for Discord RPC
 	public static var curSelected:Int = 0;
