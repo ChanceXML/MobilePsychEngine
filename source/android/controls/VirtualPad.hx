@@ -4,7 +4,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.system.FlxGraphicAsset
+import flixel.system.FlxGraphicAsset;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.ui.FlxButton;
