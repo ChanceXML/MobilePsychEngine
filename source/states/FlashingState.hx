@@ -7,6 +7,7 @@ import lime.app.Application;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 #end
 
@@ -14,7 +15,7 @@ class FlashingState extends MusicBeatState
 {
 	public static var leftState:Bool = false;
 	#if mobile
-    var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 
 	var isYes:Bool = true;
