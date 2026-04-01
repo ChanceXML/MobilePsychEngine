@@ -22,7 +22,7 @@ class OptionsState extends MusicBeatState
 		#if TRANSLATIONS_ALLOWED , 'Language' #end
 	];
 	#if mobile
-    var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
