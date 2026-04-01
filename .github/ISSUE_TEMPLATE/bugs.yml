@@ -25,24 +25,27 @@ body:
         - Lua
         - Source
     validations:
-      required: true
+      required: false
 
   - type: dropdown
     id: btarget
     attributes:
-      label: "What is your build target?"
+      label: "Which device are u building for. (or just using)"
       options:
         - "Android"
         - "IOS"
-        - "Windows"
-        - "Linux"
-        - "Mac"
-        - "HTML5"
-        - "Flash/Air-based target"
-        - "Neko, HashLink, or other build system"
+        - "PC"
+        - "Another.."
     validations:
       required: true
 
+  - type: textarea
+    id: version
+    attributes:
+      label: "Android/Ios version?"
+    validations:
+      required: true
+      
   - type: input
     id: buildsummary
     attributes:
