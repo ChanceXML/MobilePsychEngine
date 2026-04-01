@@ -1,3 +1,5 @@
+## If u wish to try a beta build, Go [here](https://github.com/ChanceXML/MobilePsychEngine/actions)
+
 ## Build Status
 [![Mobile Build](https://github.com/ChanceXML/MobilePsychEngine/actions/workflows/main.yml/badge.svg)](https://github.com/ChanceXML/MobilePsychEngine/actions/workflows/main.yml)
 
