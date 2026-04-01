@@ -6,7 +6,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
-import funkin.mobile.backend.FlxButton;
+import funkin.android.controls.FlxButton;
 #if mobile
 import backend.Controls;
 #end
