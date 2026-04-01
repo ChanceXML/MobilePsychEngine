@@ -18,13 +18,14 @@ import lime.utils.Assets;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 #end
 
 class ModsMenuState extends MusicBeatState
 {
 	#if mobile
-    var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 	var bg:FlxSprite;
 	var icon:FlxSprite;
