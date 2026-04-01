@@ -545,7 +545,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
         virtualPad = ButtonHelper.create(this, FULL, A_B_X_Y);
 
         ButtonHelper.bind(virtualPad,
-     	['ui_up', 'ui_down', 'ui_left', 'ui_right']
+     	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
 	    ['accept', 'back', 'shift', 'control']
         );
   
