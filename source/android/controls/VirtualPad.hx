@@ -28,7 +28,7 @@ class VirtualPad extends FlxSpriteGroup
 	private inline static var B_W:Int = 132;
 	private inline static var B_H:Int = 135;
 
-	public var boundActions:Map<FlxButton, String> = new Map();
+	public var boundActions:Map<FlxButton, Array<String>> = new Map();
 
 	private static var atlasFrames:FlxAtlasFrames;
 
@@ -84,16 +84,11 @@ class VirtualPad extends FlxSpriteGroup
 
 		switch (Action)
 		{
-			case A:
-				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "a"));
-			case B:
-				add(buttonB = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "b"));
-			case X:
-				add(buttonX = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "x"));
-			case Y:
-				add(buttonY = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "y"));
-			case C:
-				add(buttonC = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "c"));
+			case A: add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "a"));
+			case B: add(buttonB = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "b"));
+			case X: add(buttonX = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "x"));
+			case Y: add(buttonY = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "y"));
+			case C: add(buttonC = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "c"));
 			case A_B:
 				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, B_W, B_H, "a"));
 				add(buttonB = createButton(FlxG.width - 258, FlxG.height - 135, B_W, B_H, "b"));
@@ -161,27 +156,36 @@ class VirtualPad extends FlxSpriteGroup
 		#end
 	}
 
+	private function addAction(btn:FlxButton, action:String):Void
+	{
+		if (btn == null || action == null || action == "") return;
+		if (!boundActions.exists(btn)) boundActions.set(btn, []);
+		
+		var list = boundActions.get(btn);
+		if (!list.contains(action)) list.push(action);
+	}
+
 	public function bindDPad(up:String, down:String, left:String, right:String):Void
 	{
-		if (buttonUp != null) boundActions.set(buttonUp, up);
-		if (buttonDown != null) boundActions.set(buttonDown, down);
-		if (buttonLeft != null) boundActions.set(buttonLeft, left);
-		if (buttonRight != null) boundActions.set(buttonRight, right);
+		addAction(buttonUp, up);
+		addAction(buttonDown, down);
+		addAction(buttonLeft, left);
+		addAction(buttonRight, right);
 	}
 
 	public function bindActionGroup(a:String = "", b:String = "", x:String = "", y:String = "", c:String = ""):Void
 	{
-		if (buttonA != null && a != "") boundActions.set(buttonA, a);
-		if (buttonB != null && b != "") boundActions.set(buttonB, b);
-		if (buttonX != null && x != "") boundActions.set(buttonX, x);
-		if (buttonY != null && y != "") boundActions.set(buttonY, y);
-		if (buttonC != null && c != "") boundActions.set(buttonC, c);
+		addAction(buttonA, a);
+		addAction(buttonB, b);
+		addAction(buttonX, x);
+		addAction(buttonY, y);
+		addAction(buttonC, c);
 	}
 
 	public function pressed(action:String):Bool
 	{
-		for (btn => act in boundActions) {
-			if (act == action) {
+		for (btn => actions in boundActions) {
+			if (actions.contains(action)) {
 				if (btn.pressed) return true;
 
 				for (touch in flixel.FlxG.touches.list) {
@@ -197,8 +201,8 @@ class VirtualPad extends FlxSpriteGroup
 
 	public function justPressed(action:String):Bool
 	{
-		for (btn => act in boundActions) {
-			if (act == action) {
+		for (btn => actions in boundActions) {
+			if (actions.contains(action)) {
 				if (btn.justPressed) return true;
 
 				for (touch in flixel.FlxG.touches.list) {
@@ -214,8 +218,8 @@ class VirtualPad extends FlxSpriteGroup
 
 	public function justReleased(action:String):Bool
 	{
-		for (btn => act in boundActions) {
-			if (act == action) {
+		for (btn => actions in boundActions) {
+			if (actions.contains(action)) {
 				if (btn.justReleased) return true;
 
 				for (touch in flixel.FlxG.touches.list) {
@@ -229,27 +233,28 @@ class VirtualPad extends FlxSpriteGroup
 		return false;
 	}
 
-	override function destroy()
-{
-	buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
-	
-	if (boundActions != null)
-		boundActions.clear();
-
-	#if mobile
-	if (Controls.virtualPad == this)
-		Controls.virtualPad = null;
-	#end
-
-	if (virtualpadCamera != null)
+	override public function destroy():Void
 	{
-		FlxG.cameras.remove(virtualpadCamera, false); 
-		virtualpadCamera.destroy();
-		virtualpadCamera = null;
-	}
+		#if mobile
+		if (Controls.virtualPad == this)
+			Controls.virtualPad = null;
+		#end
 
-	super.destroy(); 
-}
+		if (boundActions != null)
+			boundActions.clear();
+
+		this.cameras = null;
+
+		if (virtualpadCamera != null)
+		{
+			FlxG.cameras.remove(virtualpadCamera, true); 
+			virtualpadCamera = null;
+		}
+
+		buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
+
+		super.destroy(); 
+	}
 	
 	private function createButton(x:Float, y:Float, width:Int, height:Int, graphic:String):FlxButton
 	{
