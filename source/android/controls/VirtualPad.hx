@@ -178,24 +178,54 @@ class VirtualPad extends FlxSpriteGroup
 		if (buttonC != null && c != "") boundActions.set(buttonC, c);
 	}
 
-	public function pressed(action:String):Bool
+		public function pressed(action:String):Bool
 	{
-		for (btn => act in boundActions)
-			if (act == action && btn.pressed) return true;
+		for (btn => act in boundActions) {
+			if (act == action) {
+				if (btn.pressed) return true;
+
+				for (touch in flixel.FlxG.touches.list) {
+					if (touch.pressed) {
+						var touchPos = touch.getWorldPosition(virtualpadCamera);
+						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 
 	public function justPressed(action:String):Bool
 	{
-		for (btn => act in boundActions)
-			if (act == action && btn.justPressed) return true;
+		for (btn => act in boundActions) {
+			if (act == action) {
+				if (btn.justPressed) return true;
+
+				for (touch in flixel.FlxG.touches.list) {
+					if (touch.justPressed) {
+						var touchPos = touch.getWorldPosition(virtualpadCamera);
+						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 
 	public function justReleased(action:String):Bool
 	{
-		for (btn => act in boundActions)
-			if (act == action && btn.justReleased) return true;
+		for (btn => act in boundActions) {
+			if (act == action) {
+				if (btn.justReleased) return true;
+
+				for (touch in flixel.FlxG.touches.list) {
+					if (touch.justReleased) {
+						var touchPos = touch.getWorldPosition(virtualpadCamera);
+						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 
