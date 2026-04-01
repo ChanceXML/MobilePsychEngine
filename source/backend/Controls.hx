@@ -71,11 +71,17 @@ class Controls
 	public var BACK(get, never):Bool;
 	public var PAUSE(get, never):Bool;
 	public var RESET(get, never):Bool;
+	
+	public var CONTROL(get, never):Bool;
+	public var SHIFT(get, never):Bool;
 
 	inline function get_ACCEPT() return justPressed('accept');
 	inline function get_BACK() return justPressed('back');
 	inline function get_PAUSE() return justPressed('pause');
 	inline function get_RESET() return justPressed('reset');
+
+	inline function get_CONTROL() return justPressed('control');
+	inline function get_SHIFT() return justPressed('shift');
 
 	public var keyboardBinds:Map<String, Array<FlxKey>>;
 	public var gamepadBinds:Map<String, Array<FlxGamepadInputID>>;
