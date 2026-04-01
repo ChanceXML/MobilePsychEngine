@@ -6,6 +6,7 @@ import backend.StageData;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 #end
 
