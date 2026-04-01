@@ -191,7 +191,6 @@ public function justReleased(key:String):Bool
             if (virtualPad.justReleased('note_' + key.substring(3))) return true;
         }
     }
-}
     #end
 
     var keys = getKeyboard(key);
@@ -213,6 +212,6 @@ public function justReleased(key:String):Bool
             }
         }
     }
-}
+
     return false;
 }
