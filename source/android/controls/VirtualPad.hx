@@ -178,7 +178,7 @@ class VirtualPad extends FlxSpriteGroup
 		if (buttonC != null && c != "") boundActions.set(buttonC, c);
 	}
 
-		public function pressed(action:String):Bool
+	public function pressed(action:String):Bool
 	{
 		for (btn => act in boundActions) {
 			if (act == action) {
@@ -186,7 +186,7 @@ class VirtualPad extends FlxSpriteGroup
 
 				for (touch in flixel.FlxG.touches.list) {
 					if (touch.pressed) {
-						var touchPos = touch.getWorldPosition(virtualpadCamera);
+						var touchPos = touch.getScreenPosition(virtualpadCamera);
 						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
 					}
 				}
@@ -203,7 +203,7 @@ class VirtualPad extends FlxSpriteGroup
 
 				for (touch in flixel.FlxG.touches.list) {
 					if (touch.justPressed) {
-						var touchPos = touch.getWorldPosition(virtualpadCamera);
+						var touchPos = touch.getScreenPosition(virtualpadCamera);
 						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
 					}
 				}
@@ -220,7 +220,7 @@ class VirtualPad extends FlxSpriteGroup
 
 				for (touch in flixel.FlxG.touches.list) {
 					if (touch.justReleased) {
-						var touchPos = touch.getWorldPosition(virtualpadCamera);
+						var touchPos = touch.getScreenPosition(virtualpadCamera);
 						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
 					}
 				}
@@ -230,25 +230,27 @@ class VirtualPad extends FlxSpriteGroup
 	}
 
 	override function destroy()
-	{
-		super.destroy();
-
-		buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
+{
+	buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
+	
+	if (boundActions != null)
 		boundActions.clear();
 
-		#if mobile
-		if (Controls.virtualPad == this)
-			Controls.virtualPad = null;
-		#end
+	#if mobile
+	if (Controls.virtualPad == this)
+		Controls.virtualPad = null;
+	#end
 
-		if (virtualpadCamera != null)
-		{
-			FlxG.cameras.remove(virtualpadCamera);
-			virtualpadCamera.destroy();
-			virtualpadCamera = null;
-		}
+	if (virtualpadCamera != null)
+	{
+		FlxG.cameras.remove(virtualpadCamera, false); 
+		virtualpadCamera.destroy();
+		virtualpadCamera = null;
 	}
 
+	super.destroy(); 
+}
+	
 	private function createButton(x:Float, y:Float, width:Int, height:Int, graphic:String):FlxButton
 	{
 		var button:FlxButton = new FlxButton(x, y);
