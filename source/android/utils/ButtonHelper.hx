@@ -9,9 +9,9 @@ class ButtonHelper
 {
 	#if mobile
 
-	public static function create(parent:FlxGroup):VirtualPad
+	public static function create(parent:FlxGroup, ?dpad:Dynamic = null, ?action:Dynamic = null):VirtualPad
 	{
-		var pad = new VirtualPad();
+		var pad = new VirtualPad(dpad, action);
 		parent.add(pad);
 		return pad;
 	}
@@ -21,23 +21,19 @@ class ButtonHelper
 		if (pad == null) return;
 
 		if (dpad != null && dpad.length >= 4)
-		{
-			pad.addButton(105, 300, dpad[0], "up", 396, 135);
-			pad.addButton(0, 420, dpad[1], "left", 396, 135);
-			pad.addButton(207, 420, dpad[2], "right", 396, 135);
-			pad.addButton(105, 540, dpad[3], "down", 396, 135);
-		}
+			pad.bindDPad(dpad[0], dpad[1], dpad[2], dpad[3]);
 
 		if (actions != null)
 		{
-			if (actions.length > 0)
-				pad.addButton(1000, 420, actions[0], "a", 396, 135);
-			if (actions.length > 1)
-				pad.addButton(1150, 420, actions[1], "b", 396, 135);
-			if (actions.length > 2)
-				pad.addButton(1000, 300, actions[2], "x", 396, 135);
-			if (actions.length > 3)
-				pad.addButton(1150, 300, actions[3], "y", 396, 135);
+			switch (actions.length)
+			{
+				case 1: pad.bindActionGroup(actions[0]);
+				case 2: pad.bindActionGroup(actions[0], actions[1]);
+				case 3: pad.bindActionGroup(actions[0], actions[1], actions[2]);
+				case 4: pad.bindActionGroup(actions[0], actions[1], actions[2], actions[3]);
+				case 5: pad.bindActionGroup(actions[0], actions[1], actions[2], actions[3], actions[4]);
+				default:
+			}
 		}
 	}
 
