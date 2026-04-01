@@ -33,6 +33,13 @@ import objects.HealthIcon;
 import objects.Note;
 import objects.StrumNote;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
+#end
+
 using DateTools;
 
 typedef UndoStruct = {
@@ -66,6 +73,10 @@ enum abstract WaveformTarget(String)
 
 class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent
 {
+	#if mobile
+    var virtualPad:VirtualPad;
+    #end
+		
 	public static final defaultEvents:Array<Array<String>> =
 	[
 		['', "Nothing. Yep, that's right."], //Always leave this one empty pls
@@ -529,6 +540,18 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		].join('\n');
 		fullTipText.screenCenter();
 		add(fullTipText);
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B_X_Y);
+
+        ButtonHelper.bind(virtualPad,
+     	['ui_up', 'ui_down', 'ui_left', 'ui_right']
+	    ['accept', 'back', 'shift', 'control']
+        );
+  
+        Controls.virtualPad = virtualPad;
+        #end
+			
 		super.create();
 	}
 
