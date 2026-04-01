@@ -6,6 +6,7 @@ import objects.CheckboxThingie;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 #end
 import options.Option.OptionType;
