@@ -13,11 +13,7 @@ import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
 
-#if (flixel >= "5.0.0")
-import flixel.util.IFlxDestroyable;
-#else
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-#end
 
 #if (flixel >= "5.3.0")
 import flixel.sound.FlxSound;
