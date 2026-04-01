@@ -4,10 +4,14 @@ import objects.AttachedSprite;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 
 class CreditsState extends MusicBeatState
 {
+	#if mobile
+	public var virtualPad:VirtualPad;
+	#end
 	var curSelected:Int = -1;
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
