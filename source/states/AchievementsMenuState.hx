@@ -8,6 +8,7 @@ import objects.Bar;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 #end
 
@@ -26,7 +27,7 @@ class AchievementsMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 
 	#if mobile
-    var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 
 	var MAX_PER_ROW:Int = 4;
