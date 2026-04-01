@@ -12,7 +12,6 @@ import states.TitleState;
 	public var hitboxHint:Float = 1;
 	public var hitboxStyle:String = 'Normal';
 	public var hintStyle:String = 'Bottom';
-	public var mouse:Bool = false;
 	public var downScroll:Bool = false;
 	public var middleScroll:Bool = false;
 	public var opponentStrums:Bool = true;
