@@ -185,6 +185,7 @@ public function justReleased(key:String):Bool
     #if mobile
     if (virtualPad != null && key != null) {
         if (virtualPad.justReleased(key)) return true;
+
         if (StringTools.startsWith(key, 'note_')) {
             if (virtualPad.justReleased('ui_' + key.substring(5))) return true;
         } else if (StringTools.startsWith(key, 'ui_')) {
