@@ -113,10 +113,14 @@ class Controls
 		var result = false;
 
 		#if mobile
-		if (virtualPad != null && virtualPad.justPressed(key))
-			result = true;
+		if (virtualPad != null) {
+			if (virtualPad.justPressed(key)) result = true;
+			
+			if (key.indexOf('note_') == 0 && virtualPad.justPressed('ui_' + key.substring(5))) result = true;
+			if (key.indexOf('ui_') == 0 && virtualPad.justPressed('note_' + key.substring(3))) result = true;
+		}
 		#end
-
+			
 		var keys = getKeyboard(key);
 		if (keys != null && FlxG.keys.anyJustPressed(keys))
 		{
@@ -146,10 +150,14 @@ class Controls
 		var result = false;
 
 		#if mobile
-		if (virtualPad != null && virtualPad.pressed(key))
-			result = true;
+		if (virtualPad != null) {
+			if (virtualPad.pressed(key)) result = true;
+			
+			if (key.indexOf('note_') == 0 && virtualPad.pressed('ui_' + key.substring(5))) result = true;
+			if (key.indexOf('ui_') == 0 && virtualPad.pressed('note_' + key.substring(3))) result = true;
+		}
 		#end
-
+			
 		var keys = getKeyboard(key);
 		if (keys != null && FlxG.keys.anyPressed(keys))
 		{
@@ -179,8 +187,12 @@ class Controls
 		var result = false;
 
 		#if mobile
-		if (virtualPad != null && virtualPad.justReleased(key))
-			result = true;
+		if (virtualPad != null) {
+			if (virtualPad.justReleased(key)) result = true;
+			
+			if (key.indexOf('note_') == 0 && virtualPad.justReleased('ui_' + key.substring(5))) result = true;
+			if (key.indexOf('ui_') == 0 && virtualPad.justReleased('note_' + key.substring(3))) result = true;
+		}
 		#end
 
 		var keys = getKeyboard(key);
