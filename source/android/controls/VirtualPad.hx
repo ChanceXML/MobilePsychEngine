@@ -42,7 +42,7 @@ class VirtualPad extends FlxSpriteGroup
 		FlxG.cameras.add(virtualpadCamera, false);
 		this.cameras = [virtualpadCamera];
 
-		if (atlasFrames == null)
+		if (atlasFrames == null || atlasFrames.parent == null || atlasFrames.parent.isDestroyed)
 		{
 			atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
 				'assets/shared/images/mobile/controls/classic/virtual-input-classic.png',
@@ -52,12 +52,6 @@ class VirtualPad extends FlxSpriteGroup
 
 		switch (DPad)
 		{
-			case FULL, NONE:
-				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, 'up'));
-				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, 'left'));
-				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, 'right'));
-				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, 'down'));
-
 			case UP_DOWN:
 				add(buttonUp = createButton(0, FlxG.height - 255, B_W, B_H, 'up'));
 				add(buttonDown = createButton(0, FlxG.height - 135, B_W, B_H, 'down'));
@@ -66,11 +60,25 @@ class VirtualPad extends FlxSpriteGroup
 				add(buttonLeft = createButton(0, FlxG.height - 135, B_W, B_H, 'left'));
 				add(buttonRight = createButton(126, FlxG.height - 135, B_W, B_H, 'right'));
 
+			case UP_LEFT_RIGHT:
+				add(buttonUp = createButton(105, FlxG.height - 243, B_W, B_H, 'up'));
+				add(buttonLeft = createButton(0, FlxG.height - 135, B_W, B_H, 'left'));
+				add(buttonRight = createButton(207, FlxG.height - 135, B_W, B_H, 'right'));
+
+			case FULL:
+				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, 'up'));
+				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, 'left'));
+				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, 'right'));
+				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, 'down'));
+
 			case RIGHT_FULL:
 				add(buttonUp = createButton(FlxG.width - 258, FlxG.height - 414, B_W, B_H, 'up'));
 				add(buttonLeft = createButton(FlxG.width - 390, FlxG.height - 309, B_W, B_H, 'left'));
 				add(buttonRight = createButton(FlxG.width - 132, FlxG.height - 309, B_W, B_H, 'right'));
 				add(buttonDown = createButton(FlxG.width - 258, FlxG.height - 201, B_W, B_H, 'down'));
+
+			case NONE:
+				
 
 			default:
 				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, 'up'));
@@ -168,26 +176,26 @@ class VirtualPad extends FlxSpriteGroup
 	}
 
 	private function createButton(x:Float, y:Float, width:Int, height:Int, graphic:String):FlxButton
-{
-	var button = new FlxButton(x, y);
-
-	var frame = atlasFrames.getByName(graphic);
-
-	if (frame == null)
 	{
-		trace('Missing frame: ' + graphic);
+		var button = new FlxButton(x, y);
+		
+		if (atlasFrames == null) return button;
+
+		var frame = atlasFrames.getByName(graphic);
+		if (frame == null) return button;
+
+		button.frames = atlasFrames;
+		button.animation.addByPrefix('normal', graphic, 24, false);
+		button.animation.addByPrefix('highlight', graphic, 24, false);
+		button.animation.addByPrefix('pressed', graphic, 24, false);
+		button.animation.play('normal');
+
+		button.setGraphicSize(width, height);
+		button.updateHitbox();
+		button.scrollFactor.set();
+
 		return button;
 	}
-
-	var sprite = frame.parent;
-
-	button.loadGraphic(sprite);
-	button.setGraphicSize(width, height);
-	button.updateHitbox();
-	button.scrollFactor.set();
-
-	return button;
-  }
 }
 
 enum DPadMode
