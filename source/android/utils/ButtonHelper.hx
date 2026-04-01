@@ -2,7 +2,6 @@ package android.utils;
 
 #if mobile
 import android.controls.VirtualPad;
-import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 #end
 
@@ -10,36 +9,37 @@ class ButtonHelper
 {
 	#if mobile
 
-	public static function create(parent:FlxBasic, dpad:DPadMode, action:ActionMode):VirtualPad
-{
-	var vpad = new VirtualPad(dpad, action);
-
-	if (Std.isOfType(parent, FlxGroup))
+	public static function create(parent:FlxGroup):VirtualPad
 	{
-		(cast parent : FlxGroup).add(vpad);
+		var pad = new VirtualPad();
+		parent.add(pad);
+		return pad;
 	}
 
-	return vpad;
-}
-	public static function bind(vpad:VirtualPad, dpad:Array<String>, actions:Array<String>):Void
+	public static function bind(pad:VirtualPad, dpad:Array<String>, actions:Array<String>):Void
 	{
-		if (vpad == null) return;
+		if (pad == null) return;
 
 		if (dpad != null && dpad.length >= 4)
-			vpad.bindDPad(dpad[0], dpad[1], dpad[2], dpad[3]);
+		{
+			pad.addButton(105, 300, dpad[0], "up", 396, 135);
+			pad.addButton(0, 420, dpad[1], "left", 396, 135);
+			pad.addButton(207, 420, dpad[2], "right", 396, 135);
+			pad.addButton(105, 540, dpad[3], "down", 396, 135);
+		}
 
 		if (actions != null)
 		{
-			switch (actions.length)
-			{
-				case 1: vpad.bindActionGroup(actions[0]);
-				case 2: vpad.bindActionGroup(actions[0], actions[1]);
-				case 3: vpad.bindActionGroup(actions[0], actions[1], actions[2]);
-				case 4: vpad.bindActionGroup(actions[0], actions[1], actions[2], actions[3]);
-				case 5: vpad.bindActionGroup(actions[0], actions[1], actions[2], actions[3], actions[4]);
-			}
+			if (actions.length > 0)
+				pad.addButton(1000, 420, actions[0], "a", 396, 135);
+			if (actions.length > 1)
+				pad.addButton(1150, 420, actions[1], "b", 396, 135);
+			if (actions.length > 2)
+				pad.addButton(1000, 300, actions[2], "x", 396, 135);
+			if (actions.length > 3)
+				pad.addButton(1150, 300, actions[3], "y", 396, 135);
 		}
 	}
 
 	#end
-}				
+}
