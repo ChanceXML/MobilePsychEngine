@@ -37,6 +37,7 @@ import objects.StrumNote;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 #end
 
@@ -74,7 +75,7 @@ enum abstract WaveformTarget(String)
 class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent
 {
 	#if mobile
-    var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 		
 	public static final defaultEvents:Array<Array<String>> =
