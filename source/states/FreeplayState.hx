@@ -8,6 +8,7 @@ import backend.Song;
 import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
+import android.controls.FlxButton;
 import android.utils.ButtonHelper;
 #end
 
@@ -29,7 +30,7 @@ class FreeplayState extends MusicBeatState
 	var songs:Array<SongMetadata> = [];
 
 	#if mobile
-    var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 
 	var selector:FlxText;
