@@ -12,12 +12,19 @@ import flixel.input.IFlxInput;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
+
+#if (flixel >= "5.0.0")
 import flixel.util.IFlxDestroyable;
+#else
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+#end
+
 #if (flixel >= "5.3.0")
 import flixel.sound.FlxSound;
 #else
 import flixel.system.FlxSound;
 #end
+
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -247,18 +254,17 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 
 	function checkTouchOverlap():Bool
 	{
-		var overlap = false;
 		#if FLX_TOUCH
 		for (camera in cameras)
 		{
 			for (touch in FlxG.touches.list)
 			{
 				if (checkInput(touch, touch, touch.justPressedPosition, camera))
-					overlap = true;
+					return true;
 			}
 		}
 		#end
-		return overlap;
+		return false;
 	}
 
 	function checkInput(pointer:FlxPointer, input:IFlxInput, justPressedPosition:FlxPoint, camera:FlxCamera):Bool
