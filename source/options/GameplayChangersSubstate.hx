@@ -13,7 +13,7 @@ import options.Option.OptionType;
 class GameplayChangersSubstate extends MusicBeatSubstate
 {
 	#if mobile
-    var virtualPad:VirtualPad;
+    public var virtualPad:VirtualPad;
     #end
 	private var curSelected:Int = 0;
 	private var optionsArray:Array<Dynamic> = [];
