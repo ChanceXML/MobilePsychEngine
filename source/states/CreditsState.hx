@@ -1,6 +1,10 @@
 package states;
 
 import objects.AttachedSprite;
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.utils.ButtonHelper;
 
 class CreditsState extends MusicBeatState
 {
@@ -126,6 +130,18 @@ class CreditsState extends MusicBeatState
 
 		bg.color = CoolUtil.colorFromString(creditsStuff[curSelected][4]);
 		intendedColor = bg.color;
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, UP_DOWN, A_B);
+
+        ButtonHelper.bind(virtualPad,
+     	['ui_up', 'ui_down'],
+	    ['accept', 'back']
+        );
+  
+        Controls.virtualPad = virtualPad;
+        #end
+			
 		changeSelection();
 		super.create();
 	}
