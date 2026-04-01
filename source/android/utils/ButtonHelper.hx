@@ -11,19 +11,16 @@ class ButtonHelper
 	#if mobile
 
 	public static function create(parent:FlxBasic, dpad:DPadMode, action:ActionMode):VirtualPad
+{
+	var vpad = new VirtualPad(dpad, action);
+
+	if (Std.isOfType(parent, FlxGroup))
 	{
-		if (parent == null) return null;
-
-		var vpad = new VirtualPad(dpad, action);
-		
-		if (Std.isOfType(parent, FlxGroup))
-		{
-			cast(parent, FlxGroup).add(vpad);
-		}
-
-		return vpad;
+		(cast parent : FlxGroup).add(vpad);
 	}
 
+	return vpad;
+}
 	public static function bind(vpad:VirtualPad, dpad:Array<String>, actions:Array<String>):Void
 	{
 		if (vpad == null) return;
