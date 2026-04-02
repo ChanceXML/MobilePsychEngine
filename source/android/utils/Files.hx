@@ -1,205 +1,224 @@
 package android.utils;
 
-import sys.FileSystem;
-import sys.io.File;
-import sys.io.FileInput;
-import sys.io.FileOutput;
-import sys.thread.Thread;
-import haxe.io.Bytes;
-
 #if android
+import extension.androidtools.os.Build.VERSION;
+import extension.androidtools.Permissions;
 import lime.system.JNI;
 #end
 
-/**
- * Advanced Asynchronous File Manager with Native Android Hooks
- * Handles deep directory traversal, chunk-based file copying, and JNI Toast popups.
- */
-class Files {
-    public static var isTransferring:Bool = false;
-    public static var totalFiles:Int = 0;
-    public static var filesCopied:Int = 0;
-    public static var totalBytes:Float = 0;
-    public static var bytesCopied:Float = 0;
+import openfl.Assets;
+import haxe.io.Bytes;
 
-    private static inline var BUFFER_SIZE:Int = 1048576; 
+#if sys
+import sys.FileSystem;
+import sys.io.File;
+#end
 
-    #if android
-    private static var showToastJNI:Dynamic = null;
-    #end
-      
-    public static function startTransfer():Void {
-        if (isTransferring) {
-            trace("Transfer already in progress. Aborting new request.");
-            return;
-        }
+using StringTools;
 
-        isTransferring = true;
-        totalFiles = 0;
-        filesCopied = 0;
-        totalBytes = 0;
-        bytesCopied = 0;
+class Files
+{
+	// =========================
+	// 📁 DIRECTORY
+	// =========================
+	public static function getDirectory():String
+	{
+		#if android
+		return "/storage/emulated/0/Android/data/com.shadowmario.psychengine/files/";
+		#else
+		return "";
+		#end
+	}
 
-        initNativeHooks();
+	// =========================
+	// 🔐 PERMISSIONS
+	// =========================
+	public static function requestPermissions():Void
+	{
+		#if android
+		try {
+			if (VERSION.SDK_INT < 30) {
+				Permissions.requestPermissions([
+					"READ_EXTERNAL_STORAGE",
+					"WRITE_EXTERNAL_STORAGE"
+				]);
+			}
+		} catch (e:Dynamic) {
+			trace("Permission error: " + e);
+		}
+		#end
+	}
 
-        showNativePopup("Transferring Files... Please wait.");
+	// =========================
+	// 📱 LOADING DIALOG
+	// =========================
+	#if android
+	private static var showDialog:Dynamic = null;
+	private static var hideDialog:Dynamic = null;
+	#end
 
-        Thread.create(function() {
-            var destRoot = "/storage/emulated/0/Android/data/com.shadowmario.psychengine/files/";
+	private static function initDialog():Void
+	{
+		#if android
+		try {
+			if (showDialog == null) {
+				showDialog = JNI.createStaticMethod(
+					"org/haxe/extension/Extension",
+					"showLoading",
+					"(Ljava/lang/String;)V"
+				);
+				hideDialog = JNI.createStaticMethod(
+					"org/haxe/extension/Extension",
+					"hideLoading",
+					"()V"
+				);
+			}
+		} catch (e:Dynamic) {
+			trace("JNI dialog not available (safe to ignore)");
+		}
+		#end
+	}
 
-            try {
-                ensureDirectory(destRoot);
+	private static function showLoading(msg:String):Void
+	{
+		#if android
+		initDialog();
+		try {
+			if (showDialog != null) showDialog(msg);
+		} catch (e:Dynamic) {}
+		#end
+	}
 
-                var sourceAssets = "assets";
-                var destAssets = destRoot + "assets";
-                var sourceMods = "mods";
-                var destMods = destRoot + "mods";
+	private static function hideLoading():Void
+	{
+		#if android
+		try {
+			if (hideDialog != null) hideDialog();
+		} catch (e:Dynamic) {}
+		#end
+	}
 
-                trace("Scanning directories...");
-                scanDirectory(sourceAssets);
-                scanDirectory(sourceMods);
-                
-                trace('Scan complete. Total files to transfer: $totalFiles');
+	// =========================
+	// 🚀 INIT 
+	// =========================
+	public static function init():Void
+	{
+		#if android
+		requestPermissions();
 
-                showNativePopup('Copying $totalFiles files...');
-                
-                copyDirectory(sourceAssets, destAssets);
-                copyDirectory(sourceMods, destMods);
+		var base = getDirectory();
+		ensureDir(base);
 
-                showNativePopup("File Transfer Complete!");
-                trace("All files transferred successfully.");
+		showLoading("Preparing files...");
 
-            } catch (e:Dynamic) {
-                trace("CRITICAL ERROR DURING TRANSFER: " + e);
-                showNativePopup("Error transferring files!");
-            }
+		try {
+			if (!FileSystem.exists(base + "assets/")) {
+				trace("Copying assets...");
+				copyAssets("assets/", base + "assets/");
+			}
 
-            isTransferring = false;
-        });
-    }
+			if (!FileSystem.exists(base + "mods/")) {
+				trace("Copying mods...");
+				copyAssets("mods/", base + "mods/");
+			}
+		}
+		catch (e:Dynamic) {
+			trace("Copy error: " + e);
+		}
 
-    /**
-     * Initializes the Java Native Interface bindings for Android.
-     */
-    private static function initNativeHooks():Void {
-        #if android
-        try {
-            if (showToastJNI == null) {
-                showToastJNI = JNI.createStaticMethod("org/haxe/extension/Extension", "showToast", "(Ljava/lang/String;I)V");
-            }
-        } catch (e:Dynamic) {
-            trace("Failed to initialize JNI hooks: " + e);
-        }
-        #end
-    }
+		hideLoading();
+		#end
+	}
 
-    /**
-     * Triggers the native Android internal popup (Toast).
-     * @param message The text to display
-     */
-    private static function showNativePopup(message:String):Void {
-        trace("POPUP: " + message);
-        #if android
-        try {
-            if (showToastJNI != null) {
-                showToastJNI(message, 1); 
-            }
-        } catch (e:Dynamic) {
-            trace("Error displaying native popup: " + e);
-        }
-        #end
-    }
+	// =========================
+	// 📦 COPY FROM APK
+	// =========================
+	private static function copyAssets(source:String, target:String):Void
+	{
+		#if android
+		try {
+			ensureDir(target);
 
-    /**
-     * Recursively scans a directory to count total files and calculate total bytes.
-     * This ensures the script knows exactly how much work it has to do.
-     */
-    private static function scanDirectory(source:String):Void {
-        if (!FileSystem.exists(source)) return;
+			var clean = source;
+			if (clean.endsWith("/"))
+				clean = clean.substr(0, clean.length - 1);
 
-        var entries:Array<String> = FileSystem.readDirectory(source);
-        for (entry in entries) {
-            var path = source + "/" + entry;
-            if (FileSystem.isDirectory(path)) {
-                scanDirectory(path);
-            } else {
-                totalFiles++;
-                var stat = FileSystem.stat(path);
-                totalBytes += stat.size;
-            }
-        }
-    }
+			var list = Assets.list();
 
-    /**
-     * Recursively creates directory structures if they do not exist.
-     */
-    private static function ensureDirectory(path:String):Void {
-        if (!FileSystem.exists(path)) {
-            trace("Creating directory: " + path);
-            FileSystem.createDirectory(path);
-        }
-    }
+			for (asset in list)
+			{
+				if (!asset.startsWith(clean)) continue;
 
-    /**
-     * Handles the recursive traversal and delegation of file copying.
-     */
-    private static function copyDirectory(source:String, destination:String):Void {
-        if (!FileSystem.exists(source)) return;
-        ensureDirectory(destination);
+				var relative = asset;
 
-        var entries:Array<String> = FileSystem.readDirectory(source);
-        for (entry in entries) {
-            var srcPath = source + "/" + entry;
-            var dstPath = destination + "/" + entry;
+				if (relative.startsWith("assets/"))
+					relative = relative.substr(7);
 
-            if (FileSystem.isDirectory(srcPath)) {
-                copyDirectory(srcPath, dstPath); 
-            } else {
-                copyFileChunked(srcPath, dstPath);
-                filesCopied++;
-                
-                if (filesCopied % 50 == 0) {
-                    var percentage = Math.floor((filesCopied / totalFiles) * 100);
-                    showNativePopup('Transferring... $percentage% ($filesCopied / $totalFiles)');
-                }
-            }
-        }
-    }
+				if (relative == "") continue;
 
-    /**
-     * Advanced file copying method that reads and writes in chunks.
-     * This prevents OutOfMemory exceptions on low-end Android devices when copying huge mod files (like video cutscenes).
-     */
-    private static function copyFileChunked(source:String, destination:String):Void {
-    var input:FileInput = null;
-    var output:FileOutput = null;
+				var outPath = target + relative;
 
-    try {
-        input = File.read(source, true);
-        output = File.write(destination, true);
-        
-        var buffer:Bytes = Bytes.alloc(BUFFER_SIZE);
-        var readLen:Int = 0;
+				var dir = haxe.io.Path.directory(outPath);
+				if (dir != "" && !FileSystem.exists(dir))
+					createDirRecursive(dir);
 
-        while (true) {
-            try {
-                readLen = input.readBytes(buffer, 0, BUFFER_SIZE);
-                if (readLen == 0) break;
+				try {
+					if (Assets.exists(asset))
+					{
+						var bytes:Bytes = Assets.getBytes(asset);
 
-                output.writeBytes(buffer, 0, readLen);
-                bytesCopied += readLen;
-            } catch (e:haxe.io.Eof) {
-                break;
-            }
-        }
-    } catch (e:Dynamic) {
-        trace('Failed to copy file from $source to $destination. Reason: $e');
-    }
-    if (input != null) {
-        try { input.close(); } catch (e:Dynamic) { trace("Error closing input stream."); }
-    }
-    if (output != null) {
-        try { output.close(); } catch (e:Dynamic) { trace("Error closing output stream."); }
-    }
- }
+						if (bytes != null) {
+							File.saveBytes(outPath, bytes);
+						} else {
+							var text = Assets.getText(asset);
+							if (text != null)
+								File.saveContent(outPath, text);
+						}
+					}
+				}
+				catch (e:Dynamic) {
+					trace("Copy error: " + asset + " -> " + e);
+				}
+			}
+
+			trace("Finished: " + target);
+		}
+		catch (e:Dynamic) {
+			trace("FATAL copy error: " + e);
+		}
+		#end
+	}
+
+	// =========================
+	// 📁 HELPERS
+	// =========================
+	private static function ensureDir(path:String):Void
+	{
+		#if sys
+		if (!FileSystem.exists(path)) {
+			FileSystem.createDirectory(path);
+		}
+		#end
+	}
+
+	private static function createDirRecursive(path:String):Void
+	{
+		#if sys
+		var parts = path.split("/");
+		var cur = "";
+
+		for (p in parts)
+		{
+			if (p == "") continue;
+
+			cur += "/" + p;
+
+			if (!FileSystem.exists(cur)) {
+				try {
+					FileSystem.createDirectory(cur);
+				} catch (e:Dynamic) {}
+			}
+		}
+		#end
+	}
 }
