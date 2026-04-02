@@ -139,7 +139,7 @@ class CreditsState extends MusicBeatState
         virtualPad = ButtonHelper.create(this, UP_DOWN, A_B);
 
         ButtonHelper.bind(virtualPad,
-     	['ui_up', 'ui_down' null, null],
+     	['ui_up', 'ui_down', null, null],
 	    ['accept', 'back']
         );
   
