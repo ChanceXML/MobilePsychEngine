@@ -541,7 +541,9 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		].join('\n');
 		fullTipText.screenCenter();
 		add(fullTipText);
-
+			
+		super.create();
+		
 		#if mobile
         virtualPad = ButtonHelper.create(this, FULL, A_B_X_Y);
 
@@ -552,8 +554,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
   
         Controls.virtualPad = virtualPad;
         #end
-			
-		super.create();
 	}
 
 	var gridColors:Array<FlxColor>;
