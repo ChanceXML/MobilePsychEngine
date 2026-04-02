@@ -90,7 +90,9 @@ class Pause extends FlxGroup
         if (touchedPause && !game.paused && game.canPause && !game.endingSong)
         {
             pauseButton.animation.play('confirm');
-            game.pauseGame();
+            
+            game.openPauseMenu(); 
         }
     }
 }
+        
