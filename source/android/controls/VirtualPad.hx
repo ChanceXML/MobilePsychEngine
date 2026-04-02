@@ -51,6 +51,8 @@ class VirtualPad extends FlxSpriteGroup
 
 		switch (DPad)
 		{
+			case NONE:
+                // do nothing (no dpad)
 			case UP_DOWN:
 				add(buttonUp = createButton(0, FlxG.height - 255, B_W, B_H, "up"));
 				add(buttonDown = createButton(0, FlxG.height - 135, B_W, B_H, "down"));
@@ -70,7 +72,7 @@ class VirtualPad extends FlxSpriteGroup
 				add(buttonLeft = createButton(FlxG.width - 390, FlxG.height - 309, B_W, B_H, "left"));
 				add(buttonRight = createButton(FlxG.width - 132, FlxG.height - 309, B_W, B_H, "right"));
 				add(buttonDown = createButton(FlxG.width - 258, FlxG.height - 201, B_W, B_H, "down"));
-			case FULL, NONE:
+			case FULL:
 				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, "up"));
 				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
 				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
@@ -248,8 +250,8 @@ class VirtualPad extends FlxSpriteGroup
 
 		if (virtualpadCamera != null)
 		{
-			FlxG.cameras.remove(virtualpadCamera, true); 
-			virtualpadCamera = null;
+			virtualpadCamera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
+            this.cameras = [virtualpadCamera];
 		}
 
 		buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
