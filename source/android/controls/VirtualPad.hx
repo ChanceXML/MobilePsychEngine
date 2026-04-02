@@ -214,7 +214,7 @@ public function justReleased(action:String):Bool
 	override public function destroy():Void
 {
 	#if mobile
-	exists = false
+	exists = false;
 		
 	if (Controls.virtualPad == this)
 		Controls.virtualPad = null;
