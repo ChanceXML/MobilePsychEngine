@@ -30,8 +30,8 @@ class VirtualPad extends FlxSpriteGroup
 
 	public var boundActions:Map<FlxButton, Array<String>> = new Map();
 
-	private static var atlasFrames:FlxAtlasFrames;
-
+	private var atlasFrames:FlxAtlasFrames;
+	
 	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
 	{
 		super();
@@ -41,13 +41,11 @@ class VirtualPad extends FlxSpriteGroup
 		FlxG.cameras.add(virtualpadCamera, false);
 		this.cameras = [virtualpadCamera];
 
-		if (atlasFrames == null)
-		{
-			atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
-				'assets/shared/images/mobile/buttons/classic/virtual-input.png',
-				'assets/shared/images/mobile/buttons/classic/virtual-input.txt'
-			);
-		}
+		atlasFrames = FlxAtlasFrames.fromSpriteSheetPacker(
+	     'assets/shared/images/mobile/buttons/classic/virtual-input.png',
+	     'assets/shared/images/mobile/buttons/classic/virtual-input.txt'
+        );
+		
 
 		switch (DPad)
         {
@@ -235,6 +233,7 @@ public function justReleased(action:String):Bool
 	}
 
 	this.cameras = null;
+	atlasFrames = null;
 
 	buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
 
