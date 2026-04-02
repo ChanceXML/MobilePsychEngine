@@ -79,28 +79,13 @@ class Main extends Sprite
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
 		Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
+		android.util.Files.init():
 		#elseif ios
 		Sys.setCwd(lime.system.System.applicationStorageDirectory);
 		#end
 		#if VIDEOS_ALLOWED
 		hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0")  ['--no-lua'] #end);
 		#end
-
-		#if android
-        if (!sys.FileSystem.exists("assets"))
-        {
-        trace("Assets not found. Starting transfer BEFORE engine init.");
-
-        android.utils.Files.startTransfer();
-  
-        while (android.utils.Files.isTransferring)
-        {
-        Sys.sleep(0.05);
-        }
-
-        trace("Assets ready.");
-        }
-        #end
 
 		#if LUA_ALLOWED
 		Mods.pushGlobalMods();
