@@ -9,9 +9,10 @@ import backend.Rating;
 #if mobile
 import android.controls.HitBox;
 import android.controls.HitboxHint;
+import android.controls.Pause;
 import backend.*;
 #end
-
+	
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -343,6 +344,8 @@ class PlayState extends MusicBeatState
 		Conductor.bpm = SONG.bpm;
 
 		#if mobile
+		setPauseButton('true');
+		
 	    var hint = new HitboxHint();
         add(hint);			
 		
