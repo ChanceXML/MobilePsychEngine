@@ -20,33 +20,33 @@ class ButtonHelper
 	{
 		if (vpad == null) return;
 
+		// ---- DPAD BINDING ---- //
 		if (dpad != null)
-      {
-            var up    = dpad.length > 0 ? dpad[0] : null;
-            var down  = dpad.length > 1 ? dpad[1] : null;
-            var left  = dpad.length > 2 ? dpad[2] : null;
-            var right = dpad.length > 3 ? dpad[3] : null;
+		{
+			var up    = dpad.length > 0 ? dpad[0] : null;
+			var down  = dpad.length > 1 ? dpad[1] : null;
+			var left  = dpad.length > 2 ? dpad[2] : null;
+			var right = dpad.length > 3 ? dpad[3] : null;
 
-            vpad.bindDPad(up, down, left, right);
-		  
-			var mirrorDPad = new Array<String>();
-			for (i in 0...4) {
-				var act = dpad[i];
-				if (act != null) {
-					if (StringTools.startsWith(act, "note_")) 
-						mirrorDPad.push(StringTools.replace(act, "note_", "ui_"));
-					else if (StringTools.startsWith(act, "ui_")) 
-						mirrorDPad.push(StringTools.replace(act, "ui_", "note_"));
-					else 
-						mirrorDPad.push("");
-				} else {
-					mirrorDPad.push("");
-				}
-			}
-			
-			vpad.bindDPad(mirrorDPad[0], mirrorDPad[1], mirrorDPad[2], mirrorDPad[3]);
+			vpad.bindDPad(up, down, left, right);
+
+			// mirror (ui_ <-> note_)
+			var mup = (up != null && StringTools.startsWith(up, "note_")) ? StringTools.replace(up, "note_", "ui_")
+			         : (up != null && StringTools.startsWith(up, "ui_")) ? StringTools.replace(up, "ui_", "note_") : null;
+
+			var mdown = (down != null && StringTools.startsWith(down, "note_")) ? StringTools.replace(down, "note_", "ui_")
+			           : (down != null && StringTools.startsWith(down, "ui_")) ? StringTools.replace(down, "ui_", "note_") : null;
+
+			var mleft = (left != null && StringTools.startsWith(left, "note_")) ? StringTools.replace(left, "note_", "ui_")
+			           : (left != null && StringTools.startsWith(left, "ui_")) ? StringTools.replace(left, "ui_", "note_") : null;
+
+			var mright = (right != null && StringTools.startsWith(right, "note_")) ? StringTools.replace(right, "note_", "ui_")
+			            : (right != null && StringTools.startsWith(right, "ui_")) ? StringTools.replace(right, "ui_", "note_") : null;
+
+			vpad.bindDPad(mup, mdown, mleft, mright);
 		}
 
+		// ---- ACTION BUTTONS ---- //
 		if (actions != null)
 		{
 			switch (actions.length)
