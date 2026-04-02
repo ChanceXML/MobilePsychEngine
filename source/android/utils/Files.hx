@@ -171,36 +171,34 @@ class Files {
      * This prevents OutOfMemory exceptions on low-end Android devices when copying huge mod files (like video cutscenes).
      */
     private static function copyFileChunked(source:String, destination:String):Void {
-        var input:FileInput = null;
-        var output:FileOutput = null;
+    var input:FileInput = null;
+    var output:FileOutput = null;
 
-        try {
-            input = File.read(source, true);
-            output = File.write(destination, true);
-            
-            var buffer:Bytes = Bytes.alloc(BUFFER_SIZE);
-            var readLen:Int = 0;
+    try {
+        input = File.read(source, true);
+        output = File.write(destination, true);
+        
+        var buffer:Bytes = Bytes.alloc(BUFFER_SIZE);
+        var readLen:Int = 0;
 
-            while (true) {
-                try {
-                    readLen = input.readBytes(buffer, 0, BUFFER_SIZE);
-                    if (readLen == 0) break;
-                    
-                    output.writeBytes(buffer, 0, readLen);
-                    bytesCopied += readLen;
-                } catch (e:haxe.io.Eof) {
-                    break;
-                }
-            }
-        } catch (e:Dynamic) {
-            trace('Failed to copy file from $source to $destination. Reason: $e');
-        } finally {
-            if (input != null) {
-                try { input.close(); } catch (e:Dynamic) { trace("Error closing input stream."); }
-            }
-            if (output != null) {
-                try { output.close(); } catch (e:Dynamic) { trace("Error closing output stream."); }
+        while (true) {
+            try {
+                readLen = input.readBytes(buffer, 0, BUFFER_SIZE);
+                if (readLen == 0) break;
+
+                output.writeBytes(buffer, 0, readLen);
+                bytesCopied += readLen;
+            } catch (e:haxe.io.Eof) {
+                break;
             }
         }
+    } catch (e:Dynamic) {
+        trace('Failed to copy file from $source to $destination. Reason: $e');
     }
-}
+    if (input != null) {
+        try { input.close(); } catch (e:Dynamic) { trace("Error closing input stream."); }
+    }
+    if (output != null) {
+        try { output.close(); } catch (e:Dynamic) { trace("Error closing output stream."); }
+    }
+ }
