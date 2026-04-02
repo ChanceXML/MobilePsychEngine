@@ -200,6 +200,8 @@ class FreeplayState extends MusicBeatState
 		
 		changeSelection();
 		updateTexts();
+	
+		super.create();
 
 		#if mobile
         virtualPad = ButtonHelper.create(this, FULL, A_B_X_Y);
@@ -211,8 +213,6 @@ class FreeplayState extends MusicBeatState
 
         Controls.virtualPad = virtualPad;
         #end
-	
-		super.create();
 	}
 
 	override function closeSubState()
