@@ -174,37 +174,43 @@ class VirtualPad extends FlxSpriteGroup
 
 	public function pressed(action:String):Bool
 {
-	for (btn => actions in boundActions) {
-		if (actions.contains(action)) {
-			if (btn != null && btn.pressed)
-				return true;
-		}
-	}
-	return false;
+    if (boundActions == null) return false; 
+
+    for (btn => actions in boundActions) {
+        if (actions != null && actions.contains(action)) {
+            if (btn != null && btn.pressed)
+                return true;
+        }
+    }
+    return false;
 }
 
 public function justPressed(action:String):Bool
 {
-	for (btn => actions in boundActions) {
-		if (actions.contains(action)) {
-			if (btn != null && btn.justPressed)
-				return true;
-		}
-	}
-	return false;
+    if (boundActions == null) return false; 
+
+    for (btn => actions in boundActions) {
+        if (actions != null && actions.contains(action)) {
+            if (btn != null && btn.justPressed)
+                return true;
+        }
+    }
+    return false;
 }
 
 public function justReleased(action:String):Bool
 {
-	for (btn => actions in boundActions) {
-		if (actions.contains(action)) {
-			if (btn != null && btn.justReleased)
-				return true;
-		}
-	}
-	return false;
-}
+    if (boundActions == null) return false; 
 
+    for (btn => actions in boundActions) {
+        if (actions != null && actions.contains(action)) {
+            if (btn != null && btn.justReleased)
+                return true;
+        }
+    }
+    return false;
+}
+	
 	override public function destroy():Void
 {
 	#if mobile
