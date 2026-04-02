@@ -147,12 +147,13 @@ class Controls
 public function pressed(key:String):Bool
 {
     #if mobile
-    if (virtualPad != null && key != null) {
-        if (virtualPad.pressed(key)) return true;
+    if (virtualPad != null && virtualPad.exists && key != null) {
+        if (virtualPad.justPressed(key)) return true;
+        
         if (StringTools.startsWith(key, 'note_')) {
-            if (virtualPad.pressed('ui_' + key.substring(5))) return true;
+            if (virtualPad.justPressed('ui_' + key.substring(5))) return true;
         } else if (StringTools.startsWith(key, 'ui_')) {
-            if (virtualPad.pressed('note_' + key.substring(3))) return true;
+            if (virtualPad.justPressed('note_' + key.substring(3))) return true;
         }
     }
     #end
