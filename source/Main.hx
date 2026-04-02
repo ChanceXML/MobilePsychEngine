@@ -54,7 +54,7 @@ class Main extends Sprite
 		height: 720, // WINDOW height
 		initialState: TitleState, // initial game state
 		framerate: 60, // default framerate
-		skipSplash: false, // if the default flixel splash screen should be skipped
+		skipSplash: true, // if the default flixel splash screen should be skipped
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
 
@@ -70,6 +70,9 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
+        #if android
+		android.utils.Files.startTransfer();
+		#end
 
 		#if (cpp && windows)
 		backend.Native.fixScaling();
