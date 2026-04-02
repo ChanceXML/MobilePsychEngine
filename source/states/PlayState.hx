@@ -2029,7 +2029,7 @@ class PlayState extends MusicBeatState
 		return health;
 	}
 
-	function openPauseMenu()
+	public function openPauseMenu()
 	{
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
