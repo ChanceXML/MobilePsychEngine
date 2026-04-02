@@ -141,7 +141,7 @@ class MainMenuState extends MusicBeatState
 
         ButtonHelper.bind(virtualPad,
      	null,
-	    ['debug_1']
+	    [null, 'debug_1']
         );
   
         Controls.virtualPad = virtualPad;
