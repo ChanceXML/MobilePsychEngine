@@ -54,13 +54,13 @@ class FlashingState extends MusicBeatState
         virtualPad = ButtonHelper.create(this, LEFT_RIGHT, A);
 
         ButtonHelper.bind(virtualPad,
-    	['ui_left', 'ui_right'],
-    	['accept']
+	    [null, null, 'ui_left', 'ui_right'],
+	    ['accept']
         );
 
         Controls.virtualPad = virtualPad;
         #end
-
+	
 		FlxTween.tween(texts, {alpha: 1.0}, 0.5, {
 			onComplete: (_) -> updateItems()
 		});
