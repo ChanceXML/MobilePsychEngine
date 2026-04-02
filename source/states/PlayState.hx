@@ -344,8 +344,9 @@ class PlayState extends MusicBeatState
 		Conductor.bpm = SONG.bpm;
 
 		#if mobile
-		setPauseButton('true');
-		
+		var androidPause = new android.controls.Pause();
+        add(androidPause);
+				
 	    var hint = new HitboxHint();
         add(hint);			
 		
