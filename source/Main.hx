@@ -71,9 +71,6 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-        #if android
-		android.utils.Files.startTransfer();
-		#end
 
 		#if (cpp && windows)
 		backend.Native.fixScaling();
@@ -88,6 +85,22 @@ class Main extends Sprite
 		#if VIDEOS_ALLOWED
 		hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0")  ['--no-lua'] #end);
 		#end
+
+		#if android
+        if (!sys.FileSystem.exists("assets"))
+        {
+        trace("Assets not found. Starting transfer BEFORE engine init.");
+
+        android.utils.Files.startTransfer();
+  
+        while (android.utils.Files.isTransferring)
+        {
+        Sys.sleep(0.05);
+        }
+
+        trace("Assets ready.");
+        }
+        #end
 
 		#if LUA_ALLOWED
 		Mods.pushGlobalMods();
