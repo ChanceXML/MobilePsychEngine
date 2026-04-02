@@ -133,6 +133,11 @@ class AchievementsMenuState extends MusicBeatState
 		add(nameText);
 		
 		_changeSelection();
+	
+		super.create();
+		
+		FlxG.camera.follow(camFollow, null, 0.15);
+		FlxG.camera.scroll.y = -FlxG.height;
 
 		#if mobile
         virtualPad = ButtonHelper.create(this, FULL, A_B);
@@ -144,11 +149,6 @@ class AchievementsMenuState extends MusicBeatState
 
         Controls.virtualPad = virtualPad;
         #end
-	
-		super.create();
-		
-		FlxG.camera.follow(camFollow, null, 0.15);
-		FlxG.camera.scroll.y = -FlxG.height;
 	}
 
 	function makeAchievement(achievement:String, data:Achievement, unlocked:Bool, mod:String = null)
