@@ -50,39 +50,26 @@ class VirtualPad extends FlxSpriteGroup
 		}
 
 		switch (DPad)
-		{
-			case NONE:
-                // do nothing (no dpad)
-			case UP_DOWN:
-				add(buttonUp = createButton(0, FlxG.height - 255, B_W, B_H, "up"));
-				add(buttonDown = createButton(0, FlxG.height - 135, B_W, B_H, "down"));
-			case LEFT_RIGHT:
-				add(buttonLeft = createButton(0, FlxG.height - 135, B_W, B_H, "left"));
-				add(buttonRight = createButton(126, FlxG.height - 135, B_W, B_H, "right"));
-			case UP_LEFT_RIGHT:
-				add(buttonUp = createButton(105, FlxG.height - 243, B_W, B_H, "up"));
-				add(buttonLeft = createButton(0, FlxG.height - 135, B_W, B_H, "left"));
-				add(buttonRight = createButton(207, FlxG.height - 135, B_W, B_H, "right"));
-			case DOWN_LEFT_RIGHT:
-				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
-				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
-				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, "down"));
-			case RIGHT_FULL:
-				add(buttonUp = createButton(FlxG.width - 258, FlxG.height - 414, B_W, B_H, "up"));
-				add(buttonLeft = createButton(FlxG.width - 390, FlxG.height - 309, B_W, B_H, "left"));
-				add(buttonRight = createButton(FlxG.width - 132, FlxG.height - 309, B_W, B_H, "right"));
-				add(buttonDown = createButton(FlxG.width - 258, FlxG.height - 201, B_W, B_H, "down"));
-			case FULL:
-				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, "up"));
-				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
-				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
-				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, "down"));
-			default:
-				add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, "up"));
-				add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
-				add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
-				add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, "down"));
-		}
+        {
+	        case NONE:
+		        // DO NOTHING (no dpad at all)
+            case UP_DOWN:
+	     	    add(buttonUp = createButton(0, FlxG.height - 255, B_W, B_H, "up"));
+		        add(buttonDown = createButton(0, FlxG.height - 135, B_W, B_H, "down"));
+	        case LEFT_RIGHT:
+		        add(buttonLeft = createButton(0, FlxG.height - 135, B_W, B_H, "left"));
+		        add(buttonRight = createButton(126, FlxG.height - 135, B_W, B_H, "right"));
+      	    case FULL:
+		        add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, "up"));
+		        add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
+		        add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
+		        add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, "down"));
+	        default:
+		        add(buttonUp = createButton(105, FlxG.height - 348, B_W, B_H, "up"));
+		        add(buttonLeft = createButton(0, FlxG.height - 243, B_W, B_H, "left"));
+		        add(buttonRight = createButton(207, FlxG.height - 243, B_W, B_H, "right"));
+		        add(buttonDown = createButton(105, FlxG.height - 135, B_W, B_H, "down"));
+        }
 
 		switch (Action)
 		{
@@ -237,27 +224,26 @@ class VirtualPad extends FlxSpriteGroup
 	}
 
 	override public function destroy():Void
+{
+	#if mobile
+	if (Controls.virtualPad == this)
+		Controls.virtualPad = null;
+	#end
+
+	if (boundActions != null)
+		boundActions.clear();
+
+	if (virtualpadCamera != null)
 	{
-		#if mobile
-		if (Controls.virtualPad == this)
-			Controls.virtualPad = null;
-		#end
-
-		if (boundActions != null)
-			boundActions.clear();
-
-		this.cameras = null;
-
-		if (virtualpadCamera != null)
-		{
-			virtualpadCamera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
-            this.cameras = [virtualpadCamera];
-		}
-
-		buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
-
-		super.destroy(); 
+		FlxG.cameras.remove(virtualpadCamera, true);
+		virtualpadCamera.destroy();
+		virtualpadCamera = null;
 	}
+
+	buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
+
+	super.destroy();
+}
 	
 	private function createButton(x:Float, y:Float, width:Int, height:Int, graphic:String):FlxButton
 	{
