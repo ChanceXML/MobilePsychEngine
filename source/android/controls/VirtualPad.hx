@@ -173,55 +173,37 @@ class VirtualPad extends FlxSpriteGroup
 	}
 
 	public function pressed(action:String):Bool
-	{
-		for (btn => actions in boundActions) {
-			if (actions.contains(action)) {
-				if (btn.pressed) return true;
-
-				for (touch in flixel.FlxG.touches.list) {
-					if (touch.pressed) {
-						var touchPos = touch.getScreenPosition(virtualpadCamera);
-						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
-					}
-				}
-			}
+{
+	for (btn => actions in boundActions) {
+		if (actions.contains(action)) {
+			if (btn != null && btn.pressed)
+				return true;
 		}
-		return false;
 	}
+	return false;
+}
 
-	public function justPressed(action:String):Bool
-	{
-		for (btn => actions in boundActions) {
-			if (actions.contains(action)) {
-				if (btn.justPressed) return true;
-
-				for (touch in flixel.FlxG.touches.list) {
-					if (touch.justPressed) {
-						var touchPos = touch.getScreenPosition(virtualpadCamera);
-						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
-					}
-				}
-			}
+public function justPressed(action:String):Bool
+{
+	for (btn => actions in boundActions) {
+		if (actions.contains(action)) {
+			if (btn != null && btn.justPressed)
+				return true;
 		}
-		return false;
 	}
+	return false;
+}
 
-	public function justReleased(action:String):Bool
-	{
-		for (btn => actions in boundActions) {
-			if (actions.contains(action)) {
-				if (btn.justReleased) return true;
-
-				for (touch in flixel.FlxG.touches.list) {
-					if (touch.justReleased) {
-						var touchPos = touch.getScreenPosition(virtualpadCamera);
-						if (btn.overlapsPoint(touchPos, true, virtualpadCamera)) return true;
-					}
-				}
-			}
+public function justReleased(action:String):Bool
+{
+	for (btn => actions in boundActions) {
+		if (actions.contains(action)) {
+			if (btn != null && btn.justReleased)
+				return true;
 		}
-		return false;
 	}
+	return false;
+}
 
 	override public function destroy():Void
 {
@@ -230,8 +212,10 @@ class VirtualPad extends FlxSpriteGroup
 		Controls.virtualPad = null;
 	#end
 
-	if (boundActions != null)
+	if (boundActions != null) {
 		boundActions.clear();
+		boundActions = null;
+	}
 
 	if (virtualpadCamera != null)
 	{
@@ -239,6 +223,8 @@ class VirtualPad extends FlxSpriteGroup
 		virtualpadCamera.destroy();
 		virtualpadCamera = null;
 	}
+
+	this.cameras = null;
 
 	buttonA = buttonB = buttonC = buttonX = buttonY = buttonLeft = buttonDown = buttonUp = buttonRight = null;
 
