@@ -196,6 +196,8 @@ class StoryMenuState extends MusicBeatState
 		changeWeek();
 		changeDifficulty();
 
+		super.create();
+
 		#if mobile
         virtualPad = ButtonHelper.create(this, FULL, A_B_X_Y);
 
@@ -206,8 +208,6 @@ class StoryMenuState extends MusicBeatState
 
         Controls.virtualPad = virtualPad;
         #end
-
-		super.create();
 	}
 
 	override function closeSubState() {
