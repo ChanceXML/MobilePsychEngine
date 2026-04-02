@@ -10,6 +10,14 @@ import states.StoryMenuState;
 import states.FreeplayState;
 import options.OptionsState;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.controls.FlxButton;
+import android.utils.ButtonHelper;
+#end
+
 class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
@@ -27,6 +35,10 @@ class PauseSubState extends MusicBeatSubstate
 
 	var missingTextBG:FlxSprite;
 	var missingText:FlxText;
+
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
 
 	public static var songName:String = null;
 
@@ -142,6 +154,17 @@ class PauseSubState extends MusicBeatSubstate
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		super.create();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, UP_DOWN, A_B);
+
+        ButtonHelper.bind(virtualPad,
+    	['ui_up', 'ui_down'],
+    	['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 	}
 	
 	function getPauseSong()
