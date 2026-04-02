@@ -20,10 +20,15 @@ class ButtonHelper
 	{
 		if (vpad == null) return;
 
-		if (dpad != null && dpad.length >= 4)
-		{
-			vpad.bindDPad(dpad[0], dpad[1], dpad[2], dpad[3]);
+		if (dpad != null)
+      {
+            var up    = dpad.length > 0 ? dpad[0] : null;
+            var down  = dpad.length > 1 ? dpad[1] : null;
+            var left  = dpad.length > 2 ? dpad[2] : null;
+            var right = dpad.length > 3 ? dpad[3] : null;
 
+            vpad.bindDPad(up, down, left, right);
+		  
 			var mirrorDPad = new Array<String>();
 			for (i in 0...4) {
 				var act = dpad[i];
