@@ -220,7 +220,9 @@ public function justReleased(action:String):Bool
 	if (virtualpadCamera != null)
 	{
 		FlxG.cameras.remove(virtualpadCamera, true);
-		virtualpadCamera.destroy();
+		
+		// virtualpadCamera.destroy();
+		
 		virtualpadCamera = null;
 	}
 
