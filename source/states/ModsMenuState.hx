@@ -305,6 +305,8 @@ class ModsMenuState extends MusicBeatState
 
 		changeSelectedMod();
 
+		super.create();
+
 		#if mobile
         virtualPad = ButtonHelper.create(this, FULL, A_B);
 
@@ -315,7 +317,6 @@ class ModsMenuState extends MusicBeatState
  
         Controls.virtualPad = virtualPad;
         #end
-		super.create();
 	}
 	
 	var nextAttempt:Float = 1;
