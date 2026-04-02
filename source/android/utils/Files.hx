@@ -202,3 +202,4 @@ class Files {
         try { output.close(); } catch (e:Dynamic) { trace("Error closing output stream."); }
     }
  }
+}
