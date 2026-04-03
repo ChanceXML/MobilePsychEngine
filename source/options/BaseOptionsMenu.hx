@@ -10,8 +10,19 @@ import objects.AttachedText;
 import options.Option;
 import backend.InputFormatter;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.controls.FlxButton;
+import android.utils.ButtonHelper;
+#end
+
 class BaseOptionsMenu extends MusicBeatSubstate
 {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
 	private var curOption:Option = null;
 	private var curSelected:Int = 0;
 	private var optionsArray:Array<Option>;
