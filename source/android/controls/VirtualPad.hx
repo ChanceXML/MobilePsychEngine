@@ -140,7 +140,7 @@ class VirtualPad extends FlxSpriteGroup
 
 		#if mobile
 		Controls.virtualPad = this;
-		this.alpha = 0.8;
+		this.alpha = 0.55;
 		#end
 	}
 
