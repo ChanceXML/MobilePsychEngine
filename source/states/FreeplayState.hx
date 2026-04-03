@@ -348,11 +348,11 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if(FlxG.keys.justPressed.CONTROL && !player.playingMusic)
-		{
-			persistentUpdate = false;
-			openSubState(new GameplayChangersSubstate());
-		}
+		if ((FlxG.keys.justPressed.CONTROL || controls.justPressed('control')) && !player.playingMusic)
+        {
+            persistentUpdate = false;
+            openSubState(new GameplayChangersSubstate());
+        }		
 		else if(FlxG.keys.justPressed.SPACE)
 		{
 			if(instPlaying != curSelected && !player.playingMusic)
