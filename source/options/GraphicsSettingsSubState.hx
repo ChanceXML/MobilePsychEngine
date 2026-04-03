@@ -1,20 +1,9 @@
 package options;
 
-#if mobile
-import backend.Controls;
-import backend.ClientPrefs;
-import android.controls.VirtualPad;
-import android.controls.FlxButton;
-import android.utils.ButtonHelper;
-#end
-
 import objects.Character;
 
 class GraphicsSettingsSubState extends BaseOptionsMenu
 {
-	#if mobile
-    public var virtualPad:VirtualPad;
-    #end
 	var antialiasingOption:Int;
 	var boyfriend:Character = null;
 	public function new()
