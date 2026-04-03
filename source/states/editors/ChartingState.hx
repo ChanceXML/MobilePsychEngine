@@ -906,7 +906,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				}
 				#if desktop
 				else if(FlxG.keys.justPressed.A != FlxG.keys.justPressed.D && !holdingAlt)
-				#ens
+				#end
 				#if mobile
 				else if(Controls.instance.UI_LEFT != Controls.instance.UI_RIGHT && !holdingAlt)
 				#end
