@@ -71,15 +71,25 @@ class Controls
 	public var BACK(get, never):Bool;
 	public var PAUSE(get, never):Bool;
 	public var RESET(get, never):Bool;
-	public var CONTROL(get, never):Bool;
-	public var SHIFT(get, never):Bool;
 
 	inline function get_ACCEPT() return justPressed('accept');
 	inline function get_BACK() return justPressed('back');
 	inline function get_PAUSE() return justPressed('pause');
 	inline function get_RESET() return justPressed('reset');
-	inline function get_CONTROL() return justPressed('control');
-	inline function get_SHIFT() return justPressed('shift');
+
+	public var CONTROL_P(get, never):Bool;
+	public var SHIFT_P(get, never):Bool;
+	public var CONTROL(get, never):Bool;
+	public var SHIFT(get, never):Bool;
+	public var CONTROL_R(get, never):Bool;
+	public var SHIFT_R(get, never):Bool;
+
+	inline function get_CONTROL_P() return justPressed('control');
+	inline function get_SHIFT_P() return justPressed('shift');
+	inline function get_CONTROL() return pressed('control');
+	inline function get_SHIFT() return pressed('shift');
+	inline function get_CONTROL_R() return justReleased('control');
+	inline function get_SHIFT_R() return justReleased('shift');
 
 	public var keyboardBinds:Map<String, Array<FlxKey>>;
 	public var gamepadBinds:Map<String, Array<FlxGamepadInputID>>;
@@ -109,112 +119,112 @@ class Controls
 	}
 
 	public function justPressed(key:String):Bool
-{
-    #if mobile
-    if (virtualPad != null && key != null) {
-        if (virtualPad.justPressed(key)) return true;
-        if (StringTools.startsWith(key, 'note_')) {
-            if (virtualPad.justPressed('ui_' + key.substring(5))) return true;
-        } else if (StringTools.startsWith(key, 'ui_')) {
-            if (virtualPad.justPressed('note_' + key.substring(3))) return true;
-        }
-    }
-    #end
-        
-    var keys = getKeyboard(key);
-    if (keys != null && FlxG.keys.anyJustPressed(keys))
-    {
-        controllerMode = false;
-        return true;
-    }
+	{
+		#if mobile
+		if (virtualPad != null && key != null) {
+			if (virtualPad.justPressed(key)) return true;
+			if (StringTools.startsWith(key, 'note_')) {
+				if (virtualPad.justPressed('ui_' + key.substring(5))) return true;
+			} else if (StringTools.startsWith(key, 'ui_')) {
+				if (virtualPad.justPressed('note_' + key.substring(3))) return true;
+			}
+		}
+		#end
+			
+		var keys = getKeyboard(key);
+		if (keys != null && FlxG.keys.anyJustPressed(keys))
+		{
+			controllerMode = false;
+			return true;
+		}
 
-    var pads = getGamepad(key);
-    if (pads != null)
-    {
-        for (p in pads)
-        {
-            if (FlxG.gamepads.anyJustPressed(p))
-            {
-                controllerMode = true;
-                return true;
-            }
-        }
-    }
+		var pads = getGamepad(key);
+		if (pads != null)
+		{
+			for (p in pads)
+			{
+				if (FlxG.gamepads.anyJustPressed(p))
+				{
+					controllerMode = true;
+					return true;
+				}
+			}
+		}
 
-    return false;
+		return false;
+	}
+
+	public function pressed(key:String):Bool
+	{
+		#if mobile
+		if (virtualPad != null && virtualPad.exists && key != null) {
+			if (virtualPad.justPressed(key)) return true; 
+			
+			if (StringTools.startsWith(key, 'note_')) {
+				if (virtualPad.justPressed('ui_' + key.substring(5))) return true;
+			} else if (StringTools.startsWith(key, 'ui_')) {
+				if (virtualPad.justPressed('note_' + key.substring(3))) return true;
+			}
+		}
+		#end
+			
+		var keys = getKeyboard(key);
+		if (keys != null && FlxG.keys.anyPressed(keys))
+		{
+			controllerMode = false;
+			return true;
+		}
+
+		var pads = getGamepad(key);
+		if (pads != null)
+		{
+			for (p in pads)
+			{
+				if (FlxG.gamepads.anyPressed(p))
+				{
+					controllerMode = true;
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public function justReleased(key:String):Bool
+	{
+		#if mobile
+		if (virtualPad != null && key != null) {
+			if (virtualPad.justReleased(key)) return true;
+
+			if (StringTools.startsWith(key, 'note_')) {
+				if (virtualPad.justReleased('ui_' + key.substring(5))) return true;
+			} else if (StringTools.startsWith(key, 'ui_')) {
+				if (virtualPad.justReleased('note_' + key.substring(3))) return true;
+			}
+		}
+		#end
+
+		var keys = getKeyboard(key);
+		if (keys != null && FlxG.keys.anyJustReleased(keys))
+		{
+			controllerMode = false;
+			return true;
+		}
+
+		var pads = getGamepad(key);
+		if (pads != null)
+		{
+			for (p in pads)
+			{
+				if (FlxG.gamepads.anyJustReleased(p))
+				{
+					controllerMode = true;
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 }
-
-public function pressed(key:String):Bool
-{
-    #if mobile
-    if (virtualPad != null && virtualPad.exists && key != null) {
-        if (virtualPad.justPressed(key)) return true;
-        
-        if (StringTools.startsWith(key, 'note_')) {
-            if (virtualPad.justPressed('ui_' + key.substring(5))) return true;
-        } else if (StringTools.startsWith(key, 'ui_')) {
-            if (virtualPad.justPressed('note_' + key.substring(3))) return true;
-        }
-    }
-    #end
-        
-    var keys = getKeyboard(key);
-    if (keys != null && FlxG.keys.anyPressed(keys))
-    {
-        controllerMode = false;
-        return true;
-    }
-
-    var pads = getGamepad(key);
-    if (pads != null)
-    {
-        for (p in pads)
-        {
-            if (FlxG.gamepads.anyPressed(p))
-            {
-                controllerMode = true;
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-public function justReleased(key:String):Bool
-{
-    #if mobile
-    if (virtualPad != null && key != null) {
-        if (virtualPad.justReleased(key)) return true;
-
-        if (StringTools.startsWith(key, 'note_')) {
-            if (virtualPad.justReleased('ui_' + key.substring(5))) return true;
-        } else if (StringTools.startsWith(key, 'ui_')) {
-            if (virtualPad.justReleased('note_' + key.substring(3))) return true;
-        }
-    }
-    #end
-
-    var keys = getKeyboard(key);
-    if (keys != null && FlxG.keys.anyJustReleased(keys))
-    {
-        controllerMode = false;
-        return true;
-    }
-
-    var pads = getGamepad(key);
-    if (pads != null)
-    {
-        for (p in pads)
-        {
-            if (FlxG.gamepads.anyJustReleased(p))
-            {
-                controllerMode = true;
-                return true;
-            }
-        }
-    }
-
-    return false;
-    }
-  }
