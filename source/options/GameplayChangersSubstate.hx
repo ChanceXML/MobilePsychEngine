@@ -2,6 +2,13 @@ package options;
 
 import objects.AttachedText;
 import objects.CheckboxThingie;
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.controls.FlxButton;
+import android.utils.ButtonHelper;
+#end
 import options.Option.OptionType;
 
 class GameplayChangersSubstate extends MusicBeatSubstate
@@ -138,6 +145,17 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		}
 		changeSelection();
 		reloadCheckboxes();
+	
+	    #if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
+
+        ButtonHelper.bind(virtualPad,
+      	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+	    ['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
     }
 	var nextAccept:Int = 5;
 	var holdTime:Float = 0;
