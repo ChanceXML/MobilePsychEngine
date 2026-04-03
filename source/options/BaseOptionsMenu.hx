@@ -324,17 +324,22 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			}
 		}
 		else if (FlxG.keys.pressed.BACKSPACE || FlxG.gamepads.anyPressed(BACK))
-		{
-			holdingEsc += elapsed;
-			if(holdingEsc > 0.5)
-			{
-				if (!controls.controllerMode) curOption.keys.keyboard = NONE;
-				else curOption.keys.gamepad = NONE;
-				updateBind(!controls.controllerMode ? InputFormatter.getKeyName(NONE) : InputFormatter.getGamepadName(NONE));
-				FlxG.sound.play(Paths.sound('cancelMenu'));
-				closeBinding();
-			}
-		}
+        {
+        holdingEsc += elapsed;
+
+        if (holdingEsc > 0.5)
+        {
+            if (!controls.controllerMode)
+                curOption.keys.keyboard = null;
+            else
+                curOption.keys.gamepad = null;
+
+            updateBind("None");
+
+            FlxG.sound.play(Paths.sound('cancelMenu'));
+            closeBinding();
+            }
+        }
 		else
 		{
 			holdingEsc = 0;
