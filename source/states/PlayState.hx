@@ -346,6 +346,7 @@ class PlayState extends MusicBeatState
 		#if mobile
 		var androidPause = new android.controls.Pause();
         add(androidPause);
+        androidPause.setPauseButton('true');
 				
 	    var hint = new HitboxHint();
         add(hint);			
