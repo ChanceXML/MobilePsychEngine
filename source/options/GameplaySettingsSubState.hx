@@ -1,11 +1,7 @@
 package options;
 
 class GameplaySettingsSubState extends BaseOptionsMenu
-{
-	#if mobile
-    public var virtualPad:VirtualPad;
-    #end
-		
+{		
 	public function new()
 	{
 		title = Language.getPhrase('gameplay_menu', 'Gameplay Settings');
