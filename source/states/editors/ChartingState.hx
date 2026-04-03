@@ -696,6 +696,42 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var lastBeatHit:Int = 0;
 	override function update(elapsed:Float)
 	{
+		#if mobile
+        if (Controls.virtualPad != null)
+        {
+        FlxG.keys.reset();
+
+        inline function press(key:FlxKey)
+    {
+        FlxG.keys._keyList[key].current = 1;
+        }
+
+        inline function justPress(key:FlxKey)
+    {
+        FlxG.keys._keyList[key].current = 2;
+        }
+
+        if (Controls.virtualPad.pressed('ui_up'))    press(FlxKey.W);
+        if (Controls.virtualPad.pressed('ui_down'))  press(FlxKey.S);
+        if (Controls.virtualPad.pressed('ui_left'))  press(FlxKey.A);
+        if (Controls.virtualPad.pressed('ui_right')) press(FlxKey.D);
+
+        if (Controls.virtualPad.justPressed('accept')) justPress(FlxKey.SPACE);
+        if (Controls.virtualPad.justPressed('back'))   justPress(FlxKey.SHIFT);
+
+        if (Controls.virtualPad.pressed('shift')) press(FlxKey.Q);
+
+        if (Controls.virtualPad.pressed('control')) press(FlxKey.E);
+
+        if (Controls.virtualPad.justPressed('ui_left'))
+            FlxG.mouse.wheel = -1;
+        else if (Controls.virtualPad.justPressed('ui_right'))
+            FlxG.mouse.wheel = 1;
+        else
+            FlxG.mouse.wheel = 0;
+      }
+        #end
+			
 		if(!fileDialog.completed)
 		{
 			lastFocus = PsychUIInputText.focusOn;
