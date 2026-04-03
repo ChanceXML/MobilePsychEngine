@@ -1,9 +1,20 @@
 package options;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.controls.FlxButton;
+import android.utils.ButtonHelper;
+#end
+
 import objects.Character;
 
 class GraphicsSettingsSubState extends BaseOptionsMenu
 {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
 	var antialiasingOption:Int;
 	var boyfriend:Character = null;
 	public function new()
@@ -62,6 +73,17 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 
 		super();
 		insert(1, boyfriend);
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
+
+        ButtonHelper.bind(virtualPad,
+    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+    	['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 	}
 
 	function onChangeAntiAliasing()
