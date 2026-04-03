@@ -74,10 +74,6 @@ enum abstract WaveformTarget(String)
 
 class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent
 {
-    inline function keyJustPressed(k:FlxKey, action:String):Bool
-{
-    return FlxG.keys.justPressed.check(k) || controls.justPressed(action);
-}
 	#if mobile
     public var virtualPad:VirtualPad;
     #end
