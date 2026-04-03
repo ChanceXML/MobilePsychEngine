@@ -46,5 +46,16 @@ class AndroidSubState extends BaseOptionsMenu
 		addOption(option);
 
 		super();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
+
+        ButtonHelper.bind(virtualPad,
+    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+    	['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 	}
 }
