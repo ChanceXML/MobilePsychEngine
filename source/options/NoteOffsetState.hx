@@ -7,8 +7,19 @@ import flixel.addons.display.shapes.FlxShapeCircle;
 
 import states.stages.StageWeek1 as BackgroundStage;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.controls.FlxButton;
+import android.utils.ButtonHelper;
+#end
+
 class NoteOffsetState extends MusicBeatState
 {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
 	var stageDirectory:String = 'week1';
 	var boyfriend:Character;
 	var gf:Character;
@@ -171,6 +182,17 @@ class NoteOffsetState extends MusicBeatState
 		FlxG.sound.playMusic(Paths.music('offsetSong'), 1, true);
 
 		super.create();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, LEFT_RIGHT, A_B);
+
+        ButtonHelper.bind(virtualPad,
+    	[null, null, 'ui_left', 'ui_right'],
+    	['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 	}
 
 	var holdTime:Float = 0;
