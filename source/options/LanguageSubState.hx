@@ -1,19 +1,9 @@
 package options;
 
 import openfl.utils.Assets;
-#if mobile
-import backend.Controls;
-import backend.ClientPrefs;
-import android.controls.VirtualPad;
-import android.controls.FlxButton;
-import android.utils.ButtonHelper;
-#end
 
 class LanguageSubState extends MusicBeatSubstate
 {
-	#if mobile
-    public var virtualPad:VirtualPad;
-    #end
 	#if TRANSLATIONS_ALLOWED
 	var grpLanguages:FlxTypedGroup<Alphabet> = new FlxTypedGroup<Alphabet>();
 	var languages:Array<String> = [];
@@ -102,17 +92,6 @@ class LanguageSubState extends MusicBeatSubstate
 			grpLanguages.add(text);
 		}
 		changeSelected();
-
-		#if mobile
-        virtualPad = ButtonHelper.create(this, FULL, A_B);
-
-        ButtonHelper.bind(virtualPad,
-    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
-    	['accept', 'back']
-        );
-
-        Controls.virtualPad = virtualPad;
-        #end
 	}
 
 	var changedLanguage:Bool = false;
