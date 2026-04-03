@@ -5,19 +5,8 @@ import objects.StrumNote;
 import objects.NoteSplash;
 import objects.Alphabet;
 
-#if mobile
-import backend.Controls;
-import backend.ClientPrefs;
-import android.controls.VirtualPad;
-import android.controls.FlxButton;
-import android.utils.ButtonHelper;
-#end
-
 class VisualsSettingsSubState extends BaseOptionsMenu
 {
-	#if mobile
-    public var virtualPad:VirtualPad;
-    #end
 	var noteOptionID:Int = -1;
 	var notes:FlxTypedGroup<StrumNote>;
 	var splashes:FlxTypedGroup<NoteSplash>;
@@ -172,17 +161,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		super();
 		add(notes);
 		add(splashes);
-
-		#if mobile
-        virtualPad = ButtonHelper.create(this, FULL, A_B);
-
-        ButtonHelper.bind(virtualPad,
-    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
-    	['accept', 'back']
-        );
-
-        Controls.virtualPad = virtualPad;
-        #end
 	}
 
 	var notesShown:Bool = false;
