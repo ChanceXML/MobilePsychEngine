@@ -7,8 +7,19 @@ import objects.Character;
 
 import options.Option.OptionType;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.controls.FlxButton;
+import android.utils.ButtonHelper;
+#end
+
 class ModSettingsSubState extends BaseOptionsMenu
 {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
 	var save:Map<String, Dynamic> = new Map<String, Dynamic>();
 	var folder:String;
 	private var _crashed:Bool = false;
@@ -149,6 +160,17 @@ class ModSettingsSubState extends BaseOptionsMenu
 		bg.alpha = 0.75;
 		bg.color = FlxColor.WHITE;
 		reloadCheckboxes();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
+
+        ButtonHelper.bind(virtualPad,
+    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+    	['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 	}
 
 	private function convertType(str:String):OptionType
