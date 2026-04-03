@@ -7,8 +7,19 @@ import objects.Character;
 import states.MainMenuState;
 import states.FreeplayState;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.controls.FlxButton;
+import android.utils.ButtonHelper;
+#end
+
 class MasterEditorMenu extends MusicBeatState
 {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
 	var options:Array<String> = [
 		'Chart Editor',
 		'Character Editor',
@@ -74,6 +85,17 @@ class MasterEditorMenu extends MusicBeatState
 
 		FlxG.mouse.visible = false;
 		super.create();
+
+		#if mobile
+        virtualPad = ButtonHelper.create(this, UP_DOWN, A_B);
+
+        ButtonHelper.bind(virtualPad,
+    	['ui_up', 'ui_down'],
+    	['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+        #end
 	}
 
 	override function update(elapsed:Float)
