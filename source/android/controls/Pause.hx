@@ -77,7 +77,7 @@ class Pause extends FlxGroup
         {
             if (touch.justPressed)
             {
-                if (pauseButton.overlapsPoint(touch.getWorldPosition(PauseCam), true, PauseCam))
+                if (pauseButton.overlapsPoint(touch.getScreenPosition(PauseCam), true, PauseCam))
                 {
                     touchedPause = true;
                     break;
@@ -95,4 +95,3 @@ class Pause extends FlxGroup
         }
     }
 }
-        
