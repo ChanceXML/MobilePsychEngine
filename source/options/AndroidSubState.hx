@@ -1,7 +1,19 @@
 package options;
 
+#if mobile
+import backend.Controls;
+import backend.ClientPrefs;
+import android.controls.VirtualPad;
+import android.controls.FlxButton;
+import android.utils.ButtonHelper;
+#end
+
 class AndroidSubState extends BaseOptionsMenu
 {
+	#if mobile
+    public var virtualPad:VirtualPad;
+    #end
+		
 	public function new()
 	{
 		title = 'Android Settings';
