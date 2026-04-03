@@ -88,6 +88,8 @@ class OptionsState extends MusicBeatState
 		changeSelection();
 		ClientPrefs.saveSettings();
 
+		super.create();
+
 		#if mobile
         virtualPad = ButtonHelper.create(this, FULL, A_B);
 
@@ -98,8 +100,6 @@ class OptionsState extends MusicBeatState
 
         Controls.virtualPad = virtualPad;
         #end
-
-		super.create();
 	}
 
 	override function closeSubState()
