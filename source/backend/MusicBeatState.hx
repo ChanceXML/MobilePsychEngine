@@ -206,10 +206,23 @@ class MusicBeatState extends FlxState
 				func(stage);
 	}
 
+
 	function getBeatsOnSection()
 	{
 		var val:Null<Float> = 4;
 		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
 		return val == null ? 4 : val;
 	}
+
+	override function closeSubState():Void
+{
+    super.closeSubState();
+
+    #if mobile
+    if (Controls.virtualPad != null)
+    {
+        Controls.virtualPad.cameras = [FlxG.camera];
+    }
+    #end
+}
 }
