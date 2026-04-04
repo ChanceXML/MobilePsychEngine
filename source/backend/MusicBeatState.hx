@@ -54,7 +54,6 @@ class MusicBeatState extends FlxState
 	public static var timePassedOnState:Float = 0;
 	override function update(elapsed:Float)
 	{
-		Controls.updateMouseBlock();
 		
 		//everyStep();
 		var oldStep:Int = curStep;
@@ -84,6 +83,7 @@ class MusicBeatState extends FlxState
 		});
 
 		super.update(elapsed);
+		Controls.updateMouseBlock();
 	}
 
 	private function updateSection():Void
