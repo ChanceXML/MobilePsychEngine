@@ -910,7 +910,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				{
 					if(FlxG.sound.music.playing)
 						setSongPlaying(false);
-						
+					{
                     #if desktop
 					var shiftAdd:Int = FlxG.keys.pressed.SHIFT ? 4 : 1;
 					#end
@@ -950,7 +950,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						}
 					}
 				}
-			}
 				else if(FlxG.keys.justPressed.HOME)
 				{
 					setSongPlaying(false);
