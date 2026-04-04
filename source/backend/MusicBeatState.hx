@@ -227,19 +227,5 @@ class MusicBeatState extends FlxState
         Controls.virtualPad.active = true;
     }
     #end
-}
-
-	override function close()
-{
-    super.close();
-
-    #if mobile
-    if (Controls.virtualPad != null)
-    {
-        Controls.virtualPad.cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-        Controls.virtualPad.visible = true;
-        Controls.virtualPad.active = true;
-    }
-    #end
   }
 }
