@@ -1552,9 +1552,15 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			noteSelectionSine += elapsed;
 			var sineValue:Float = 0.75 + Math.cos(Math.PI * noteSelectionSine * (isMovingNotes ? 8 : 2)) / 4;
 			//trace(sineValue);
-
+            #if desktop
 			var qPress = FlxG.keys.justPressed.Q;
 			var ePress = FlxG.keys.justPressed.E;
+			#end
+			#if mobile
+			var qPress = Controls.instance.SHIFT;
+			var ePress = Controls.instance.CONTROL;
+			#end
+			
 			var addSus = (FlxG.keys.pressed.SHIFT ? 4 : 1) * (Conductor.stepCrochet / 2);
 			if(qPress) addSus *= -1;
 
