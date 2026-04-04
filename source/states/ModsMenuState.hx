@@ -308,11 +308,11 @@ class ModsMenuState extends MusicBeatState
 		super.create();
 
 		#if mobile
-        virtualPad = ButtonHelper.create(this, FULL, A_B);
+        virtualPad = ButtonHelper.create(this, NONE, B);
 
         ButtonHelper.bind(virtualPad,
-      	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
-	    ['accept', 'back']
+      	null,
+	    [null, 'back']
         );   
  
         Controls.virtualPad = virtualPad;
