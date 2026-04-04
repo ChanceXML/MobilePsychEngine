@@ -282,13 +282,19 @@ class Controls
     #if mobile
     if (virtualPad != null && virtualPad.exists)
     {
-        var onUI = virtualPad.overlapsPoint(FlxG.mouse.getWorldPosition());
+        var onUI = virtualPad.overlapsPoint(FlxG.mouse.getWorldPosition())
+            && virtualPad.anyPressed();
 
         if (onUI)
         {
-            FlxG.mouse._leftButton.current = 0;
+            FlxG.mouse.visible = false;
+            FlxG.mouse.enabled = false;
+        }
+        else
+        {
+            FlxG.mouse.enabled = true;
         }
     }
     #end
-   }
+  }
 }
