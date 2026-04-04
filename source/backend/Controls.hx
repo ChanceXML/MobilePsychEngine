@@ -276,4 +276,19 @@ class Controls
 
 		return false;
 	}
+	
+    public static function updateMouseBlock():Void
+{
+    #if mobile
+    if (virtualPad != null && virtualPad.exists)
+    {
+        var onUI = virtualPad.overlapsPoint(FlxG.mouse.getWorldPosition());
+
+        if (onUI)
+        {
+            FlxG.mouse._leftButton.current = 0;
+        }
+    }
+    #end
+   }
 }
