@@ -194,15 +194,23 @@ class VirtualPad extends FlxSpriteGroup
             }
         }
     }
-
     if (!isDown)
+    {
+        if (holdTimers.exists(action))
+        {
+            holdTimers.remove(action);
+            holdActive.remove(action);
+        }
+        return false;
+    }
+    if (!holdTimers.exists(action))
     {
         holdTimers.set(action, 0);
         holdActive.set(action, false);
-        return false;
+        return true;
     }
 
-    var timer = holdTimers.exists(action) ? holdTimers.get(action) : 0;
+    var timer = holdTimers.get(action);
     var active = holdActive.exists(action) ? holdActive.get(action) : false;
 
     timer += elapsed;
@@ -228,7 +236,7 @@ class VirtualPad extends FlxSpriteGroup
     holdTimers.set(action, timer);
     return false;
 }
-
+	
 public function anyPressed():Bool
 {
     if (buttonUp != null && buttonUp.pressed) return true;
