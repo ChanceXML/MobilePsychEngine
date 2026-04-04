@@ -915,7 +915,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					#end
 					
 					#if mobile
-					var shiftAdd:Int = Controls.instance.SHIFT ? 4 : 1;
+					var shiftAdd:Int = Controls.instance.BACK ? 4 : 1;
 					#end
                     #if desktop
 					if(FlxG.keys.justPressed.A)
@@ -982,14 +982,24 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					if(mouseSnapCheckBox.checked && FlxG.mouse.wheel != 0)
 					{
 						var snap:Float = Conductor.stepCrochet / (curQuant/16) / curZoom;
+						#if desktop
 						var timeAdd:Float = (FlxG.keys.pressed.SHIFT ? 4 : 1) / (holdingAlt ? 4 : 1) * -FlxG.mouse.wheel * snap;
+						#end
+					    #if mobile
+						var timeAdd:Float = (Controls.instance.BACK ? 4 : 1) / (holdingAlt ? 4 : 1) * -FlxG.mouse.wheel * snap;
+						#end
 						var time:Float = Math.round((FlxG.sound.music.time + timeAdd) / snap) * snap;
 						if(time > 0) time += 0.000001; //goes at the start of a section more properly
 						FlxG.sound.music.time = time;
 					}
 					else
 					{
+						#if mobile
 						var speedMult:Float = ((FlxG.keys.pressed.SHIFT || Controls.instance.SHIFT) ? 4 : 1) * (FlxG.mouse.wheel != 0 ? 4 : 1) / (holdingAlt ? 4 : 1);
+						#end
+						#if mobile
+						var speedMult:Float = ((FlxG.keys.pressed.SHIFT || Controls.instance.BACK) ? 4 : 1) * (FlxG.mouse.wheel != 0 ? 4 : 1) / (holdingAlt ? 4 : 1);
+						#end
 						if(FlxG.keys.pressed.W || Controls.instance.UI_UP || FlxG.mouse.wheel > 0)
 							FlxG.sound.music.time -= Conductor.crochet * speedMult * 1.5 * elapsed / curZoom;
 						else if(FlxG.keys.pressed.S || Controls.instance.UI_DOWN || FlxG.mouse.wheel < 0)
@@ -1548,9 +1558,14 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			noteSelectionSine += elapsed;
 			var sineValue:Float = 0.75 + Math.cos(Math.PI * noteSelectionSine * (isMovingNotes ? 8 : 2)) / 4;
 			//trace(sineValue);
-
+            #if desktop
 			var qPress = FlxG.keys.justPressed.Q;
 			var ePress = FlxG.keys.justPressed.E;
+			#end
+			#if mobile
+			var qPress = Controls.instance.SHIFT;
+			var ePress = Controls.instance.CONTROL;
+			#end
 			var addSus = (FlxG.keys.pressed.SHIFT ? 4 : 1) * (Conductor.stepCrochet / 2);
 			if(qPress) addSus *= -1;
 
