@@ -53,6 +53,8 @@ class MusicBeatState extends FlxState
 	public static var timePassedOnState:Float = 0;
 	override function update(elapsed:Float)
 	{
+		Controls.updateMouseBlock();
+		
 		//everyStep();
 		var oldStep:Int = curStep;
 		timePassedOnState += elapsed;
@@ -205,24 +207,39 @@ class MusicBeatState extends FlxState
 			if(stage != null && stage.exists && stage.active)
 				func(stage);
 	}
-
-
+	
 	function getBeatsOnSection()
 	{
 		var val:Null<Float> = 4;
 		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
 		return val == null ? 4 : val;
 	}
-
-	override function closeSubState():Void
+	
+    override function closeSubState()
 {
     super.closeSubState();
 
     #if mobile
     if (Controls.virtualPad != null)
     {
-        Controls.virtualPad.cameras = [FlxG.camera];
+        Controls.virtualPad.cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+        Controls.virtualPad.visible = true;
+        Controls.virtualPad.active = true;
     }
     #end
 }
+
+	override function close()
+{
+    super.close();
+
+    #if mobile
+    if (Controls.virtualPad != null)
+    {
+        Controls.virtualPad.cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+        Controls.virtualPad.visible = true;
+        Controls.virtualPad.active = true;
+    }
+    #end
+  }
 }
