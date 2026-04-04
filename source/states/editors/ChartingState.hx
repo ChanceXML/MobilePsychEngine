@@ -906,6 +906,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				#if mobile
 				else if(Controls.instance.UI_LEFT != Controls.instance.UI_RIGHT && !holdingAlt)
 				#end
+		
 				{
 					if(FlxG.sound.music.playing)
 						setSongPlaying(false);
@@ -920,6 +921,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
                     #if desktop
 					if(FlxG.keys.justPressed.A)
 					#end
+					
 					#if mobile
 					else if(Controls.instance.UI_LEFT)
 					#end
@@ -948,6 +950,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						}
 					}
 				}
+			}
 				else if(FlxG.keys.justPressed.HOME)
 				{
 					setSongPlaying(false);
