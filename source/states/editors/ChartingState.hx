@@ -915,13 +915,13 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					#end
 					
 					#if mobile
-					var shiftAdd:Int = Controls.instance.SHIFT ? 4 : 1;
+					var shiftAdd:Int = Controls.instance.BACK ? 4 : 1;
 					#end
                     #if desktop
 					if(FlxG.keys.justPressed.A)
 					#end
 					#if mobile
-					if(Controls.instance.UI_LEFT)
+					else if(Controls.instance.UI_LEFT)
 					#end
 					{
 						if(curSec - shiftAdd < 0) shiftAdd = curSec;
@@ -936,7 +936,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					else if(FlxG.keys.justPressed.D)
 					#end
 					#if mobile
-					else if(Controls.instance.UI_RIGHT)
+				    else if(Controls.instance.UI_RIGHT)
 					#end
 					{
 						if(curSec + shiftAdd >= PlayState.SONG.notes.length) shiftAdd = PlayState.SONG.notes.length - curSec - 1;
@@ -982,14 +982,18 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					if(mouseSnapCheckBox.checked && FlxG.mouse.wheel != 0)
 					{
 						var snap:Float = Conductor.stepCrochet / (curQuant/16) / curZoom;
+						#if desktop
 						var timeAdd:Float = (FlxG.keys.pressed.SHIFT ? 4 : 1) / (holdingAlt ? 4 : 1) * -FlxG.mouse.wheel * snap;
+						#end
+						#if mobile
+						var timeAdd:Float = (Controls.instance.BACK ? 4 : 1) / (holdingAlt ? 4 : 1) * -FlxG.mouse.wheel * snap;
 						var time:Float = Math.round((FlxG.sound.music.time + timeAdd) / snap) * snap;
 						if(time > 0) time += 0.000001; //goes at the start of a section more properly
 						FlxG.sound.music.time = time;
 					}
 					else
 					{
-						var speedMult:Float = ((FlxG.keys.pressed.SHIFT || Controls.instance.SHIFT) ? 4 : 1) * (FlxG.mouse.wheel != 0 ? 4 : 1) / (holdingAlt ? 4 : 1);
+						var speedMult:Float = ((FlxG.keys.pressed.SHIFT || Controls.instance.BACK) ? 4 : 1) * (FlxG.mouse.wheel != 0 ? 4 : 1) / (holdingAlt ? 4 : 1);
 						if(FlxG.keys.pressed.W || Controls.instance.UI_UP || FlxG.mouse.wheel > 0)
 							FlxG.sound.music.time -= Conductor.crochet * speedMult * 1.5 * elapsed / curZoom;
 						else if(FlxG.keys.pressed.S || Controls.instance.UI_DOWN || FlxG.mouse.wheel < 0)
