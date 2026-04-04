@@ -200,6 +200,52 @@ class Controls
 
     return false;
 }
+
+	public function pressedRepeat(key:String):Bool
+{
+    var isHeld = pressed(key);
+    var just = justPressed(key);
+
+    if (!isHeld)
+    {
+        holdTimers.set(key, 0);
+        holdStates.set(key, false);
+        return false;
+    }
+
+    if (just)
+    {
+        holdTimers.set(key, 0);
+        holdStates.set(key, false);
+        return true;
+    }
+
+    var timer:Float = holdTimers.exists(key) ? holdTimers.get(key) : 0;
+    var active:Bool = holdStates.exists(key) ? holdStates.get(key) : false;
+
+    timer += FlxG.elapsed;
+
+    if (!active)
+    {
+        if (timer >= HOLD_DELAY)
+        {
+            holdStates.set(key, true);
+            holdTimers.set(key, 0);
+            return true;
+        }
+    }
+    else
+    {
+        if (timer >= HOLD_REPEAT)
+        {
+            holdTimers.set(key, 0);
+            return true;
+        }
+    }
+
+    holdTimers.set(key, timer);
+    return false;
+}
 	
 	public function justReleased(key:String):Bool
 	{
@@ -237,46 +283,6 @@ class Controls
 
 		return false;
 	}
-
-	public function pressedRepeat(key:String):Bool
-{
-    #if mobile
-    if (virtualPad == null) return false;
-    #end
-
-    if (!pressed(key))
-    {
-        holdTimers.set(key, 0);
-        holdStates.set(key, false);
-        return false;
-    }
-
-    var timer:Float = holdTimers.exists(key) ? holdTimers.get(key) : 0;
-    var active:Bool = holdStates.exists(key) ? holdStates.get(key) : false;
-
-    timer += FlxG.elapsed;
-
-    if (!active)
-    {
-        if (timer >= HOLD_DELAY)
-        {
-            holdStates.set(key, true);
-            holdTimers.set(key, 0);
-            return true;
-        }
-    }
-    else
-    {
-        if (timer >= HOLD_REPEAT)
-        {
-            holdTimers.set(key, 0);
-            return true;
-        }
-    }
-
-    holdTimers.set(key, timer);
-    return false;
-}
 	
     public static function updateMouseBlock():Void
 {
