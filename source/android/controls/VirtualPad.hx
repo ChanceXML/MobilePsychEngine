@@ -32,6 +32,13 @@ class VirtualPad extends FlxSpriteGroup
 
 	private var atlasFrames:FlxAtlasFrames;
 	
+    public static inline var HOLD_DELAY:Float = 0.15; // 150ms
+
+    public static inline var HOLD_REPEAT:Float = 0.05; // 50ms
+
+    private var holdTimers:Map<String, Float> = new Map();
+    private var holdActive:Map<String, Bool> = new Map();
+	
 	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
 	{
 		super();
@@ -170,26 +177,67 @@ class VirtualPad extends FlxSpriteGroup
 		addAction(buttonC, c);
 	}
 
-	public function pressed(action:String):Bool
+	public function pressed(action:String, elapsed:Float):Bool
 {
-    if (boundActions == null) return false; 
+    if (boundActions == null) return false;
 
-    for (btn => actions in boundActions) {
-        if (actions != null && actions.contains(action)) {
-            if (btn != null && btn.pressed)
-                return true;
+    var isDown:Bool = false;
+
+    for (btn => actions in boundActions)
+    {
+        if (actions != null && actions.contains(action))
+        {
+            if (btn != null && btn.exists && btn.active && btn.pressed)
+            {
+                isDown = true;
+                break;
+            }
         }
     }
+
+    if (!isDown)
+    {
+        holdTimers.set(action, 0);
+        holdActive.set(action, false);
+        return false;
+    }
+
+    var timer = holdTimers.exists(action) ? holdTimers.get(action) : 0;
+    var active = holdActive.exists(action) ? holdActive.get(action) : false;
+
+    timer += elapsed;
+
+    if (!active)
+    {
+        if (timer >= HOLD_DELAY)
+        {
+            holdActive.set(action, true);
+            holdTimers.set(action, 0);
+            return true;
+        }
+    }
+    else
+    {
+        if (timer >= HOLD_REPEAT)
+        {
+            holdTimers.set(action, 0);
+            return true;
+        }
+    }
+
+    holdTimers.set(action, timer);
     return false;
 }
-
+	
 public function justPressed(action:String):Bool
 {
     if (boundActions == null) return false; 
 
-    for (btn => actions in boundActions) {
-        if (actions != null && actions.contains(action)) {
-            if (btn != null && btn.justPressed)
+    for (btn => actions in boundActions)
+    {
+        if (actions != null && actions.contains(action))
+        {
+            if (btn != null && btn.exists && btn.active && btn.justPressed)
                 return true;
         }
     }
