@@ -283,21 +283,9 @@ class Controls
     #if mobile
     if (virtualPad != null && virtualPad.exists)
     {
-        var onUI:Bool = false;
-
-        var mousePos = FlxG.mouse.getWorldPosition();
-
-        for (btn in virtualPad.buttons)
-        {
-            if (btn != null && btn.overlapsPoint(mousePos))
-            {
-                onUI = true;
-                break;
-            }
-        }
-
+        var onUI = virtualPad.isTouchOnPad(FlxG.mouse.getWorldPosition());
         FlxG.mouse.enabled = !onUI;
     }
     #end
-}
+  }
 }
