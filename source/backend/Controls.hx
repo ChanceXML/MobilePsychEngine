@@ -99,9 +99,9 @@ class Controls
 
 	private var holdTimers:Map<String, Float> = new Map();
     private var holdStates:Map<String, Bool> = new Map();
-
-    public static inline var HOLD_DELAY:Float = 0.15;
-    public static inline var HOLD_REPEAT:Float = 0.05;
+  
+    public static inline var HOLD_DELAY:Float = 0.10;
+    public static inline var HOLD_REPEAT:Float = 0.025;
 	#end
 
 	public var controllerMode:Bool = false;
