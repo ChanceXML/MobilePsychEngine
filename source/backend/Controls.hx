@@ -172,9 +172,10 @@ class Controls
         if (!isDown)
         {
             if (StringTools.startsWith(key, 'note_'))
-                isDown = virtualPad.pressed('ui_' + key.substring(5));
+			    isDown = virtualPad.pressed('ui_' + key.substring(5), FlxG.elapsed);
+			    
             else if (StringTools.startsWith(key, 'ui_'))
-                isDown = virtualPad.pressed('note_' + key.substring(3));
+			    isDown = virtualPad.pressed('note_' + key.substring(3), FlxG.elapsed);
         }
     }
     #end
