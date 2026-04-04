@@ -228,6 +228,16 @@ class VirtualPad extends FlxSpriteGroup
     holdTimers.set(action, timer);
     return false;
 }
+
+public function anyPressed():Bool
+{
+    for (btn in buttons)
+    {
+        if (btn != null && btn.pressed)
+            return true;
+    }
+    return false;
+}
 	
 public function justPressed(action:String):Bool
 {
