@@ -231,11 +231,33 @@ class VirtualPad extends FlxSpriteGroup
 
 public function anyPressed():Bool
 {
-    for (btn in buttons)
-    {
-        if (btn != null && btn.pressed)
-            return true;
-    }
+    if (buttonUp != null && buttonUp.pressed) return true;
+    if (buttonDown != null && buttonDown.pressed) return true;
+    if (buttonLeft != null && buttonLeft.pressed) return true;
+    if (buttonRight != null && buttonRight.pressed) return true;
+
+    if (buttonA != null && buttonA.pressed) return true;
+    if (buttonB != null && buttonB.pressed) return true;
+    if (buttonX != null && buttonX.pressed) return true;
+    if (buttonY != null && buttonY.pressed) return true;
+    if (buttonC != null && buttonC.pressed) return true;
+
+    return false;
+}
+
+public function isTouchOnPad(point:FlxPoint):Bool
+{
+    if (buttonUp != null && buttonUp.overlapsPoint(point)) return true;
+    if (buttonDown != null && buttonDown.overlapsPoint(point)) return true;
+    if (buttonLeft != null && buttonLeft.overlapsPoint(point)) return true;
+    if (buttonRight != null && buttonRight.overlapsPoint(point)) return true;
+
+    if (buttonA != null && buttonA.overlapsPoint(point)) return true;
+    if (buttonB != null && buttonB.overlapsPoint(point)) return true;
+    if (buttonX != null && buttonX.overlapsPoint(point)) return true;
+    if (buttonY != null && buttonY.overlapsPoint(point)) return true;
+    if (buttonC != null && buttonC.overlapsPoint(point)) return true;
+
     return false;
 }
 	
