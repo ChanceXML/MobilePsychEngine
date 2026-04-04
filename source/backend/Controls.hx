@@ -96,6 +96,12 @@ class Controls
 
 	#if mobile
 	public static var virtualPad:VirtualPad;
+
+	private var holdTimers:Map<String, Float> = new Map();
+    private var holdStates:Map<String, Bool> = new Map();
+
+    public static inline var HOLD_DELAY:Float = 0.15;
+    public static inline var HOLD_REPEAT:Float = 0.05;
 	#end
 
 	public var controllerMode:Bool = false;
@@ -155,42 +161,85 @@ class Controls
 	}
 
 	public function pressed(key:String):Bool
-	{
-		#if mobile
-		if (virtualPad != null && virtualPad.exists && key != null) {
-			if (virtualPad.justPressed(key)) return true; 
-			
-			if (StringTools.startsWith(key, 'note_')) {
-				if (virtualPad.justPressed('ui_' + key.substring(5))) return true;
-			} else if (StringTools.startsWith(key, 'ui_')) {
-				if (virtualPad.justPressed('note_' + key.substring(3))) return true;
-			}
-		}
-		#end
-			
-		var keys = getKeyboard(key);
-		if (keys != null && FlxG.keys.anyPressed(keys))
-		{
-			controllerMode = false;
-			return true;
-		}
+{
+    var isDown:Bool = false;
 
-		var pads = getGamepad(key);
-		if (pads != null)
-		{
-			for (p in pads)
-			{
-				if (FlxG.gamepads.anyPressed(p))
-				{
-					controllerMode = true;
-					return true;
-				}
-			}
-		}
+    #if mobile
+    if (virtualPad != null && virtualPad.exists && key != null)
+    {
+        if (virtualPad.pressed(key)) isDown = true;
 
-		return false;
-	}
+        if (!isDown)
+        {
+            if (StringTools.startsWith(key, 'note_'))
+                isDown = virtualPad.pressed('ui_' + key.substring(5));
+            else if (StringTools.startsWith(key, 'ui_'))
+                isDown = virtualPad.pressed('note_' + key.substring(3));
+        }
+    }
+    #end
 
+    if (!isDown)
+    {
+        var keys = getKeyboard(key);
+        if (keys != null && FlxG.keys.anyPressed(keys))
+        {
+            controllerMode = false;
+            isDown = true;
+        }
+    }
+
+    if (!isDown)
+    {
+        var pads = getGamepad(key);
+        if (pads != null)
+        {
+            for (p in pads)
+            {
+                if (FlxG.gamepads.anyPressed(p))
+                {
+                    controllerMode = true;
+                    isDown = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!isDown)
+    {
+        holdTimers.set(key, 0);
+        holdStates.set(key, false);
+        return false;
+    }
+
+    var timer:Float = holdTimers.exists(key) ? holdTimers.get(key) : 0;
+    var active:Bool = holdStates.exists(key) ? holdStates.get(key) : false;
+
+    timer += FlxG.elapsed;
+
+    if (!active)
+    {
+        if (timer >= HOLD_DELAY)
+        {
+            holdStates.set(key, true);
+            holdTimers.set(key, 0);
+            return true;
+        }
+    }
+    else
+    {
+        if (timer >= HOLD_REPEAT)
+        {
+            holdTimers.set(key, 0);
+            return true;
+        }
+    }
+
+    holdTimers.set(key, timer);
+    return false;
+}
+	
 	public function justReleased(key:String):Bool
 	{
 		#if mobile
