@@ -162,82 +162,42 @@ class Controls
 
 	public function pressed(key:String):Bool
 {
-    var isDown:Bool = false;
-
     #if mobile
     if (virtualPad != null && virtualPad.exists && key != null)
     {
-        if (virtualPad.pressed(key)) isDown = true;
+        if (virtualPad.pressed(key, FlxG.elapsed)) return true;
 
-        if (!isDown)
+        if (StringTools.startsWith(key, 'note_'))
         {
-            if (StringTools.startsWith(key, 'note_'))
-			    isDown = virtualPad.pressed('ui_' + key.substring(5), FlxG.elapsed);
-			    
-            else if (StringTools.startsWith(key, 'ui_'))
-			    isDown = virtualPad.pressed('note_' + key.substring(3), FlxG.elapsed);
+            if (virtualPad.pressed('ui_' + key.substring(5), FlxG.elapsed)) return true;
+        }
+        else if (StringTools.startsWith(key, 'ui_'))
+        {
+            if (virtualPad.pressed('note_' + key.substring(3), FlxG.elapsed)) return true;
         }
     }
     #end
 
-    if (!isDown)
+    var keys = getKeyboard(key);
+    if (keys != null && FlxG.keys.anyPressed(keys))
     {
-        var keys = getKeyboard(key);
-        if (keys != null && FlxG.keys.anyPressed(keys))
-        {
-            controllerMode = false;
-            isDown = true;
-        }
+        controllerMode = false;
+        return true;
     }
 
-    if (!isDown)
+    var pads = getGamepad(key);
+    if (pads != null)
     {
-        var pads = getGamepad(key);
-        if (pads != null)
+        for (p in pads)
         {
-            for (p in pads)
+            if (FlxG.gamepads.anyPressed(p))
             {
-                if (FlxG.gamepads.anyPressed(p))
-                {
-                    controllerMode = true;
-                    isDown = true;
-                    break;
-                }
+                controllerMode = true;
+                return true;
             }
         }
     }
 
-    if (!isDown)
-    {
-        holdTimers.set(key, 0);
-        holdStates.set(key, false);
-        return false;
-    }
-
-    var timer:Float = holdTimers.exists(key) ? holdTimers.get(key) : 0;
-    var active:Bool = holdStates.exists(key) ? holdStates.get(key) : false;
-
-    timer += FlxG.elapsed;
-
-    if (!active)
-    {
-        if (timer >= HOLD_DELAY)
-        {
-            holdStates.set(key, true);
-            holdTimers.set(key, 0);
-            return true;
-        }
-    }
-    else
-    {
-        if (timer >= HOLD_REPEAT)
-        {
-            holdTimers.set(key, 0);
-            return true;
-        }
-    }
-
-    holdTimers.set(key, timer);
     return false;
 }
 	
@@ -277,25 +237,67 @@ class Controls
 
 		return false;
 	}
+
+	public function pressedRepeat(key:String):Bool
+{
+    #if mobile
+    if (virtualPad == null) return false;
+    #end
+
+    if (!pressed(key))
+    {
+        holdTimers.set(key, 0);
+        holdStates.set(key, false);
+        return false;
+    }
+
+    var timer:Float = holdTimers.exists(key) ? holdTimers.get(key) : 0;
+    var active:Bool = holdStates.exists(key) ? holdStates.get(key) : false;
+
+    timer += FlxG.elapsed;
+
+    if (!active)
+    {
+        if (timer >= HOLD_DELAY)
+        {
+            holdStates.set(key, true);
+            holdTimers.set(key, 0);
+            return true;
+        }
+    }
+    else
+    {
+        if (timer >= HOLD_REPEAT)
+        {
+            holdTimers.set(key, 0);
+            return true;
+        }
+    }
+
+    holdTimers.set(key, timer);
+    return false;
+}
 	
     public static function updateMouseBlock():Void
 {
     #if mobile
     if (virtualPad != null && virtualPad.exists)
     {
-        var onUI = virtualPad.overlapsPoint(FlxG.mouse.getWorldPosition())
-            && virtualPad.anyPressed();
+        var onUI:Bool = false;
 
-        if (onUI)
+        var mousePos = FlxG.mouse.getWorldPosition();
+
+        for (btn in virtualPad.buttons)
         {
-            FlxG.mouse.visible = false;
-            FlxG.mouse.enabled = false;
+            if (btn != null && btn.overlapsPoint(mousePos))
+            {
+                onUI = true;
+                break;
+            }
         }
-        else
-        {
-            FlxG.mouse.enabled = true;
-        }
+
+        FlxG.mouse.enabled = !onUI;
     }
     #end
-  }
+}
 }
