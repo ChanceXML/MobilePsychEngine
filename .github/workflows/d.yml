@@ -43,4 +43,4 @@ jobs:
               \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
             }]
           }" \
-          ${{ discord }}
+          ${{ secrets.DISCORD_WEBHOOK }}
