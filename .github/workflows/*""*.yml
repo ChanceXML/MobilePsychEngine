@@ -1,0 +1,45 @@
+name: CI + Discord Notifications
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+      - uses: actions/checkout@v3
+
+      - name: Send Commit
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d "{
+            \"username\": \"GitHub\",
+            \"avatar_url\": \"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\",
+            \"embeds\": [{
+              \"author\": {
+                \"name\": \"${{ github.actor }}\",
+                \"icon_url\": \"https://github.com/${{ github.actor }}.png\"
+              },
+              \"title\": \"📦 New Commit\",
+              \"url\": \"${{ github.event.head_commit.url }}\",
+              \"description\": \"${{ github.event.head_commit.message }}\",
+              \"color\": 3447003,
+              \"fields\": [
+                {
+                  \"name\": \"Repository\",
+                  \"value\": \"${{ github.repository }}\",
+                  \"inline\": true
+                },
+                {
+                  \"name\": \"Branch\",
+                  \"value\": \"${{ github.ref_name }}\",
+                  \"inline\": true
+                }
+              ],
+              \"footer\": {
+                \"text\": \"Commit Notification\"
+              },
+              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+            }]
+          }" \
+          ${{ secrets.DISCORD_WEBHOOK }}
