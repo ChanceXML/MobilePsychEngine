@@ -1,4 +1,4 @@
-name: CI + Discord Notifications
+name: discord
 
 on:
   push:
