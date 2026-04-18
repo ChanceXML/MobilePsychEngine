@@ -219,7 +219,21 @@ class FreeplayState extends MusicBeatState
 {
     super.closeSubState();
 
-    changeSelection(0, false);
+    #if mobile
+    if (virtualPad != null)
+    {
+        ButtonHelper.bind(virtualPad,
+            ['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+            ['accept', 'back', 'control', 'reset']
+        );
+
+        Controls.virtualPad = virtualPad;
+    }
+
+    FlxG.keys.reset();
+    #end
+
+    changeSelection(0);
     persistentUpdate = true;
 }
 
