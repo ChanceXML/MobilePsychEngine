@@ -85,8 +85,21 @@ class NativeAPI {
 	public static function hasVersion(vers:String)
 		return lime.system.System.platformLabel.toLowerCase().indexOf(vers.toLowerCase()) != -1;
 
-	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
+		public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
+		#if android
+		try {
+			// this calls android Material UI
+			var nativeAlert = lime.system.JNI.createStaticMethod("org/haxe/extension/Tools", "showMessage", "(Ljava/lang/String;Ljava/lang/String;)V", true);
+			nativeAlert(caption, message);
+		} catch (e:Dynamic) {
+			// fallback if the JNI call fails
+			lime.app.Application.current.window.alert(message, caption);
+		}
+		#elseif windows
 		lime.app.Application.current.window.alert(message, caption);
+		#else
+		lime.app.Application.current.window.alert(message, caption);
+		#end
 	}
 
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
