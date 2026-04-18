@@ -103,13 +103,31 @@ class OptionsState extends MusicBeatState
 	}
 
 	override function closeSubState()
-	{
-		super.closeSubState();
-		ClientPrefs.saveSettings();
-		#if DISCORD_ALLOWED
-		DiscordClient.changePresence("Options Menu", null);
-		#end
-	}
+{
+    super.closeSubState();
+
+    ClientPrefs.saveSettings();
+
+    #if mobile
+    // rebind controls
+    if (virtualPad != null)
+    {
+        ButtonHelper.bind(virtualPad,
+            ['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+            ['accept', 'back']
+        );
+
+        Controls.virtualPad = virtualPad;
+    }
+
+    // reset input
+    FlxG.keys.reset();
+    #end
+
+    #if DISCORD_ALLOWED
+    DiscordClient.changePresence("Options Menu", null);
+    #end
+}
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
