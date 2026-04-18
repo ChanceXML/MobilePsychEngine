@@ -91,8 +91,8 @@ class Main extends Sprite
 		      "Setup",
 		      "Files Need To Load Correctly. Close The App And Rejoin."
         	);
-
-	    Sys.exit(0);
+	      Sys.exit(0);
+		}
         #end
 		#elseif ios
 		Sys.setCwd(lime.system.System.applicationStorageDirectory);
@@ -274,4 +274,3 @@ class Main extends Sprite
 	}
 	#end
   }
-}
