@@ -3,6 +3,8 @@ package;
 #if android
 import extension.androidtools.content.Context;
 import android.utils.Files;
+import backend.utils.NativeAPI;
+import android.utils.ButtonHelper;
 #end
 
 import debug.FPSCounter;
