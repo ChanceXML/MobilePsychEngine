@@ -78,8 +78,23 @@ class Main extends Sprite
 
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
-		Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
-		// android.utils.Files.init();
+        Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
+
+        var base = Context.getExternalFilesDir() + "/";
+        var firstRun = !sys.FileSystem.exists(base + "mods/");
+
+        if (firstRun)
+        {
+	        android.utils.Files.init();
+
+        	NativeAPI.showMessageBox(
+		      "Setup",
+		      "Files Need To Load Correctly. Close The App And Rejoin."
+        	);
+
+	    Sys.exit(0);
+       }
+        #end
 		#elseif ios
 		Sys.setCwd(lime.system.System.applicationStorageDirectory);
 		#end
@@ -258,4 +273,5 @@ class Main extends Sprite
 		Sys.exit(1);
 	}
 	#end
+  }
 }
