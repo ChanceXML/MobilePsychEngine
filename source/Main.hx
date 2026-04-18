@@ -93,7 +93,6 @@ class Main extends Sprite
         	);
 	      Sys.exit(0);
 		}
-        #end
 		#elseif ios
 		Sys.setCwd(lime.system.System.applicationStorageDirectory);
 		#end
