@@ -3,7 +3,7 @@ package;
 #if android
 import extension.androidtools.content.Context;
 import android.utils.Files;
-import backend.utils.NativeAPI;
+import backend.NativeAPI;
 import android.utils.ButtonHelper;
 #end
 
