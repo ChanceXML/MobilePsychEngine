@@ -20,8 +20,8 @@ class HitboxHint extends FlxSpriteGroup
         camHint.zoom = 1;
         camHint.scroll.set(0, 0);
         camHint.pixelPerfectRender = false;
-        camHint.visible = ClientPrefs.data.hitboxHint;
-        camHint.alpha = ClientPrefs.data.hintOpacity;
+        camHint.alpha = ClientPrefs.data.hitboxHint;
+        camHint.visible = ClientPrefs.data.hitboxHint > 0;
         FlxG.cameras.add(camHint, true);
 
         var hintGraphic = Paths.image(
