@@ -199,6 +199,8 @@
     </ios>
 		
     <files include="ios/*.mm" if="ios" />
+
+	<dependency name="source/native/ios/NativePopup.mm" if="ios" />
 	
 	<!--Used for Izzy Engine's crash handler-->
 	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
