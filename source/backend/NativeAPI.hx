@@ -1,22 +1,35 @@
 package backend;
 
-import backend.Native;
 import openfl.ui.Mouse;
 import openfl.ui.MouseCursor;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.FlxColor;
 
+#if (windows && !macro)
+@:cppFileCode('
+#include <windows.h>
+#include <iostream>
+#include <dwmapi.h>
+#pragma comment(lib, "Dwmapi.lib")
+')
+#end
 class NativeAPI {
 	
 	public static function allocConsole() {
 		#if (windows && !macro)
+		untyped __cpp__('
+			AllocConsole();
+			freopen("CONIN$", "r", stdin);
+			freopen("CONOUT$", "w", stdout);
+			freopen("CONOUT$", "w", stderr);
+		');
 		#end
 	}
 
 	public static function getFileAttributesRaw(path:String, useAbsolute:Bool = true):Int {
 		#if (windows && !macro)
-		return -1;
+		return untyped __cpp__('GetFileAttributesA({0}.c_str())', path);
 		#else
 		return -1;
 		#end
@@ -28,7 +41,8 @@ class NativeAPI {
 
 	public static function setFileAttributes(path:String, attrib:OneOfThree<NativeAPI.FileAttribute, FileAttributeWrapper, Int>, useAbsolute:Bool = true):Int {
 		#if (windows && !macro)
-		return 0;
+		var attrInt:Int = cast(attrib, Int);
+		return untyped __cpp__('SetFileAttributesA({0}.c_str(), {1})', path, attrInt) ? 1 : 0;
 		#else
 		return 0;
 		#end
@@ -52,26 +66,56 @@ class NativeAPI {
 
 	public static function setDarkMode(title:String, enable:Bool) {
 		#if (windows && !macro)
+		var val:Int = enable ? 1 : 0;
+		untyped __cpp__('
+			HWND window = GetActiveWindow();
+			int darkVal = {0};
+			DwmSetWindowAttribute(window, 20, &darkVal, sizeof(darkVal));
+		', val);
 		#end
 	}
 
 	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = true) {
 		#if (windows && !macro)
+		var c:Int = (color.b << 16) | (color.g << 8) | color.r;
+		untyped __cpp__('
+			HWND window = GetActiveWindow();
+			int colorVal = {0};
+			if ({1}) DwmSetWindowAttribute(window, 35, &colorVal, sizeof(colorVal));
+			if ({2}) DwmSetWindowAttribute(window, 34, &colorVal, sizeof(colorVal));
+		', c, setHeader, setBorder);
 		#end
 	}
 
 	public static function resetWindowBorderColor(title:String, setHeader:Bool = true, setBorder:Bool = true) {
 		#if (windows && !macro)
+		untyped __cpp__('
+			HWND window = GetActiveWindow();
+			int defaultColor = 0xFFFFFFFF;
+			if ({0}) DwmSetWindowAttribute(window, 35, &defaultColor, sizeof(defaultColor));
+			if ({1}) DwmSetWindowAttribute(window, 34, &defaultColor, sizeof(defaultColor));
+		', setHeader, setBorder);
 		#end
 	}
 
 	public static function setWindowTitleColor(title:String, color:FlxColor) {
 		#if (windows && !macro)
+		var c:Int = (color.b << 16) | (color.g << 8) | color.r; 
+		untyped __cpp__('
+			HWND window = GetActiveWindow();
+			int colorVal = {0};
+			DwmSetWindowAttribute(window, 36, &colorVal, sizeof(colorVal));
+		', c);
 		#end
 	}
 
 	public static function resetWindowTitleColor(title:String) {
 		#if (windows && !macro)
+		untyped __cpp__('
+			HWND window = GetActiveWindow();
+			int defaultColor = 0xFFFFFFFF; 
+			DwmSetWindowAttribute(window, 36, &defaultColor, sizeof(defaultColor)); 
+		');
 		#end
 	}
 
@@ -86,27 +130,30 @@ class NativeAPI {
 		return lime.system.System.platformLabel.toLowerCase().indexOf(vers.toLowerCase()) != -1;
 
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING)
-{
-    #if android
-    try {
-	var fn = lime.system.JNI.createStaticMethod(
-		"org/haxe/extension/Tools",
-		"showMessage",
-		"(Ljava/lang/String;Ljava/lang/String;)V"
-	);
+	{
+		#if android
+		try {
+			var fn = lime.system.JNI.createStaticMethod(
+				"org/haxe/extension/Tools",
+				"showMessage",
+				"(Ljava/lang/String;Ljava/lang/String;)V"
+			);
 
-	if (fn != null)
-		fn(caption, message);
-	else
+			if (fn != null)
+				fn(caption, message);
+			else
+				lime.app.Application.current.window.alert(message, caption);
+		}
+		catch (e:Dynamic) {
+			lime.app.Application.current.window.alert(message, caption);
+		}
+		#elseif (windows && !macro)
+		var iconInt:Int = cast(icon, Int);
+		untyped __cpp__('MessageBoxA(GetActiveWindow(), {0}.c_str(), {1}.c_str(), {2})', message, caption, iconInt);
+		#else
 		lime.app.Application.current.window.alert(message, caption);
-}
-catch (e:Dynamic) {
-	lime.app.Application.current.window.alert(message, caption);
-}
-#else
-lime.app.Application.current.window.alert(message, caption);
-#end
-}
+		#end
+	}
 
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
 		#if (sys && !android)
