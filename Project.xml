@@ -190,9 +190,9 @@
         <source path="dependencies/android/src" />
     </android>
 		
-    <section if="ios">
-        <source path="ios" />
-    </section>
+    <files id="haxe" if="ios">
+        <file name="source/native/ios/NativePopup.mm" />
+    </files>
 
 	<ios>
         <compilerflag value="-ObjC" />
