@@ -9,6 +9,7 @@ import android.utils.ButtonHelper;
 
 #if ios
 import backend.IOSNative;
+import lime.system.System;
 #end
 
 import debug.FPSCounter;
@@ -102,6 +103,11 @@ class Main extends Sprite
 		}
 		#elseif ios
 		Sys.setCwd(lime.system.System.applicationStorageDirectory);
+
+		var base = System.applicationStorageDirectory;
+        base = haxe.io.Path.addTrailingSlash(base);
+
+        var firstRun = !sys.FileSystem.exists(base + "mods/");
 		
 		if (firstRun)
 		{
