@@ -150,9 +150,9 @@ class NativeAPI {
 	public static function showToast(message:String)
 	{
 		#if android
-		extension.androidtools.Tools.showToast(message);
+		//extension.androidtools.Tools.showToast(message);
 		#else
-		trace("Toast: " + message);
+		//trace("Toast: " + message);
 		#end
 	}
 
