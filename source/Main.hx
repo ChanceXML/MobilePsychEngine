@@ -7,6 +7,10 @@ import backend.NativeAPI;
 import android.utils.ButtonHelper;
 #end
 
+#if ios
+import backend.iOSNative;
+#end
+
 import debug.FPSCounter;
 
 import flixel.graphics.FlxGraphic;
@@ -61,6 +65,7 @@ class Main extends Sprite
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
 
+	
 	public static var fpsVar:FPSCounter;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
@@ -97,6 +102,14 @@ class Main extends Sprite
 		}
 		#elseif ios
 		Sys.setCwd(lime.system.System.applicationStorageDirectory);
+		
+		if (firstRun)
+		{
+			android.utils.Files.init();
+            backend.IOSNative.ios_show_alert("Setup", "Files Need To Load Correctly. Close The App And Rejoin.");
+	
+	      Sys.exit(0);
+        }
 		#end
 		#if VIDEOS_ALLOWED
 		hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0")  ['--no-lua'] #end);
