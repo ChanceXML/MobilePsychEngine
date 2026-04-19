@@ -202,6 +202,7 @@
     
         <!-- This tells the compiler to actually compile that specific file -->
         <dependency name="source/native/ios/NativePopup.mm" />
+		<config xcode-excluded-architectures="arm64" if="simulator" />
     </section>
 		
 	
