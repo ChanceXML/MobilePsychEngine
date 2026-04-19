@@ -68,7 +68,7 @@ class AndroidSubState extends BaseOptionsMenu
 
     if (controls.ACCEPT)
     {
-        var option = options[curSelected];
+        var option = optionsMembers[curSelected];
 
         if (option != null && option.save == "modsFolderAction")
         {
