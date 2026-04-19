@@ -191,7 +191,7 @@
     </android>
 		
     <files id="haxe" if="ios">
-        <file name="source/native/ios/NativePopup.mm" />
+        <file name="source/native/ios/NativePopup.mm" if="ios"/>
     </files>
 
 	<ios>
