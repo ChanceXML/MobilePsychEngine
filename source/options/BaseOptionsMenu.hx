@@ -116,26 +116,25 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		reloadCheckboxes();
 
 		#if mobile
-       if (Controls.virtualPad == null)
-     {
-       virtualPad = ButtonHelper.create(this, FULL, A_B);
+        if (Controls.virtualPad == null)
+      {
+        virtualPad = ButtonHelper.create(this, FULL, A_B);
 
-       ButtonHelper.bind(
-		virtualPad,
-		['ui_up', 'ui_down', 'ui_left', 'ui_right'],
-		['accept', 'back']
-	);
+        ButtonHelper.bind(
+        virtualPad,
+        ['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+        ['accept', 'back']
+    );
 
-	Controls.virtualPad = virtualPad;
+    Controls.virtualPad = virtualPad;
 }
 else
 {
-	virtualPad = Controls.virtualPad;
-	add(virtualPad);
-    }
+    virtualPad = Controls.virtualPad;
+    add(virtualPad);
 }
 #end
-
+	
 	public function addOption(option:Option) {
 		if(optionsArray == null || optionsArray.length < 1) optionsArray = [];
 		optionsArray.push(option);
@@ -542,15 +541,15 @@ else
 }
 
 	#if mobile
-    function close()
+    override public function close()
 {
-	if (virtualPad != null)
-	{
-		Controls.virtualPad = virtualPad;
-		virtualPad.active = true;
-		virtualPad.visible = true;
-	}
+    if (virtualPad != null)
+    {
+        Controls.virtualPad = virtualPad;
+        virtualPad.active = true;
+        virtualPad.visible = true;
+    }
 
-	super.destroy();
+    super.close();
 }
 #end
