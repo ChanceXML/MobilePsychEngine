@@ -7,7 +7,7 @@ import flixel.util.typeLimit.OneOfThree;
 import flixel.util.FlxColor;
 
 #if android
-import android.Tools;
+import extension.androidtools.Tools;
 #end
 
 #if (windows && !macro)
