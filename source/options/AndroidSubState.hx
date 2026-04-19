@@ -78,4 +78,11 @@ class AndroidSubState extends BaseOptionsMenu
 
     super.selectOption();
     }
+
+	function openModsPicker()
+{
+    #if android
+    AndroidModSync.pickModsFolder();
+    #end
+    }
 }
