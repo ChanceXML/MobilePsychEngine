@@ -1,6 +1,5 @@
 #import <UIKit/UIKit.h>
 
-__attribute__((visibility("default")))
 extern "C" void ios_show_alert(const char* title, const char* message)
 {
     NSString *t = [NSString stringWithUTF8String:title];
