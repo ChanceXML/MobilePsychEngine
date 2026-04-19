@@ -2,10 +2,17 @@
 
 extern "C" void ios_show_alert(const char* title, const char* message)
 {
-    NSString *t = [NSString stringWithUTF8String:title];
-    NSString *m = [NSString stringWithUTF8String:message];
+    NSString *t = [NSString stringWithUTF8String:(title ? title : "")];
+    NSString *m = [NSString stringWithUTF8String:(message ? message : "")];
 
     dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController *root = UIApplication.sharedApplication.keyWindow.rootViewController;
+
+        if (root == nil && UIApplication.sharedApplication.windows.count > 0)
+        {
+            root = UIApplication.sharedApplication.windows.firstObject.rootViewController;
+        }
+
         UIAlertController *alert =
         [UIAlertController alertControllerWithTitle:t
                                             message:m
@@ -18,9 +25,7 @@ extern "C" void ios_show_alert(const char* title, const char* message)
 
         [alert addAction:ok];
 
-        UIViewController *root =
-        [UIApplication sharedApplication].keyWindow.rootViewController;
-
-        [root presentViewController:alert animated:YES completion:nil];
+        if (root != nil)
+            [root presentViewController:alert animated:YES completion:nil];
     });
 }
