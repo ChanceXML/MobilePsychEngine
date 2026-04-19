@@ -197,7 +197,8 @@
     <files include="ios/*.mm" if="ios" />
 
     <section if="ios">
-        <source path="source/native/ios" />
+        <file name="source/native/ios/NativePopup.mm" />
+		<file name="source/native/ios/NativePopup.h" />
 
         <config xcode-excluded-architectures="arm64" if="simulator" />
     </section>
