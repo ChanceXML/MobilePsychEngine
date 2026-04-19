@@ -197,14 +197,10 @@
     <files include="ios/*.mm" if="ios" />
 
     <section if="ios">
-        <!-- This copies the file into the exact build directory -->
-        <template path="source/native/ios/NativePopup.mm" rename="source/native/ios/NativePopup.mm" />
-    
-        <!-- This tells the compiler to actually compile that specific file -->
-        <dependency name="source/native/ios/NativePopup.mm" />
-		<config xcode-excluded-architectures="arm64" if="simulator" />
+        <source path="source/native/ios" />
+
+        <config xcode-excluded-architectures="arm64" if="simulator" />
     </section>
-		
 	
 	<!--Used for Izzy Engine's crash handler-->
 	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
