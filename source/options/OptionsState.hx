@@ -4,7 +4,6 @@ import states.MainMenuState;
 import backend.StageData;
 
 #if mobile
-import backend.Controls;
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
 import android.utils.ButtonHelper;
@@ -25,25 +24,21 @@ class OptionsState extends MusicBeatState
 
 	#if mobile
 	public var virtualPad:VirtualPad;
+	var padCreated:Bool = false;
 	#end
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 
-	public static var menuBG:FlxSprite;
-	public static var onPlayState:Bool = false;
-
 	var selectorLeft:Alphabet;
 	var selectorRight:Alphabet;
+
+	public static var onPlayState:Bool = false;
 
 	override function create()
 	{
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Options Menu", null);
-		#end
-
-		#if mobile
-		cleanupVirtualPad();
 		#end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -57,7 +52,7 @@ class OptionsState extends MusicBeatState
 
 		for (num => option in options)
 		{
-			var optionText:Alphabet = new Alphabet(0, 0, Language.getPhrase('options_$option', option), true);
+			var optionText = new Alphabet(0, 0, Language.getPhrase('options_$option', option), true);
 			optionText.screenCenter();
 			optionText.y += (92 * (num - (options.length / 2))) + 45;
 			grpOptions.add(optionText);
@@ -75,63 +70,41 @@ class OptionsState extends MusicBeatState
 		super.create();
 
 		#if mobile
-		createVirtualPad();
+		if (!padCreated)
+		{
+			virtualPad = ButtonHelper.create(this, FULL, A_B);
+
+			ButtonHelper.bind(
+				virtualPad,
+				['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+				['accept', 'back']
+			);
+
+			add(virtualPad);
+			padCreated = true;
+		}
 		#end
 	}
 
 	#if mobile
-	function createVirtualPad()
+	override function openSubState(state:FlxSubState)
 	{
-		if (Controls.virtualPad != null)
-			cleanupVirtualPad();
-
-		virtualPad = ButtonHelper.create(this, FULL, A_B);
-
-		ButtonHelper.bind(
-			virtualPad,
-			['ui_up', 'ui_down', 'ui_left', 'ui_right'],
-			['accept', 'back']
-		);
-
-		Controls.virtualPad = virtualPad;
-	}
-
-	function cleanupVirtualPad()
-	{
-		if (Controls.virtualPad != null)
-		{
-			Controls.virtualPad.kill();
-			Controls.virtualPad.destroy();
-			Controls.virtualPad = null;
-		}
-
 		if (virtualPad != null)
-		{
-			remove(virtualPad);
-			virtualPad.destroy();
-			virtualPad = null;
-		}
+			virtualPad.visible = false;
+
+		super.openSubState(state);
 	}
-	#end
 
 	override function closeSubState()
 	{
 		super.closeSubState();
 
-		ClientPrefs.saveSettings();
-
-		#if mobile
 		if (virtualPad != null)
-		{
-			virtualPad.active = true;
 			virtualPad.visible = true;
-		}
-		#end
 
-		#if DISCORD_ALLOWED
-		DiscordClient.changePresence("Options Menu", null);
-		#end
+		ClientPrefs.saveSettings();
 	}
+	#end
 
 	override function update(elapsed:Float)
 	{
@@ -150,13 +123,35 @@ class OptionsState extends MusicBeatState
 			{
 				StageData.loadDirectory(PlayState.SONG);
 				LoadingState.loadAndSwitchState(new PlayState());
-				FlxG.sound.music.volume = 0;
 			}
 			else
 				MusicBeatState.switchState(new MainMenuState());
 		}
 		else if (controls.ACCEPT)
 			openSelectedSubstate(options[curSelected]);
+	}
+
+	function openSelectedSubstate(label:String)
+	{
+		switch(label)
+		{
+			case 'Android':
+				openSubState(new options.AndroidSubState());
+			case 'Note Colors':
+				openSubState(new options.NotesColorSubState());
+			case 'Controls':
+				openSubState(new options.ControlsSubState());
+			case 'Graphics':
+				openSubState(new options.GraphicsSettingsSubState());
+			case 'Visuals':
+				openSubState(new options.VisualsSettingsSubState());
+			case 'Gameplay':
+				openSubState(new options.GameplaySettingsSubState());
+			case 'Adjust Delay and Combo':
+				MusicBeatState.switchState(new options.NoteOffsetState());
+			case 'Language':
+				openSubState(new options.LanguageSubState());
+		}
 	}
 
 	function changeSelection(change:Int = 0)
@@ -184,10 +179,16 @@ class OptionsState extends MusicBeatState
 	override function destroy()
 	{
 		#if mobile
-		cleanupVirtualPad();
+		if (virtualPad != null)
+		{
+			remove(virtualPad);
+			virtualPad.kill();
+			virtualPad.destroy();
+			virtualPad = null;
+		}
+		padCreated = false;
 		#end
 
-		ClientPrefs.loadPrefs();
 		super.destroy();
 	}
 }
