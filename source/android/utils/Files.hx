@@ -12,6 +12,8 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
+import lime.system.System;
+
 using StringTools;
 
 class Files
@@ -20,35 +22,39 @@ class Files
 	{
 		#if android
 		return Context.getExternalFilesDir() + "/";
+		#elseif ios
+		return System.applicationStorageDirectory;
 		#else
-		return "";
+		return System.applicationStorageDirectory;
 		#end
 	}
 
 	public static function init():Void
 	{
-		#if android
 		var base = getBase();
+
+		trace("Base path: " + base);
 
 		copyFolderOnce("assets", base + "assets/");
 		copyFolderOnce("mods", base + "mods/");
-		#end
 	}
 
 	// copy if folder doesnt exist
 	static function copyFolderOnce(folder:String, target:String):Void
 	{
+		#if sys
 		if (FileSystem.exists(target))
 		{
 			trace(folder + " already exists, skipping.");
 			return;
 		}
+		#end
 
 		trace("Copying " + folder + "...");
 		copyAssets(folder, target);
 	}
 
-	// copy files from the apk
+	// copy files from the apk / bundle
 	static function copyAssets(source:String, target:String):Void
 	{
 		var list = Assets.list();
@@ -83,9 +89,11 @@ class Files
 	// dir creation
 	static function createDirRecursive(path:String):Void
 	{
+		#if sys
 		if (path == null || path == "") return;
 
 		if (!FileSystem.exists(path))
 			FileSystem.createDirectory(path);
+		#end
 	}
 }
