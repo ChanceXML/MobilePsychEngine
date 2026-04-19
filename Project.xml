@@ -180,6 +180,11 @@
 		<haxedef name="HXCPP_STACK_TRACE" />
 		<haxedef name="HXCPP_CATCH_SEGV" />
 	</section>
+		
+    <!-- IOS Folder -->
+	<section if="ios">
+        <source path="ios" />
+   </section>
 	
 	<!--Used for Izzy Engine's crash handler-->
 	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
