@@ -13,6 +13,7 @@ import sys.io.File;
 #end
 
 import lime.system.System;
+import haxe.io.Path;
 
 using StringTools;
 
@@ -25,13 +26,14 @@ class Files
 		#elseif ios
 		return System.applicationStorageDirectory;
 		#else
-		return System.applicationStorageDirectory;
+		return Sys.getCwd();
 		#end
 	}
 
 	public static function init():Void
 	{
 		var base = getBase();
+		base = Path.addTrailingSlash(base);
 
 		trace("Base path: " + base);
 
@@ -39,7 +41,6 @@ class Files
 		copyFolderOnce("mods", base + "mods/");
 	}
 
-	// copy if folder doesnt exist
 	static function copyFolderOnce(folder:String, target:String):Void
 	{
 		#if sys
@@ -54,7 +55,6 @@ class Files
 		copyAssets(folder, target);
 	}
 
-	// copy files from the apk / bundle
 	static function copyAssets(source:String, target:String):Void
 	{
 		var list = Assets.list();
@@ -66,9 +66,9 @@ class Files
 			var relative = asset.substr(source.length);
 			if (relative.startsWith("/")) relative = relative.substr(1);
 
-			var outPath = target + relative;
+			var outPath = Path.addTrailingSlash(target) + relative;
 
-			createDirRecursive(haxe.io.Path.directory(outPath));
+			createDirRecursive(Path.directory(outPath));
 
 			try {
 				var bytes:Bytes = Assets.getBytes(asset);
@@ -86,11 +86,12 @@ class Files
 		trace("Finished copying " + source);
 	}
 
-	// dir creation
 	static function createDirRecursive(path:String):Void
 	{
 		#if sys
 		if (path == null || path == "") return;
+
+		path = Path.normalize(path);
 
 		if (!FileSystem.exists(path))
 			FileSystem.createDirectory(path);
