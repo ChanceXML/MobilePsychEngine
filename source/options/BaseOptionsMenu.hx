@@ -116,16 +116,24 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		reloadCheckboxes();
 
 		#if mobile
-        virtualPad = ButtonHelper.create(this, FULL, A_B);
+       if (Controls.virtualPad == null)
+     {
+       virtualPad = ButtonHelper.create(this, FULL, A_B);
 
-        ButtonHelper.bind(virtualPad,
-    	['ui_up', 'ui_down', 'ui_left', 'ui_right'],
-    	['accept', 'back']
-        );
+       ButtonHelper.bind(
+		virtualPad,
+		['ui_up', 'ui_down', 'ui_left', 'ui_right'],
+		['accept', 'back']
+	);
 
-        Controls.virtualPad = virtualPad;
-        #end
-	}
+	Controls.virtualPad = virtualPad;
+}
+else
+{
+	virtualPad = Controls.virtualPad;
+	add(virtualPad);
+}
+#end
 
 	public function addOption(option:Option) {
 		if(optionsArray == null || optionsArray.length < 1) optionsArray = [];
@@ -530,4 +538,19 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	function reloadCheckboxes()
 		for (checkbox in checkboxGroup)
 			checkbox.daValue = Std.string(optionsArray[checkbox.ID].getValue()) == 'true'; //Do not take off the Std.string() from this, it will break a thing in Mod Settings Menu
+}
+
+	override function close()
+{
+	#if mobile
+	if (virtualPad != null)
+	{
+		Controls.virtualPad = virtualPad;
+
+		virtualPad.active = true;
+		virtualPad.visible = true;
+	}
+	#end
+
+	super.close();
 }
