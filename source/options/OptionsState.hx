@@ -2,6 +2,7 @@ package options;
 
 import states.MainMenuState;
 import backend.StageData;
+
 #if mobile
 import backend.Controls;
 import backend.ClientPrefs;
@@ -28,23 +29,9 @@ class OptionsState extends MusicBeatState
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
+
 	public static var menuBG:FlxSprite;
 	public static var onPlayState:Bool = false;
-
-	function openSelectedSubstate(label:String)
-	{
-		switch(label)
-		{
-			case 'Android': openSubState(new options.AndroidSubState());
-			case 'Note Colors': openSubState(new options.NotesColorSubState());
-			case 'Controls': openSubState(new options.ControlsSubState());
-			case 'Graphics': openSubState(new options.GraphicsSettingsSubState());
-			case 'Visuals': openSubState(new options.VisualsSettingsSubState());
-			case 'Gameplay': openSubState(new options.GameplaySettingsSubState());
-			case 'Adjust Delay and Combo': MusicBeatState.switchState(new options.NoteOffsetState());
-			case 'Language': openSubState(new options.LanguageSubState());
-		}
-	}
 
 	var selectorLeft:Alphabet;
 	var selectorRight:Alphabet;
@@ -55,13 +42,9 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
-		if (virtualPad != null)
-		{
-			virtualPad.destroy();
-			virtualPad = null;
-		}
-
-		Controls.virtualPad = null;
+		#if mobile
+		cleanupVirtualPad();
+		#end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.data.antialiasing;
@@ -82,6 +65,7 @@ class OptionsState extends MusicBeatState
 
 		selectorLeft = new Alphabet(0, 0, '>', true);
 		add(selectorLeft);
+
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
@@ -91,16 +75,44 @@ class OptionsState extends MusicBeatState
 		super.create();
 
 		#if mobile
+		createVirtualPad();
+		#end
+	}
+
+	#if mobile
+	function createVirtualPad()
+	{
+		if (Controls.virtualPad != null)
+			cleanupVirtualPad();
+
 		virtualPad = ButtonHelper.create(this, FULL, A_B);
 
-		ButtonHelper.bind(virtualPad,
+		ButtonHelper.bind(
+			virtualPad,
 			['ui_up', 'ui_down', 'ui_left', 'ui_right'],
 			['accept', 'back']
 		);
 
 		Controls.virtualPad = virtualPad;
-		#end
 	}
+
+	function cleanupVirtualPad()
+	{
+		if (Controls.virtualPad != null)
+		{
+			Controls.virtualPad.kill();
+			Controls.virtualPad.destroy();
+			Controls.virtualPad = null;
+		}
+
+		if (virtualPad != null)
+		{
+			remove(virtualPad);
+			virtualPad.destroy();
+			virtualPad = null;
+		}
+	}
+	#end
 
 	override function closeSubState()
 	{
@@ -111,18 +123,9 @@ class OptionsState extends MusicBeatState
 		#if mobile
 		if (virtualPad != null)
 		{
-			ButtonHelper.bind(virtualPad,
-				['ui_up', 'ui_down', 'ui_left', 'ui_right'],
-				['accept', 'back']
-			);
-
 			virtualPad.active = true;
 			virtualPad.visible = true;
-
-			Controls.virtualPad = virtualPad;
 		}
-
-		FlxG.keys.reset();
 		#end
 
 		#if DISCORD_ALLOWED
@@ -180,13 +183,9 @@ class OptionsState extends MusicBeatState
 
 	override function destroy()
 	{
-		if (virtualPad != null)
-		{
-			virtualPad.destroy();
-			virtualPad = null;
-		}
-
-		Controls.virtualPad = null;
+		#if mobile
+		cleanupVirtualPad();
+		#end
 
 		ClientPrefs.loadPrefs();
 		super.destroy();
