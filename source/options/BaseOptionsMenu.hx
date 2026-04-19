@@ -132,6 +132,7 @@ else
 {
 	virtualPad = Controls.virtualPad;
 	add(virtualPad);
+    }
 }
 #end
 
