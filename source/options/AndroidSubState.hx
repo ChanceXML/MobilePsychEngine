@@ -1,5 +1,9 @@
 package options;
 
+#if android
+import openfl.utils.JNI;
+#end
+
 class AndroidSubState extends BaseOptionsMenu
 {
 	public function new()
@@ -45,6 +49,33 @@ class AndroidSubState extends BaseOptionsMenu
 			['Bottom', 'Full']); // had to change the name because Hitbox Style and Hint Style would overlap
 		addOption(option);
 
+		var option:Option = new Option(
+            'Mods Folder',
+            'Select a folder to import mods from.',
+            'modsFolderAction',
+            STRING,
+            ['Select Folder']
+        ); 
+        addOption(option);
+		
 		super();
+
 	}
+	
+    override function selectOption()
+{
+    var option:Option = options[curSelected];
+
+    if (option.save == "modsFolderAction")
+    {
+        #if android
+        openModsPicker();
+        #end
+
+        option.setValue("Select Folder");
+        return;
+    }
+
+    super.selectOption();
+    }
 }
