@@ -85,22 +85,25 @@ class NativeAPI {
 	public static function hasVersion(vers:String)
 		return lime.system.System.platformLabel.toLowerCase().indexOf(vers.toLowerCase()) != -1;
 
-	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
-		#if android
-		try {
-			var nativeAlert = lime.system.JNI.createStaticMethod("org/haxe/extension/Tools", "showMessage", "(Ljava/lang/String;Ljava/lang/String;)V", true);
-			nativeAlert(caption, message);
-		} catch (e:Dynamic) {
-			if (lime.app.Application.current != null && lime.app.Application.current.window != null) {
-				lime.app.Application.current.window.alert(message, caption);
-			}
-		}
-		#else
-		if (lime.app.Application.current != null && lime.app.Application.current.window != null) {
-			lime.app.Application.current.window.alert(message, caption);
-		}
-		#end
-	}
+	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING)
+{
+    #if android
+    try
+    {
+        untyped __java__("org.haxe.extension.Tools.showMessage(" + caption + ", " + message + ")");
+    }
+    catch (e:Dynamic)
+    {
+        lime.app.Application.current.window.alert(message, caption);
+    }
+
+    #elseif ios
+    backend.IOSNative.ios_show_alert(caption, message);
+
+    #else
+    lime.app.Application.current.window.alert(message, caption);
+    #end
+}
 
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
 		#if (sys && !android)
