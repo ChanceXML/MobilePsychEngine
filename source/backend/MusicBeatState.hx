@@ -3,6 +3,7 @@ package backend;
 import flixel.FlxState;
 import backend.PsychCamera;
 import backend.Controls;
+import AndroidModSync;
 
 class MusicBeatState extends FlxState
 {
@@ -39,7 +40,14 @@ class MusicBeatState extends FlxState
 		}
 		FlxTransitionableState.skipNextTransOut = false;
 		timePassedOnState = 0;
-	}
+
+		if (!FlxG.save.data.modsSynced)
+       {
+        AndroidModSync.syncModsFromSAF();
+        FlxG.save.data.modsSynced = true;
+        FlxG.save.flush();
+       }
+    }
 
 	public function initPsychCamera():PsychCamera
 	{
