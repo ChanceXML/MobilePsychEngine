@@ -89,21 +89,24 @@ class NativeAPI {
 {
     #if android
     try
-    {
-        untyped __java__("org.haxe.extension.Tools.showMessage(" + caption + ", " + message + ")");
-    }
-    catch (e:Dynamic)
-    {
+{
+    var fn = lime.system.JNI.createStaticMethod(
+        "org/haxe/extension/Tools",
+        "showMessage",
+        "(Ljava/lang/String;Ljava/lang/String;)V",
+        false
+    );
+
+    if (fn != null)
+        fn(caption, message);
+    else
         lime.app.Application.current.window.alert(message, caption);
-    }
-
-    #elseif ios
-    backend.IOSNative.ios_show_alert(caption, message);
-
-    #else
-    lime.app.Application.current.window.alert(message, caption);
-    #end
 }
+catch (e:Dynamic)
+{
+    lime.app.Application.current.window.alert(message, caption);
+}
+#end
 
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
 		#if (sys && !android)
