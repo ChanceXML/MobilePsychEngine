@@ -112,7 +112,7 @@ class Main extends Sprite
 		if (firstRun)
 		{
 			android.utils.Files.init();
-            backend.IOSNative.ios_show_alert(Setup, Files Need To Load Correctly. Close The App And Rejoin.);
+            backend.IOSNative.ios_show_alert("Setup", "Files Need To Load Correctly. Close The App And Rejoin.");
 	      Sys.exit(0);
         }
 		#end
