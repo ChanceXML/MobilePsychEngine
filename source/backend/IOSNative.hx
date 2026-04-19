@@ -6,14 +6,14 @@ package backend;
 extern class IOSNative
 {
     @:native("ios_show_alert")
-    public static function ios_show_alert(title:String, message:String):Void;
+    public static function showAlert(title:String, message:String):Void;
 }
 
 #else
 
 class IOSNative
 {
-    public static function ios_show_alert(title:String, message:String):Void {}
+    public static function showAlert(title:String, message:String):Void {}
 }
 
 #end
