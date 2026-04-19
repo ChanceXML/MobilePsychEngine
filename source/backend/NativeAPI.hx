@@ -106,6 +106,7 @@ catch (e:Dynamic) {
 #else
 lime.app.Application.current.window.alert(message, caption);
 #end
+}
 
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
 		#if (sys && !android)
