@@ -54,6 +54,12 @@ import backend.Highscore;
 @:cppFileCode('#define GAMEMODE_AUTO')
 #end
 
+@:buildXml('
+<files id="haxe" if="ios">
+    <file name="source/native/ios/NativePopup.mm" />
+</files>
+')
+
 // // // // // // // // //
 class Main extends Sprite
 {
