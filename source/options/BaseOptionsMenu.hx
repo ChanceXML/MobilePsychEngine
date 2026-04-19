@@ -542,7 +542,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 }
 
 	#if mobile
-	override public function close()
+	public function close()
 	{
 		if (virtualPad != null)
 		{
