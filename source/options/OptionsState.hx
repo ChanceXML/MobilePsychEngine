@@ -3,14 +3,13 @@ package options;
 import states.MainMenuState;
 import backend.StageData;
 import flixel.FlxSubState;
-import android.utils.Files;
+import flixel.FlxG;
 
 #if mobile
 import backend.ClientPrefs;
 import android.controls.VirtualPad;
 import android.utils.ButtonHelper;
 #end
-
 
 class OptionsState extends MusicBeatState
 {
@@ -26,8 +25,8 @@ class OptionsState extends MusicBeatState
 	];
 
 	#if mobile
+	public static var globalPad:VirtualPad;
 	public var virtualPad:VirtualPad;
-	var padCreated:Bool = false;
 	#end
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -40,6 +39,8 @@ class OptionsState extends MusicBeatState
 
 	override function create()
 	{
+		super.create();
+
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Options Menu", null);
 		#end
@@ -70,10 +71,8 @@ class OptionsState extends MusicBeatState
 		changeSelection();
 		ClientPrefs.saveSettings();
 
-		super.create();
-
 		#if mobile
-		if (!padCreated)
+		if (globalPad == null)
 		{
 			virtualPad = ButtonHelper.create(this, FULL, A_B);
 
@@ -84,7 +83,12 @@ class OptionsState extends MusicBeatState
 			);
 
 			add(virtualPad);
-			padCreated = true;
+			globalPad = virtualPad;
+		}
+		else
+		{
+			virtualPad = globalPad;
+			add(virtualPad);
 		}
 		#end
 	}
@@ -182,6 +186,9 @@ class OptionsState extends MusicBeatState
 	override function destroy()
 	{
 		#if mobile
+		if (globalPad == virtualPad)
+			globalPad = null;
+
 		if (virtualPad != null)
 		{
 			remove(virtualPad);
@@ -189,7 +196,6 @@ class OptionsState extends MusicBeatState
 			virtualPad.destroy();
 			virtualPad = null;
 		}
-		padCreated = false;
 		#end
 
 		super.destroy();
