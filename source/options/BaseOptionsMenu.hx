@@ -537,21 +537,22 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	}
 
 	function reloadCheckboxes()
-		for (checkbox in checkboxGroup)
-			checkbox.daValue = Std.string(optionsArray[checkbox.ID].getValue()) == 'true'; //Do not take off the Std.string() from this, it will break a thing in Mod Settings Menu
+{
+    for (checkbox in checkboxGroup)
+    {
+        checkbox.daValue = Std.string(optionsArray[checkbox.ID].getValue()) == 'true';
+    }
 }
-
 	#if mobile
-	public function close()
-	{
-		if (virtualPad != null)
-		{
-			Controls.virtualPad = virtualPad;
-			virtualPad.active = true;
-			virtualPad.visible = true;
-		}
+function close()
+{
+    if (virtualPad != null)
+    {
+        Controls.virtualPad = virtualPad;
+        virtualPad.active = true;
+        virtualPad.visible = true;
+    }
 
-		super.close();
-	}
-	#end
+    super.close();
 }
+#end
