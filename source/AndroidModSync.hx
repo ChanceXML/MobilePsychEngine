@@ -3,6 +3,8 @@ import sys.io.File;
 
 class AndroidModSync
 {
+    static var fileCache:Map<String, Float> = new Map();
+
     public static function syncModsFromSAF()
     {
         var sourceFolder = ClientPrefs.data.modsFolder;
@@ -45,13 +47,34 @@ class AndroidModSync
             }
             else
             {
+                var shouldCopy:Bool = false;
+
                 try
                 {
-                    File.copy(srcPath, dstPath);
+                    var srcTime = FileSystem.stat(srcPath).mtime.getTime();
+
+                    if (!fileCache.exists(srcPath) || fileCache.get(srcPath) != srcTime)
+                    {
+                        shouldCopy = true;
+                        fileCache.set(srcPath, srcTime);
+                    }
                 }
                 catch (e)
                 {
-                    trace("Failed copying: " + srcPath);
+                    shouldCopy = true;
+                }
+
+                if (shouldCopy)
+                {
+                    try
+                    {
+                        File.copy(srcPath, dstPath);
+                        trace("Updated file: " + srcPath);
+                    }
+                    catch (e)
+                    {
+                        trace("Failed copying: " + srcPath);
+                    }
                 }
             }
         }
