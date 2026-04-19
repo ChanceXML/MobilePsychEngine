@@ -1,13 +1,14 @@
 package backend;
 
 #if cpp
-@:cppFileCode('extern "C" void ios_show_alert(const char* title, const char* message);')
+@:include("NativePopup.mm")
 #end
 
 class IOSNative
 {
 	#if cpp
 	@:native("ios_show_alert")
+	@:extern
 	public static function showAlert(title:String, message:String):Void;
 	#end
 
