@@ -187,7 +187,7 @@
     </section>
 
     <android>
-        <source path="android/src" />
+        <source path="dependencies/android/src" />
     </android>
 		
     <section if="ios">
