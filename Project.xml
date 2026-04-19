@@ -183,10 +183,12 @@
 
 	<!-- Android Folder -->
 	<section if="android">
-        <source path="android/src" />
-	</section>
+        <source path="source" />
+    </section>
 
-	<files include="android/src/org/haxe/extension/*.java" if="android" />
+    <android>
+        <source path="android/src" />
+    </android>
 		
     <section if="ios">
         <source path="ios" />
