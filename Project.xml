@@ -192,8 +192,10 @@
         <source path="ios" />
     </section>
 
-	<compilerflag name="-ObjC" if="ios" />
-
+	<ios>
+        <compilerflag value="-ObjC" />
+    </ios>
+		
     <files include="ios/*.mm" if="ios" />
 	
 	<!--Used for Izzy Engine's crash handler-->
