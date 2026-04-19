@@ -54,15 +54,22 @@ import backend.Highscore;
 @:cppFileCode('#define GAMEMODE_AUTO')
 #end
 
+@:headerCode('
+#if ios
+#include <native/ios/NativePopup.mm>
+#endif
+')
+
 @:buildXml('
-<files id="haxe" if="ios">
-    <file name="${PROJECT_DIR}/source/native/ios/NativePopup.mm" />
-</files>
+<target id="haxe">
+	<file name="../source/native/ios/NativePopup.mm" if="ios" />
+</target>
 ')
 	
 #if ios
 @:cppFileCode('extern "C" void ios_show_alert(const char* title, const char* message);')
 #end
+	
 // // // // // // // // //
 class Main extends Sprite
 {
