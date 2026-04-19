@@ -138,7 +138,7 @@ class NativeAPI {
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING)
 	{
 		#if android
-		android.Tools.showAlertDialog(caption, message);
+		extension.androidtools.Tools.showAlertDialog(caption, message);
 		#elseif (windows && !macro)
 		var iconInt:Int = cast(icon, Int);
 		untyped __cpp__('MessageBoxA(GetActiveWindow(), {0}.c_str(), {1}.c_str(), {2})', message, caption, iconInt);
@@ -150,7 +150,7 @@ class NativeAPI {
 	public static function showToast(message:String)
 	{
 		#if android
-		android.Tools.showToast(message);
+		extension.androidtools.Tools.showToast(message);
 		#else
 		trace("Toast: " + message);
 		#end
