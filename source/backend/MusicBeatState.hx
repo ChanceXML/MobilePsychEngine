@@ -3,7 +3,6 @@ package backend;
 import flixel.FlxState;
 import backend.PsychCamera;
 import backend.Controls;
-import AndroidModSync;
 
 class MusicBeatState extends FlxState
 {
