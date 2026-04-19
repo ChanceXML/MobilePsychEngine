@@ -46,5 +46,18 @@ class HitboxHint extends FlxSpriteGroup
 
         add(hint);
     }
+    
+    public function setupCamera():Void {
+        if (!FlxG.cameras.list.contains(camHint)) {
+            FlxG.cameras.add(camHint, false);
+        }
+    }
+
+    override public function destroy():Void {
+        super.destroy();
+        if (FlxG.cameras.list.contains(camHint)) {
+            FlxG.cameras.remove(camHint);
+        }
+    }
 }
 #end
