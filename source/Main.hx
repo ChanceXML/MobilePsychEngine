@@ -59,7 +59,10 @@ import backend.Highscore;
     <file name="${PROJECT_DIR}/source/native/ios/NativePopup.mm" />
 </files>
 ')
-
+	
+#if ios
+@:cppFileCode('extern "C" void ios_show_alert(const char* title, const char* message);')
+#end
 // // // // // // // // //
 class Main extends Sprite
 {
