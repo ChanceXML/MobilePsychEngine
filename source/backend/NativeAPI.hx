@@ -105,6 +105,7 @@ class NativeAPI {
 catch (e:Dynamic)
 {
     lime.app.Application.current.window.alert(message, caption);
+  }
 }
 #end
 
