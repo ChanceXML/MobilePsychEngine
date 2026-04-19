@@ -21,8 +21,9 @@ import android.utils.ButtonHelper;
 class BaseOptionsMenu extends MusicBeatSubstate
 {
 	#if mobile
-    public var virtualPad:VirtualPad;
-    #end
+	public var virtualPad:VirtualPad;
+	private var oldPadCameras:Array<flixel.FlxCamera>;
+	#end
 	private var curOption:Option = null;
 	private var curSelected:Int = 0;
 	private var optionsArray:Array<Option>;
@@ -55,7 +56,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 
-		// avoids lagspikes while scrolling through menus!
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
@@ -84,8 +84,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		{
 			var optionText:Alphabet = new Alphabet(220, 260, optionsArray[i].name, false);
 			optionText.isMenuItem = true;
-			/*optionText.forceX = 300;
-			optionText.yMult = 90;*/
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
@@ -100,7 +98,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			{
 				optionText.x -= 80;
 				optionText.startPosition.x -= 80;
-				//optionText.xAdd -= 80;
 				var valueText:AttachedText = new AttachedText('' + optionsArray[i].getValue(), optionText.width + 60);
 				valueText.sprTracker = optionText;
 				valueText.copyAlpha = true;
@@ -108,7 +105,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				grpTexts.add(valueText);
 				optionsArray[i].child = valueText;
 			}
-			//optionText.snapToPosition(); //Don't ignore me when i ask for not making a fucking pull request to uncomment this line ok
 			updateTextFrom(optionsArray[i]);
 		}
 
@@ -131,8 +127,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		else
 		{
 			virtualPad = Controls.virtualPad;
+			oldPadCameras = virtualPad.cameras;
 			add(virtualPad);
 		}
+		
+		virtualPad.cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 		#end
 	}
 	
@@ -243,7 +242,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 										}
 		
 									case STRING:
-										var num:Int = curOption.curOption; //lol
+										var num:Int = curOption.curOption;
 										if(controls.UI_LEFT_P) --num;
 										else num++;
 		
@@ -254,7 +253,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		
 										curOption.curOption = num;
 										curOption.setValue(curOption.options[num]);
-										//trace(curOption.options[num]);
 
 									default:
 								}
@@ -333,22 +331,22 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			}
 		}
 		else if (FlxG.keys.pressed.BACKSPACE || FlxG.gamepads.anyPressed(BACK))
-        {
-        holdingEsc += elapsed;
+		{
+			holdingEsc += elapsed;
 
-        if (holdingEsc > 0.5)
-        {
-            if (!controls.controllerMode)
-                curOption.keys.keyboard = null;
-            else
-                curOption.keys.gamepad = null;
+			if (holdingEsc > 0.5)
+			{
+				if (!controls.controllerMode)
+					curOption.keys.keyboard = null;
+				else
+					curOption.keys.gamepad = null;
 
-            updateBind("None");
+				updateBind("None");
 
-            FlxG.sound.play(Paths.sound('cancelMenu'));
-            closeBinding();
-            }
-        }
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				closeBinding();
+			}
+		}
 		else
 		{
 			holdingEsc = 0;
@@ -377,9 +375,9 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				var keyPressed:FlxGamepadInputID = NONE;
 				var keyReleased:FlxGamepadInputID = NONE;
 				if(FlxG.gamepads.anyJustPressed(LEFT_TRIGGER))
-					keyPressed = LEFT_TRIGGER; //it wasnt working for some reason
+					keyPressed = LEFT_TRIGGER;
 				else if(FlxG.gamepads.anyJustPressed(RIGHT_TRIGGER))
-					keyPressed = RIGHT_TRIGGER; //it wasnt working for some reason
+					keyPressed = RIGHT_TRIGGER;
 				else
 				{
 					for (i in 0...FlxG.gamepads.numActiveGamepads)
@@ -470,7 +468,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		{
 			switch(alpha.text)
 			{
-				case '[', ']': //Square and Triangle respectively
+				case '[', ']':
 					letter.image = 'alphabet_playstation';
 					letter.updateHitbox();
 					
@@ -532,28 +530,39 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
 
-		curOption = optionsArray[curSelected]; //shorter lol
+		curOption = optionsArray[curSelected];
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
 	function reloadCheckboxes()
-{
-    for (checkbox in checkboxGroup)
-    {
-        checkbox.daValue = Std.string(optionsArray[checkbox.ID].getValue()) == 'true';
-    }
-}
-	#if mobile
-    override function close()
-{
-    if (virtualPad != null)
-    {
-        Controls.virtualPad = virtualPad;
-        virtualPad.active = true;
-        virtualPad.visible = true;
-    }
+	{
+		for (checkbox in checkboxGroup)
+		{
+			checkbox.daValue = Std.string(optionsArray[checkbox.ID].getValue()) == 'true';
+		}
+	}
 
-    super.close();
-}
-#end
+	#if mobile
+	override function close()
+	{
+		if (virtualPad != null)
+		{
+			remove(virtualPad);
+			
+			if (FlxG.state != null) {
+				FlxG.state.add(virtualPad);
+			}
+			
+			if (oldPadCameras != null) {
+				virtualPad.cameras = oldPadCameras; 
+			}
+
+			Controls.virtualPad = virtualPad;
+			virtualPad.active = true;
+			virtualPad.visible = true;
+		}
+
+		super.close();
+	}
+	#end
 }
