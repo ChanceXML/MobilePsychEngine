@@ -4,6 +4,7 @@ import states.MainMenuState;
 import backend.StageData;
 import flixel.FlxSubState;
 import flixel.FlxG;
+import flixel.math.FlxMath;
 
 #if mobile
 import backend.ClientPrefs;
@@ -96,9 +97,6 @@ class OptionsState extends MusicBeatState
 	#if mobile
 	override function openSubState(state:FlxSubState)
 	{
-		if (virtualPad != null)
-			virtualPad.visible = false;
-
 		super.openSubState(state);
 	}
 
