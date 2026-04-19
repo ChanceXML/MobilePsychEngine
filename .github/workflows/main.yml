@@ -13,6 +13,14 @@ on:
         type: boolean
         required: true
         default: true
+      android_flags:
+        description: Android Flags
+        required: true
+        default: -D officialBuild -D LUA_ALLOWED
+      ios_flags:
+        description: IOS Flags
+        required: true
+        default: -D officialBuild -nosign
 
 jobs:
   buildAndroid:
@@ -71,7 +79,7 @@ jobs:
       - name: Build Android
         run: |
          echo "${{ github.run_id }}" > VERSION
-         haxelib run lime build android -ONLY_ARMV7 -D officialBuild -D LUA_ALLOWED
+         haxelib run lime build android ${{ github.event.inputs.android_flags }}
          find . -name "*.apk"
         
       - uses: actions/upload-artifact@v4
@@ -106,7 +114,7 @@ jobs:
       - name: Build iOS
         run: |
           echo "${{ github.run_id }}" > VERSION
-          haxelib run lime build ios -D officialBuild -D LUA_ALLOWED -nosign
+          haxelib run lime build ios ${{ github.event.inputs.ios_flags }}
           find . -name "*.ipa"
            
       - name: Compile Xcode Project
