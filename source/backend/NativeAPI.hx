@@ -88,25 +88,23 @@ class NativeAPI {
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING)
 {
     #if android
-    try
-{
-    var fn = lime.system.JNI.createStaticMethod(
-        "org/haxe/extension/Tools",
-        "showMessage",
-        "(Ljava/lang/String;Ljava/lang/String;)V",
-        false
-    );
+    try {
+	var fn = lime.system.JNI.createStaticMethod(
+		"org/haxe/extension/Tools",
+		"showMessage",
+		"(Ljava/lang/String;Ljava/lang/String;)V"
+	);
 
-    if (fn != null)
-        fn(caption, message);
-    else
-        lime.app.Application.current.window.alert(message, caption);
+	if (fn != null)
+		fn(caption, message);
+	else
+		lime.app.Application.current.window.alert(message, caption);
 }
-catch (e:Dynamic)
-{
-    lime.app.Application.current.window.alert(message, caption);
-  }
+catch (e:Dynamic) {
+	lime.app.Application.current.window.alert(message, caption);
 }
+#else
+lime.app.Application.current.window.alert(message, caption);
 #end
 
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
