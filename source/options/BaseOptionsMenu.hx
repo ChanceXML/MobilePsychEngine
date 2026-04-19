@@ -133,6 +133,7 @@ else
     virtualPad = Controls.virtualPad;
     add(virtualPad);
 }
+}
 #end
 	
 	public function addOption(option:Option) {
