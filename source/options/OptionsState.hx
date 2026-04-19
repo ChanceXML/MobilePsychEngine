@@ -3,7 +3,7 @@ package options;
 import states.MainMenuState;
 import backend.StageData;
 import flixel.FlxSubState;
-import android.utils.Files
+import android.utils.Files;
 
 #if mobile
 import backend.ClientPrefs;
