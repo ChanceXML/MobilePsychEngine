@@ -1,11 +1,17 @@
 import sys.FileSystem;
 import sys.io.File;
+import haxe.io.Path;
 
 class AndroidModSync
 {
     static var fileCache:Map<String, Float> = new Map();
 
-    public static function syncModsFromSAF()
+    public static function pickModsFolder():Void
+    {
+        trace("Prompting user to pick a mods folder via SAF...");
+    }
+
+    public static function syncModsFromSAF():Void
     {
         var sourceFolder = ClientPrefs.data.modsFolder;
 
@@ -16,8 +22,8 @@ class AndroidModSync
         }
 
         trace("Syncing mods from SAF: " + sourceFolder);
-
-        var destFolder = Sys.getCwd() + "assets/mods/";
+        
+        var destFolder = Path.join([Sys.getCwd(), "assets", "mods"]);
 
         if (!FileSystem.exists(destFolder))
         {
@@ -29,14 +35,14 @@ class AndroidModSync
         trace("Mods sync complete!");
     }
 
-    private static function copyFolder(src:String, dst:String)
+    private static function copyFolder(src:String, dst:String):Void
     {
         if (!FileSystem.exists(src)) return;
 
         for (file in FileSystem.readDirectory(src))
         {
-            var srcPath = src + "/" + file;
-            var dstPath = dst + "/" + file;
+            var srcPath = Path.join([src, file]);
+            var dstPath = Path.join([dst, file]);
 
             if (FileSystem.isDirectory(srcPath))
             {
@@ -59,7 +65,7 @@ class AndroidModSync
                         fileCache.set(srcPath, srcTime);
                     }
                 }
-                catch (e)
+                catch (e:Dynamic)
                 {
                     shouldCopy = true;
                 }
@@ -71,9 +77,9 @@ class AndroidModSync
                         File.copy(srcPath, dstPath);
                         trace("Updated file: " + srcPath);
                     }
-                    catch (e)
+                    catch (e:Dynamic)
                     {
-                        trace("Failed copying: " + srcPath);
+                        trace("Failed copying: " + srcPath + " | Error: " + e);
                     }
                 }
             }
