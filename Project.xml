@@ -180,6 +180,11 @@
 		<haxedef name="HXCPP_STACK_TRACE" />
 		<haxedef name="HXCPP_CATCH_SEGV" />
 	</section>
+
+	<!-- Android Folder -->
+	<section if="android">
+        <source path="android/src" />
+	</section>
 		
     <!-- IOS Folder -->
 	<section if="ios">
