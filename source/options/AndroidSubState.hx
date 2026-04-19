@@ -1,7 +1,7 @@
 package options;
 
 #if android
-import openfl.utils.JNI;
+import lime.system.JNI;
 #end
 
 class AndroidSubState extends BaseOptionsMenu
@@ -64,7 +64,7 @@ class AndroidSubState extends BaseOptionsMenu
 	
     override function selectOption()
 {
-    var option:Option = options[curSelected];
+    var option = options.members[curSelected];
 
     if (option.save == "modsFolderAction")
     {
