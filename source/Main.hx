@@ -113,7 +113,8 @@ class Main extends Sprite
 
         	NativeAPI.showMessageBox(
 		      "Setup",
-		      "Files Need To Load Correctly. Close The App And Rejoin."
+		      "Files Need To Load Correctly. Close The App And Rejoin.",
+			  "OK"
         	);
 	      Sys.exit(0);
 		}
