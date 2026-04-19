@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#include "NativePopup.h"
 
 extern "C" void ios_show_alert(const char* title, const char* message)
 {
