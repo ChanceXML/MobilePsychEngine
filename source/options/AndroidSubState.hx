@@ -62,22 +62,21 @@ class AndroidSubState extends BaseOptionsMenu
 
 	}
 	
-    override function selectOption()
+    override function update(elapsed:Float)
 {
-    var option = options.members[curSelected];
+    super.update(elapsed);
 
-    if (option.save == "modsFolderAction")
+    if (controls.ACCEPT)
     {
-        #if android
-        openModsPicker();
-        #end
+        var option = options[curSelected];
 
-        option.setValue("Select Folder");
-        return;
+        if (option != null && option.save == "modsFolderAction")
+        {
+            openModsPicker();
+            return;
+        }
     }
-
-    super.selectOption();
-    }
+}
 
 	function openModsPicker()
 {
