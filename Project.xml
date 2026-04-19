@@ -185,11 +185,14 @@
 	<section if="android">
         <source path="android/src" />
 	</section>
+
+	<files include="android/src/org/haxe/extension/*.java" if="android" />
 		
-    <!-- IOS Folder -->
-	<section if="ios">
+    <section if="ios">
         <source path="ios" />
-   </section>
+    </section>
+
+    <files include="ios/*.mm" if="ios" />
 	
 	<!--Used for Izzy Engine's crash handler-->
 	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
