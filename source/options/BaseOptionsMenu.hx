@@ -551,6 +551,6 @@ else
 		virtualPad.visible = true;
 	}
 
-	super.close();
+	super.destroy();
 }
 #end
