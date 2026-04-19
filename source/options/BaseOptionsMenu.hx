@@ -541,7 +541,7 @@ else
 			checkbox.daValue = Std.string(optionsArray[checkbox.ID].getValue()) == 'true'; //Do not take off the Std.string() from this, it will break a thing in Mod Settings Menu
 }
 
-	override function close()
+	function close()
 {
 	#if mobile
 	if (virtualPad != null)
