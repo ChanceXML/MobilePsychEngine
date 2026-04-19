@@ -56,7 +56,7 @@ import backend.Highscore;
 
 @:buildXml('
 <files id="haxe" if="ios">
-    <file name="source/native/ios/NativePopup.mm" />
+    <file name="${PROJECT_DIR}/source/native/ios/NativePopup.mm" />
 </files>
 ')
 
