@@ -70,7 +70,7 @@ class AndroidSubState extends BaseOptionsMenu
     {
         var option = optionsArray[curSelected];
 
-        if (option != null && option.save == "modsFolderAction")
+        if (option != null && option.variable == "modsFolderAction")
         {
             openModsPicker();
             return;
