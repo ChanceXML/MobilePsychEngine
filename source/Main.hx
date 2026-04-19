@@ -8,7 +8,7 @@ import android.utils.ButtonHelper;
 #end
 
 #if ios
-import backend.iOSNative;
+import backend.IOSNative;
 #end
 
 import debug.FPSCounter;
