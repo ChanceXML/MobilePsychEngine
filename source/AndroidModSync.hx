@@ -1,11 +1,13 @@
 import sys.FileSystem;
 import sys.io.File;
 import haxe.io.Path;
+#if android
+import lime.system.JNI;
+#end
 
 class AndroidModSync
 {
     static var fileCache:Map<String, Float> = new Map();
-
 
     public static function pickModsFolder():Void
     {
