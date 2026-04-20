@@ -54,22 +54,6 @@ import backend.Highscore;
 @:cppFileCode('#define GAMEMODE_AUTO')
 #end
 
-@:headerCode('
-#if ios
-#include <native/ios/NativePopup.mm>
-#endif
-')
-
-@:buildXml('
-<target id="haxe">
-	<file name="../source/native/ios/NativePopup.mm" if="ios" />
-</target>
-')
-	
-#if ios
-@:cppFileCode('extern "C" void ios_show_alert(const char* title, const char* message);')
-#end
-	
 // // // // // // // // //
 class Main extends Sprite
 {
@@ -119,23 +103,25 @@ class Main extends Sprite
 	      Sys.exit(0);
 		}
 		#elseif ios
-		Sys.setCwd(lime.system.System.applicationStorageDirectory);
+        Sys.setCwd(lime.system.System.applicationStorageDirectory);
 
-		var base = System.applicationStorageDirectory;
+        var base = lime.system.System.applicationStorageDirectory;
         base = haxe.io.Path.addTrailingSlash(base);
 
         var firstRun = !sys.FileSystem.exists(base + "mods/");
-		
-		if (firstRun)
-		{
-			android.utils.Files.init();
-            backend.IOSNative.showAlert(
-	        "Setup",
-	        "Files Need To Load Correctly. Close The App And Rejoin."
+    
+        if (firstRun)
+      {
+        android.utils.Files.init();
+
+        backend.IOSNative.showAlert(
+            "Setup",
+            "Files Need To Load Correctly. Close The App And Rejoin."
         );
-	      Sys.exit(0);
-        }
-		#end
+        
+        Sys.exit(0);
+      }
+        #end
 		#if VIDEOS_ALLOWED
 		hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0")  ['--no-lua'] #end);
 		#end
