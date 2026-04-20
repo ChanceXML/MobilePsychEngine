@@ -54,6 +54,10 @@ import backend.Highscore;
 @:cppFileCode('#define GAMEMODE_AUTO')
 #end
 
+#if ios
+@:cppFileCode('extern "C" void ios_show_alert(const char* title, const char* message);')
+#end
+
 // // // // // // // // //
 class Main extends Sprite
 {
