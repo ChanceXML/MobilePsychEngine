@@ -12,7 +12,9 @@ import states.TitleState;
 	public var hitboxHint:Float = 1;
 	public var hitboxStyle:String = 'Normal';
 	public var hintStyle:String = 'Bottom';
-	public var modsFolder:String = "";
+	public var modsFolder:String = ''; // store the actual path
+    public var modsFolderAction:String = 'Select Folder'; // menu display	
+	public var modsFolderAction:String = 'Select Folder';
 	public var downScroll:Bool = false;
 	public var middleScroll:Bool = false;
 	public var opponentStrums:Bool = true;
