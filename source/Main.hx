@@ -9,6 +9,7 @@ import android.utils.ButtonHelper;
 
 #if ios
 import backend.IOSNative;
+import nativeiospopup.NativePopup;
 import lime.system.System;
 #end
 
@@ -101,8 +102,8 @@ class Main extends Sprite
 
         	NativeAPI.showMessageBox(
 		      "Setup",
-		      "Files Need To Load Correctly. Close The App And Rejoin.",
-			  "OK"
+		      "Files Need To Load Correctly. Click Ok To Leave The App.",
+			  "Ok"
         	);
 	      Sys.exit(0);
 		}
@@ -118,10 +119,7 @@ class Main extends Sprite
       {
         android.utils.Files.init();
 
-        backend.IOSNative.showAlert(
-            "Setup",
-            "Files Need To Load Correctly. Close The App And Rejoin."
-        );
+        NativePopup.show("Setup", "Files Need To Load Correctly. Click Ok To Leave The App.", "Ok");
         
         Sys.exit(0);
       }
