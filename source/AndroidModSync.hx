@@ -6,11 +6,28 @@ class AndroidModSync
 {
     static var fileCache:Map<String, Float> = new Map();
 
+
     public static function pickModsFolder():Void
     {
-        trace("Prompting user to pick a mods folder via SAF...");
-    }
+        if (flixel.FlxG.sound != null)
+            flixel.FlxG.sound.play(Paths.sound('confirmMenu'));
 
+        #if android
+        try 
+        {
+            var openPicker = JNI.createStaticMethod("com/shadowmario/psychengine/SAFBridge", "openModsFolderPicker", "()V");
+            
+            openPicker();
+        } 
+        catch (e:Dynamic) 
+        {
+            trace("JNI Error: Failed to open SAF picker - " + e);
+        }
+        #else
+        trace("SAF Folder Picker is only available on Android!");
+        #end
+    }
+    
     public static function syncModsFromSAF():Void
     {
         var sourceFolder = ClientPrefs.data.modsFolder;
