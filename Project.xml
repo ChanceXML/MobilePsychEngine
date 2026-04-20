@@ -195,16 +195,14 @@
 	<ios>
         <compilerflag value="-ObjC" />
     </ios>
-		
-    <files include="ios/*.mm" if="ios" />
 
     <section if="ios">
-        <file name="source/native/ios/NativePopup.mm" />
-		<file name="source/native/ios/NativePopup.h" />
+        <file path="source/native/ios/NativePopup.mm" />
+        <file path="source/native/ios/NativePopup.h" />
 
         <config xcode-excluded-architectures="arm64" if="simulator" />
     </section>
-	
+  	
 	<!--Used for Izzy Engine's crash handler-->
 	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
 	<haxedef name="HXCPP_STACK_LINE" if="CRASH_HANDLER" />
