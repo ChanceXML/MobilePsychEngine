@@ -19,6 +19,7 @@ haxelib install openfl 9.4.0 --quiet
 haxelib install format --skip-dependencies --quiet
 haxelib install hxp --skip-dependencies --quiet
 haxelib git extension-androidtools https://github.com/ChanceXML/androidTools.git --quiet --skip-dependencies
+haxelib git nativeiospopup https://github.com/ChanceXML/nativeiospopup.git
 # haxelib remove linc_luajit || true
 # haxelib git linc_luajit https://github.com/ChanceXML/linc_luajit --quiet # disabled until fixed
 haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate 768740a56b26aa0c072720e0d1236b94afe68e3e --quiet
