@@ -5,17 +5,26 @@ import lime.system.JNI;
 class SAFBridge
 {
     #if android
+    static var openModsFolderPickerJNI:Dynamic;
 
-    static var openModsFolderPickerJNI = JNI.createStaticMethod(
-        "com/shadowmario/psychengine/SAFBridge",
-        "openModsFolderPicker",
-        "()V"
-    );
+    static function init()
+    {
+        if (openModsFolderPickerJNI == null)
+        {
+            openModsFolderPickerJNI = JNI.createStaticMethod(
+                "com.shadowmario.psychengine.SAFBridge",
+                "openModsFolderPicker",
+                "()V"
+            );
+        }
+    }
 
     public static function openModsFolderPicker():Void
     {
-        openModsFolderPickerJNI();
-    }
+        init();
 
+        if (openModsFolderPickerJNI != null)
+            openModsFolderPickerJNI();
+    }
     #end
 }
