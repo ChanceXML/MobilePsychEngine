@@ -12,6 +12,8 @@ public class MainActivity extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         instance = this;
+
+        SAFBridge.activity = this;
     }
 
     @Override
