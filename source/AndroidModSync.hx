@@ -3,6 +3,7 @@ import sys.io.File;
 import haxe.io.Path;
 #if android
 import lime.system.JNI;
+import androidsaf.SAF
 #end
 
 class AndroidModSync
@@ -14,7 +15,7 @@ class AndroidModSync
     #if android
     try
     {
-        SAFBridge.openModsFolderPicker();
+        SAF.openModsFolder();
     }
     catch (e:Dynamic)
     {
@@ -22,7 +23,6 @@ class AndroidModSync
     }
     #end
 }
-    
     public static function syncModsFromSAF():Void
     {
         var sourceFolder = ClientPrefs.data.modsFolder;
