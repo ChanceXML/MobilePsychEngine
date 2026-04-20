@@ -8,8 +8,14 @@ public class SAFBridge {
     public static String lastTreeUri = null;
 
     public static void openModsFolderPicker() {
-        if (activity == null) return;
-        SAFModImporter.openFolderPicker(activity);
+    if (activity == null) return;
+
+    activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+            SAFModImporter.openFolderPicker(activity);
+        }
+    });
     }
 
     public static void syncMods() {
