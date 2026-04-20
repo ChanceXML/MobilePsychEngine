@@ -1,8 +1,6 @@
 package backend;
 
 #if ios
-// This tells the compiler to find and compile the objective-C++ file
-// The path is relative to the project's export/ios/build folder
 @:buildXml('<target id="haxe">
     <file name="../../../../source/native/ios/NativePopup.mm" />
 </target>')
@@ -18,4 +16,3 @@ class IOSNative
     public static function showAlert(title:String, message:String):Void {}
 }
 #end
-    
