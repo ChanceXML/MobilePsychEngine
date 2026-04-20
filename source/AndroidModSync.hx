@@ -3,7 +3,7 @@ import sys.io.File;
 import haxe.io.Path;
 #if android
 import lime.system.JNI;
-import androidsaf.SAF
+import androidsaf.SAF;
 #end
 
 class AndroidModSync
