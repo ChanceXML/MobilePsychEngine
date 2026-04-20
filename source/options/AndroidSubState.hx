@@ -49,20 +49,23 @@ class AndroidSubState extends BaseOptionsMenu
 			['Bottom', 'Full']); // had to change the name because Hitbox Style and Hint Style would overlap
 		addOption(option);
 
-		var option:Option = new Option(
+        if (!Reflect.hasField(ClientPrefs.data, 'modsFolderAction')) {
+        Reflect.setProperty(ClientPrefs.data, 'modsFolderAction', 'Select Folder');
+      }
+
+        var option:Option = new Option(
             'Mods Folder',
-            'Select a folder to import mods from.',
+            'Press ACCEPT to select a folder to import mods from.',
             'modsFolderAction',
             STRING,
             ['Select Folder']
         ); 
         addOption(option);
-		
-		super();
+    
+    super();
+}
 
-	}
-	
-    override function update(elapsed:Float)
+override function update(elapsed:Float)
 {
     super.update(elapsed);
 
@@ -73,13 +76,14 @@ class AndroidSubState extends BaseOptionsMenu
         if (option != null && option.variable == "modsFolderAction")
         {
             openModsPicker();
-            return;
         }
     }
 }
 
-	function openModsPicker()
+function openModsPicker()
 {
+    flixel.FlxG.sound.play(Paths.sound('confirmMenu')); 
+
     #if android
     AndroidModSync.pickModsFolder();
     #end
