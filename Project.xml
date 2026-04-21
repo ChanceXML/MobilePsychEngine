@@ -204,7 +204,7 @@
 
     </target>
 
-	<dependency name="androidx.documentfile:documentfile:1.0.1" if="android" />
+	<dependency name="androidx.documentfile:documentfile" version="1.0.1" if="android" />
 		
 	<ios>
         <compilerflag value="-ObjC" />
