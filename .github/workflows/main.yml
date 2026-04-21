@@ -75,6 +75,16 @@ jobs:
       - name: Clean Android
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
+
+      
+      - name: Update Lime Android
+        run: haxelib run lime update android
+
+      - name: Inject DocumentFile Dependency
+        run: echo -e "\ndependencies { implementation 'androidx.documentfile:documentfile:1.0.1' }" >> export/release/android/bin/app/build.gradle
+
+      - name: Build Android
+        run: haxelib run lime build android 
     
       - name: Build Android
         run: |
