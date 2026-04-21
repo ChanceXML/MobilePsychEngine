@@ -50,6 +50,7 @@ jobs:
             | haxelib run lime setup android  
           
           haxelib run lime rebuild linc_luajit android -clean
+          haxelib list
 
       - name: Install Android SDK + NDK
         run: |
@@ -76,12 +77,13 @@ jobs:
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
       
-      - name: Update Lime Android
-        run: haxelib run lime update android
-
-      - name: Inject DocumentFile Dependency
-        run: echo -e "\ndependencies { implementation 'androidx.documentfile:documentfile:1.0.1' }" >> export/release/android/bin/app/build.gradle
-    
+      - name: Setup Android Dependencies
+        run: |
+          haxelib run lime update android
+          sed -i '/dependencies {/a \    implementation "androidx.documentfile:documentfile:1.0.1"' export/release/android/bin/app/build.gradle
+          echo "android.useAndroidX=true" > export/release/android/bin/gradle.properties
+          echo "android.enableJetifier=true" >> export/release/android/bin/gradle.properties
+        
       - name: Build Android
         run: |
          echo "${{ github.run_id }}" > VERSION
