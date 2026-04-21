@@ -235,6 +235,8 @@
 
 	<haxedef name="hscriptPos" if="HSCRIPT_ALLOWED" />
 
+	<dependency id="androidx.documentfile:documentfile" version="1.0.1" if="android" />
+
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<assets path='art/icons/iconOG.png' rename='icon.png' if="linux || mac" />
