@@ -29,6 +29,8 @@
 	<define name="DISCORD_ALLOWED" if="desktop"/>
 	<define name="TRANSLATIONS_ALLOWED" />
 	<define name="IRIS_DEBUG"/>
+
+	<include path="include.xml" />
 	
     <define name="MULTITHREADED_LOADING" /> <!-- UNCOMMENTING THIS LINE WILL ENABLE MULTITHREADED LOADING, WHICH IMPROVES LOADING TIMES, BUT APPARENTLY CAN FREEZE THE GAME ON SONG LOAD IN OLDER PCs? -->
 	<define name="SHOW_LOADING_SCREEN" />
@@ -214,7 +216,6 @@
 		
     <!-- iOS Section -->
 	<section if="ios">
-	<compilerflag value="-ObjC" />
 
 	<file path="source/native/ios/NativePopup.mm" />
     <file path="source/native/ios/NativePopup.h" />
@@ -225,10 +226,6 @@
 
 	<!-- Android Section -->
 	<section if="android">
-	<gradleDependency name="androidx.documentfile:documentfile:1.0.1" />
-
-	<gradleProperty name="android.useAndroidX" value="true" />
-    <gradleProperty name="android.enableJetifier" value="true" />
 		
 	<haxedef name="LUAJIT_ENABLE_GC64" if="HXCPP_ARM64" />
 	
