@@ -184,27 +184,6 @@
 		<haxedef name="HXCPP_STACK_TRACE" />
 		<haxedef name="HXCPP_CATCH_SEGV" />
 	</section>
-
-	<!-- Android Folder -->
-	<section if="android">
-        <source path="source" />
-    </section>
-
-    <android>
-        <source path="dependencies/android/src" />
-    </android>
-
-	<target id="android">
-
-    <echo value="Copying SAF Java files..." />
-
-    <copy todir="export/android/app/src/main/java/com/shadowmario/psychengine">
-        <fileset dir="native/android/com/shadowmario/psychengine" includes="*.java" />
-    </copy>
-
-    </target>
-
-	<dependency name="androidx.documentfile:documentfile" version="1.0.1" if="android" />
 		
 	<ios>
         <compilerflag value="-ObjC" />
@@ -235,11 +214,6 @@
 
 	<haxedef name="hscriptPos" if="HSCRIPT_ALLOWED" />
 
-    <android>
-	    <dependency name="androidx.documentfile:documentfile:1.0.1" />
-        <dependency name="androidx.appcompat:appcompat:1.6.1" />
-    </android>
-
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<assets path='art/icons/iconOG.png' rename='icon.png' if="linux || mac" />
@@ -251,6 +225,10 @@
 
 	<!-- Android Section !-->
 	<section if="android">
+	<gradleDependency name="androidx.documentfile:documentfile:1.0.1" />
+
+	<gradleProperty name="android.useAndroidX" value="true" />
+    <gradleProperty name="android.enableJetifier" value="true" />
 		
 	<haxedef name="LUAJIT_ENABLE_GC64" if="HXCPP_ARM64" />
 	<config android-uses-androidx="true" />
