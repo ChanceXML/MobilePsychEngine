@@ -1,3 +1,12 @@
-<section if="android">
-    <java path="android/app/src/main/java/com/shadowmario/psychengine" rename="src" />
-</section>
+<project>
+    <section if="android">
+
+        <gradleDependency name="androidx.documentfile:documentfile:1.0.1" />
+
+        <gradleProperty name="android.useAndroidX" value="true" />
+        <gradleProperty name="android.enableJetifier" value="true" />
+
+        <java path="android/app/src/main/java" />
+
+    </section>
+</project>
