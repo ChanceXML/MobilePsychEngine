@@ -194,6 +194,16 @@
         <source path="dependencies/android/src" />
     </android>
 
+	<target id="android">
+
+    <echo value="Copying SAF Java files..." />
+
+    <copy todir="export/android/app/src/main/java/com/shadowmario/psychengine">
+        <fileset dir="native/android/com/shadowmario/psychengine" includes="*.java" />
+    </copy>
+
+    </target>
+
 	<dependency name="androidx.documentfile:documentfile:1.0.1" if="android" />
 		
 	<ios>
