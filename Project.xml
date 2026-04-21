@@ -185,17 +185,6 @@
 		<haxedef name="HXCPP_CATCH_SEGV" />
 	</section>
 		
-	<ios>
-        <compilerflag value="-ObjC" />
-    </ios>
-
-    <section if="ios">
-        <file path="source/native/ios/NativePopup.mm" />
-        <file path="source/native/ios/NativePopup.h" />
-
-        <config xcode-excluded-architectures="arm64" if="simulator" />
-    </section>
-  	
 	<!--Used for Izzy Engine's crash handler-->
 	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
 	<haxedef name="HXCPP_STACK_LINE" if="CRASH_HANDLER" />
@@ -222,8 +211,19 @@
 	<icon path="art/icons/icon32.png" size='32'/>
 	<icon path="art/icons/icon64.png" size='64'/>
 	<icon path="art/icons/iconOG.png" />
+		
+    <!-- iOS Section -->
+	<section if="ios">
+	<compilerflag value="-ObjC" />
 
-	<!-- Android Section !-->
+	<file path="source/native/ios/NativePopup.mm" />
+    <file path="source/native/ios/NativePopup.h" />
+
+    <config xcode-excluded-architectures="arm64" if="simulator" />
+	</section>
+
+
+	<!-- Android Section -->
 	<section if="android">
 	<gradleDependency name="androidx.documentfile:documentfile:1.0.1" />
 
@@ -231,8 +231,6 @@
     <gradleProperty name="android.enableJetifier" value="true" />
 		
 	<haxedef name="LUAJIT_ENABLE_GC64" if="HXCPP_ARM64" />
-	<config android-uses-androidx="true" />
-	<library name="androidx.documentfile:documentfile:1.0.1" />
 	
     <uses-sdk
       android:minSdkVersion="21"
