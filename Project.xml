@@ -235,7 +235,10 @@
 
 	<haxedef name="hscriptPos" if="HSCRIPT_ALLOWED" />
 
-	<dependency id="androidx.documentfile:documentfile" version="1.0.1" if="android" />
+    <android>
+	    <dependency name="androidx.documentfile:documentfile:1.0.1" />
+        <dependency name="androidx.appcompat:appcompat:1.6.1" />
+    </android>
 
 	<!-- _________________________________ Custom _______________________________ -->
 
