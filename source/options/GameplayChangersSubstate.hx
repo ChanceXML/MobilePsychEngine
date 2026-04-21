@@ -16,6 +16,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	#if mobile
     public var virtualPad:VirtualPad;
     #end
+	private var exiting:Bool = false;
 	private var curSelected:Int = 0;
 	private var optionsArray:Array<Dynamic> = [];
 
@@ -168,12 +169,12 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		if (controls.UI_DOWN_P)
 			changeSelection(1);
 
-		if (controls.BACK)
+	    if (controls.BACK && !exiting)
 		{
+			exiting = true;
+			
 			ClientPrefs.saveSettings();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-
-			controls.BACK = false;
 			
 			close();
 		}
