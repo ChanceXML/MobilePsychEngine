@@ -170,9 +170,12 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		if (controls.BACK)
 		{
-			close();
 			ClientPrefs.saveSettings();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
+
+			FlxG.resetInput();
+			
+			close();
 		}
 
 		if(nextAccept <= 0)
