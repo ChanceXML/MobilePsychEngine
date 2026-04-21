@@ -77,13 +77,13 @@ jobs:
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
       
-      - name: Setup Android Dependencies
+      - name: Fix missing AndroidX DocumentFile
         run: |
-          haxelib run lime update android
-          sed -i '/dependencies {/a \    implementation "androidx.documentfile:documentfile:1.0.1"' export/release/android/bin/app/build.gradle
-          echo "android.useAndroidX=true" > export/release/android/bin/gradle.properties
-          echo "android.enableJetifier=true" >> export/release/android/bin/gradle.properties
-        
+         FILE=export/release/android/bin/app/build.gradle
+         if [ -f "$FILE" ]; then
+           sed -i '/dependencies {/a \    implementation "androidx.documentfile:documentfile:1.0.1"' $FILE
+         fi
+    
       - name: Build Android
         run: |
          echo "${{ github.run_id }}" > VERSION
