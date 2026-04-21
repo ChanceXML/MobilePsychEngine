@@ -1,0 +1,3 @@
+<section if="android">
+    <java path="android/app/src/main/java/com/shadowmario/psychengine" rename="src" />
+</section>
