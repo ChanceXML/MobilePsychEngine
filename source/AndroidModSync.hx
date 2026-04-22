@@ -2,38 +2,29 @@ import sys.FileSystem;
 import sys.io.File;
 import haxe.io.Path;
 #if android
-import lime.system.JNI;
-import androidsaf.SAF;
+import extension.saf.SAF;
 #end
 
 class AndroidModSync
 {
-    static var fileCache:Map<String, Float> = new Map();
-
     public static function pickModsFolder():Void
-{
-    #if android
-    try
     {
-        SAF.openModsFolder();
+        #if android
+        SAF.open(function(uri:String) {
+            ClientPrefs.data.modsFolder = uri;
+        }, function(err:String) {
+        });
+        #end
     }
-    catch (e:Dynamic)
-    {
-        trace("SAF open failed: " + e);
-    }
-    #end
-}
+
     public static function syncModsFromSAF():Void
     {
         var sourceFolder = ClientPrefs.data.modsFolder;
 
         if (sourceFolder == null || sourceFolder == "")
         {
-            trace("No SAF mods folder set.");
             return;
         }
-
-        trace("Syncing mods from SAF: " + sourceFolder);
         
         var destFolder = Path.join([Sys.getCwd(), "assets", "mods"]);
 
@@ -42,59 +33,43 @@ class AndroidModSync
             FileSystem.createDirectory(destFolder);
         }
 
+        #if android
         copyFolder(sourceFolder, destFolder);
-
-        trace("Mods sync complete!");
+        #end
     }
 
-    private static function copyFolder(src:String, dst:String):Void
+    private static function copyFolder(srcUri:String, dst:String):Void
     {
-        if (!FileSystem.exists(src)) return;
+        #if android
+        var files = SAF.listFiles(srcUri);
 
-        for (file in FileSystem.readDirectory(src))
+        for (fileData in files)
         {
-            var srcPath = Path.join([src, file]);
-            var dstPath = Path.join([dst, file]);
+            var split = fileData.split("|");
+            var fileName = split[0];
+            var fileUri = split[1];
+            var dstPath = Path.join([dst, fileName]);
 
-            if (FileSystem.isDirectory(srcPath))
+            var isDir = fileName.indexOf(".") == -1;
+
+            if (isDir)
             {
                 if (!FileSystem.exists(dstPath))
                     FileSystem.createDirectory(dstPath);
 
-                copyFolder(srcPath, dstPath);
+                copyFolder(fileUri, dstPath);
             }
             else
             {
-                var shouldCopy:Bool = false;
-
                 try
                 {
-                    var srcTime = FileSystem.stat(srcPath).mtime.getTime();
-
-                    if (!fileCache.exists(srcPath) || fileCache.get(srcPath) != srcTime)
-                    {
-                        shouldCopy = true;
-                        fileCache.set(srcPath, srcTime);
-                    }
+                    File.copy(fileUri, dstPath);
                 }
                 catch (e:Dynamic)
                 {
-                    shouldCopy = true;
-                }
-
-                if (shouldCopy)
-                {
-                    try
-                    {
-                        File.copy(srcPath, dstPath);
-                        trace("Updated file: " + srcPath);
-                    }
-                    catch (e:Dynamic)
-                    {
-                        trace("Failed copying: " + srcPath + " | Error: " + e);
-                    }
                 }
             }
         }
+        #end
     }
 }
