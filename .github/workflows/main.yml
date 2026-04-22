@@ -89,6 +89,15 @@ jobs:
          echo "${{ github.run_id }}" > VERSION
          haxelib run lime build android ${{ github.event.inputs.android_flags }}
          find . -name "*.apk"
+
+      - name: Show generated build.gradle
+        if: failure()
+        run: |
+         echo "==== build.gradle (app) ===="
+         cat export/release/android/bin/app/build.gradle || echo "app build.gradle not found"
+
+         echo "==== root build.gradle ===="
+         cat export/release/android/bin/build.gradle || echo "root build.gradle not found"
         
       - uses: actions/upload-artifact@v4
         with:
