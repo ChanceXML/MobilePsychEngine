@@ -77,28 +77,33 @@ jobs:
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
       
-      - name: Fix missing AndroidX DocumentFile
-        run: |
-         FILE=export/release/android/bin/app/build.gradle
-         if [ -f "$FILE" ]; then
-           sed -i '/dependencies {/a \    implementation "androidx.documentfile:documentfile:1.0.1"' $FILE
-         fi
-    
-      - name: Build Android
+      - name: Export Android project
         run: |
          echo "${{ github.run_id }}" > VERSION
-         haxelib run lime build android ${{ github.event.inputs.android_flags }}
-         find . -name "*.apk"
+         haxelib run lime build android -Dandroid-gradle
 
-      - name: Show generated build.gradle
-        if: failure()
+      - name: Clone private repo
         run: |
-         echo "==== build.gradle (app) ===="
-         cat export/release/android/bin/app/build.gradle || echo "app build.gradle not found"
+         if [ -n "${{ secrets.SECRET }}" ]; then
+           echo "cloning..."
+           git clone https://x-access-token:${{ secrets.SECRET }}@github.com/ChanceXML/what.git
+         else
+           echo "skip"
+         fi
 
-         echo "==== root build.gradle ===="
-         cat export/release/android/bin/build.gradle || echo "root build.gradle not found"
-        
+      - name: Replace build.gradle
+        run: |
+         FILE=$(find export -type f -path "*android*app/build.gradle" | head -n 1)
+         cp what/build.gradle "$FILE"
+
+      - name: Build APK
+        run: |
+         cd export/release/android/bin
+         ./gradlew assembleDebug
+
+      - name: Find APK
+        run: find . -name "*.apk"
+    
       - uses: actions/upload-artifact@v4
         with:
           name: androidBuild
