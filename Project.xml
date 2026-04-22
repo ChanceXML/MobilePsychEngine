@@ -226,6 +226,7 @@
 
 	<!-- Android Section -->
 	<section if="android">
+	<template path="templates" />
 	<config name="android.useAndroidX" value="true" />
 
 	<dependency name="androidx.documentfile:documentfile:1.0.1" if="android" />
