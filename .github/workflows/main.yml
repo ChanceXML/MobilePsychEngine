@@ -76,11 +76,6 @@ jobs:
       - name: Clean Android
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
-      
-      - name: Export Android project
-        run: |
-         echo "${{ github.run_id }}" > VERSION
-         haxelib run lime build android -Dandroid-gradle
 
       - name: Clone private repo
         run: |
@@ -91,15 +86,17 @@ jobs:
            echo "skip"
          fi
 
-      - name: Replace build.gradle
+      - name: Inject build files
         run: |
-         FILE=$(find export -type f -path "*android*app/build.gradle" | head -n 1)
-         cp what/build.gradle "$FILE"
+         FILE=$(find export -type f -path "*app/build.gradle" | head -n 1)
+         echo "Found: $FILE"
 
+         cp what/build.gradle "$FILE"
+         
       - name: Build APK
         run: |
-         cd export/release/android/bin
-         ./gradlew assembleDebug
+         echo "${{ github.run_id }}" > VERSION
+         haxelib run lime build ${{ github.event.inputs.android_flags }}
 
       - name: Find APK
         run: find . -name "*.apk"
