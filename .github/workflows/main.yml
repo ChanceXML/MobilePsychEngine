@@ -80,7 +80,7 @@ jobs:
       - name: Build APK
         run: |
          echo "${{ github.run_id }}" > VERSION
-         haxelib run lime build ${{ github.event.inputs.android_flags }}
+         haxelib run lime build android ${{ github.event.inputs.android_flags }}
 
       - name: Find APK
         run: find . -name "*.apk"
