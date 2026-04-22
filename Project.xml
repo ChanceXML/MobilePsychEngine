@@ -232,7 +232,12 @@
 	<dependency name="androidx.documentfile:documentfile:1.0.1" if="android" />
 		
 	<haxedef name="LUAJIT_ENABLE_GC64" if="HXCPP_ARM64" />
-	
+
+    <config:android build-tools-version="35.0.0" />
+
+    <config:android gradle-version="8.7" />
+    <config:android gradle-plugin="8.6.0" />
+		
 	<config:android minimum-sdk-version="21" />
     <config:android target-sdk-version="35" />
 
