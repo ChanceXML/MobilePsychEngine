@@ -233,8 +233,11 @@
 		
 	<haxedef name="LUAJIT_ENABLE_GC64" if="HXCPP_ARM64" />
 	
-    <uses-sdk
-      android:minSdkVersion="21"
-      android:targetSdkVersion="35" />
+	<config:android minimum-sdk-version="21" />
+    <config:android target-sdk-version="35" />
+
+    <config:android useAndroidX="true" />
+    <config:android enableJetifier="true" />
 	</section>
+		
 </project>
