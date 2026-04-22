@@ -226,6 +226,9 @@
 
 	<!-- Android Section -->
 	<section if="android">
+	<config name="android.useAndroidX" value="true" />
+
+	<dependency name="androidx.documentfile:documentfile:1.0.1" if="android" />
 		
 	<haxedef name="LUAJIT_ENABLE_GC64" if="HXCPP_ARM64" />
 	
