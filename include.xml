@@ -1,6 +1,8 @@
 <project>
     <section if="android">
 
+        <template path="templates/android/custom-build.gradle" rename="app/build.gradle" if="android" />
+
         <gradleDependency name="androidx.documentfile:documentfile:1.0.1" />
 
         <gradleProperty name="android.useAndroidX" value="true" />
