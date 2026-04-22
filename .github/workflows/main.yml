@@ -21,13 +21,6 @@ on:
         description: IOS Flags
         required: true
         default: -D officialBuild -nosign
-      repository_url:
-        description: 'GitHub repository URL'
-        required: true
-      branch_or_tag:
-        description: 'Branch or tag to sync'
-        required: false
-        default: ''
 
 jobs:
   buildAndroid:
@@ -84,30 +77,6 @@ jobs:
         if: ${{ github.event.inputs.clean == 'true' }}
         run: haxelib run lime clean android
 
-      - name: Clone target repository
-        run: |
-          REPO_URL="${{ inputs.repository_url }}"
-          REF="${{ inputs.branch_or_tag }}"
-          if [ -n "$REF" ]; then
-            git clone --depth 1 --branch "$REF" "$REPO_URL" temp_source
-          else
-            git clone --depth 1 "$REPO_URL" temp_source
-          fi
-      - name: Merge files
-        run: |
-          rm -rf temp_source/.git
-          rm -rf temp_source/.github
-          shopt -s dotglob
-          cp -a temp_source/* ./
-          shopt -u dotglob
-          rm -rf temp_source
-
-      - name: Modify build files (temporary)
-        run: |
-         FILE=$(find export -type f -path "*app/build.gradle" | head -n 1)
-
-         cp what/build.gradle "$FILE"
-    
       - name: Build APK
         run: |
          echo "${{ github.run_id }}" > VERSION
