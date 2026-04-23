@@ -233,6 +233,8 @@
 		
 	<haxedef name="LUAJIT_ENABLE_GC64" if="HXCPP_ARM64" />
 
+	<android permission="android.permission.VIBRATE" />
+
     <config:android build-tools-version="35.0.0" />
 
     <config:android gradle-version="8.7" />
