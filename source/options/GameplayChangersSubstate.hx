@@ -169,7 +169,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		if (controls.UI_DOWN_P)
 			changeSelection(1);
 
-	    if (controls.BACK && !exiting)
+	    if (controls.BACK_P && !exiting)
 		{
 			exiting = true;
 			
