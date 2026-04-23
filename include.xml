@@ -7,8 +7,8 @@
 
         <gradleProperty name="android.useAndroidX" value="true" />
         <gradleProperty name="android.enableJetifier" value="true" />
-
+        <!--
         <template path="templates/android/app/src/main/java/com/shadowmario/psychengine/MainActivity.java" rename="app/src/main/java/com/shadowmario/psychengine/MainActivity.java" if="android" />
-
+        -->
     </section>
 </project>
