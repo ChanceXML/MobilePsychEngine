@@ -49,37 +49,44 @@ class AndroidModSync
     }
 
     private static function copyFolder(srcUri:String, dst:String):Void
+{
+    #if android
+    var files = SAF.listFiles(srcUri);
+    if (files == null || files.length == 0) return;
+
+    for (fileData in files)
     {
-        #if android
-        var files = SAF.listFiles(srcUri);
-        if (files == null || files.length == 0) return;
+        var split = fileData.split("|");
+        if (split.length < 2) continue;
 
-        for (fileData in files)
+        var fileName = split[0];
+        var fileUri = split[1];
+        var dstPath = Path.join([dst, fileName]);
+        
+        var isDir = (split.length >= 3) ? (split[2] == "true") : (fileName.indexOf(".") == -1);
+
+        if (isDir)
         {
-            var split = fileData.split("|");
-            if (split.length < 2) continue;
+            try {
+                if (!FileSystem.exists(dstPath)) FileSystem.createDirectory(dstPath);
+                copyFolder(fileUri, dstPath);
+            } catch(e:Dynamic) {}
+        }
+        else
+        {
+            try {
+                if (FileSystem.exists(dstPath)) FileSystem.deleteFile(dstPath);
 
-            var fileName = split[0];
-            var fileUri = split[1];
-            var dstPath = Path.join([dst, fileName]);
-            
-            var isDir = (split.length >= 3) ? (split[2] == "true") : (fileName.indexOf(".") == -1);
+                var ok = SAF.copyToInternal(fileUri, dstPath);
+                if (!ok) {
+                    trace("Failed copying: " + fileUri);
+                }
 
-            if (isDir)
-            {
-                try {
-                    if (!FileSystem.exists(dstPath)) FileSystem.createDirectory(dstPath);
-                    copyFolder(fileUri, dstPath);
-                } catch(e:Dynamic) {}
-            }
-            else
-            {
-                try {
-                    if (FileSystem.exists(dstPath)) FileSystem.deleteFile(dstPath);
-                    File.copy(fileUri, dstPath);
-                } catch (e:Dynamic) {}
+            } catch (e:Dynamic) {
+                trace("Copy error: " + e);
             }
         }
-        #end
+    }
+    #end
     }
 }
