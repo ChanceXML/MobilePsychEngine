@@ -169,16 +169,19 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		if (controls.UI_DOWN_P)
 			changeSelection(1);
 
-	    if (controls.BACK_P && !exiting)
-		{
-			exiting = true;
-			
-			ClientPrefs.saveSettings();
-			FlxG.sound.play(Paths.sound('cancelMenu'));
-			
-			close();
-		}
+	    if (controls.BACK && !exiting)
+    {
+        exiting = true;
 
+        ClientPrefs.saveSettings();
+        FlxG.sound.play(Paths.sound('cancelMenu'));
+ 
+        new FlxTimer().start(0, function(tmr:FlxTimer)
+        {
+            close();
+        });
+    }
+		
 		if(nextAccept <= 0)
 		{
 			var usesCheckbox:Bool = (curOption.type == BOOL);
