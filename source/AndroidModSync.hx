@@ -1,99 +1,111 @@
-package extension.saf;
+package;
 
+import sys.FileSystem;
+import sys.io.File;
+import haxe.io.Path;
 #if android
-import lime.system.JNI;
+import extension.saf.SAF;
 #end
 
-class SAF {
-    #if android
-    private static var _copyToInternal:Dynamic = null;
-    private static var _open_jni:Dynamic = null;
-    private static var _list_jni:Dynamic = null;
-    private static var _currentCallback:SAFCallback = null;
-    #end
+class AndroidModSync
+{
+    public static var isSyncing:Bool = false;
 
-    public static function open(onResult:String->Void, onError:String->Void):Void {
+    public static function pickModsFolder():Void
+    {
         #if android
-        try {
-            if (_open_jni == null) {
-                _open_jni = JNI.createStaticMethod("extension/saf/SAFHelper", "openSAF", "(Lorg/haxe/lime/HaxeObject;)V");
+        SAF.open(function(uri:String) {
+            if (ClientPrefs.data != null) {
+                ClientPrefs.data.modsFolder = uri;
             }
-            _currentCallback = new SAFCallback(onResult, onError);
-            if (_open_jni != null) _open_jni(_currentCallback);
-        } catch(e:Dynamic) {
-            if (onError != null) onError(Std.string(e));
-        }
-        #else
-        if (onError != null) onError("SAF is only supported on Android");
+        }, function(err:String) {
+            trace(err);
+        });
         #end
     }
 
-    public static function listFiles(uriString:String):Array<String> {
+    public static function syncModsFromSAF():Void
+    {
+        var sourceFolder = "";
+        if (ClientPrefs.data != null && ClientPrefs.data.modsFolder != null) {
+            sourceFolder = ClientPrefs.data.modsFolder;
+        }
+
+        if (sourceFolder == "" || isSyncing) return;
+        
+        isSyncing = true;
+        
+        var cwd = Sys.getCwd();
+        if (cwd == null) cwd = "";
+        var destFolder = Path.join([cwd, "assets", "mods"]);
+
+        try {
+            if (!FileSystem.exists(destFolder)) {
+                FileSystem.createDirectory(destFolder);
+            }
+        } catch(e:Dynamic) {
+            trace(e);
+        }
+
         #if android
         try {
-            if (_list_jni == null) {
-                _list_jni = JNI.createStaticMethod("extension/saf/SAFHelper", "listFiles", "(Ljava/lang/String;)[Ljava/lang/String;");
+            copyFolder(sourceFolder, destFolder);
+        } catch (e:Dynamic) {
+            trace(e);
+        }
+        isSyncing = false;
+        #end
+    }
+
+    private static function copyFolder(srcUri:String, dst:String):Void
+    {
+        #if android
+        var files = SAF.listFiles(srcUri);
+        if (files == null || files.length == 0) return;
+
+        for (fileData in files)
+        {
+            var split = fileData.split("|");
+            if (split.length < 2) continue;
+
+            var fileName = split[0];
+            var fileUri = split[1];
+            var dstPath = Path.join([dst, fileName]);
+            
+            var isDir = false;
+            if (split.length >= 3) {
+                isDir = (split[2] == "true");
+            } else {
+                isDir = (fileName.indexOf(".") == -1);
             }
-            if (_list_jni == null) return [];
-            
-            var nativeArray:Dynamic = _list_jni(uriString);
-            var hxArray:Array<String> = [];
-            
-            if (nativeArray != null) {
-                var len:Int = nativeArray.length;
-                for (i in 0...len) {
-                    hxArray.push(Std.string(nativeArray[i]));
+
+            if (isDir)
+            {
+                try {
+                    if (!FileSystem.exists(dstPath)) {
+                        FileSystem.createDirectory(dstPath);
+                    }
+                    copyFolder(fileUri, dstPath);
+                } catch(e:Dynamic) {
+                    trace(e);
                 }
             }
-            return hxArray;
-        } catch(e:Dynamic) {
-            return [];
-        }
-        #end
-        return [];
-    }
-    
-    public static function copyToInternal(uri:String, dest:String):Bool {
-        #if android
-        try {
-            if (_copyToInternal == null) {
-                _copyToInternal = JNI.createStaticMethod(
-                    "extension/saf/SAFHelper",
-                    "copyToInternal",
-                    "(Ljava/lang/String;Ljava/lang/String;)Z"
-                );
+            else
+            {
+                try {
+                    if (FileSystem.exists(dstPath)) {
+                        FileSystem.deleteFile(dstPath);
+                    }
+
+                    var ok = SAF.copyToInternal(fileUri, dstPath);
+                    if (!ok) {
+                        trace(fileUri);
+                    }
+                } catch (e:Dynamic) {
+                    trace(e);
+                }
             }
-            if (_copyToInternal == null) return false;
-
-            return _copyToInternal(uri, dest);
-        } catch (e:Dynamic) {
-            return false;
         }
-        #else
-        return false;
         #end
-    }
-}
-
-@:keep
-class SAFCallback {
-    var cb_ok:String->Void;
-    var cb_err:String->Void;
-
-    public function new(ok:String->Void, err:String->Void) {
-        this.cb_ok = ok;
-        this.cb_err = err;
-    }
-
-    public function onResult(uri:String):Void {
-        haxe.MainLoop.runInMainThread(function() {
-            if (cb_ok != null) cb_ok(uri);
-        });
-    }
-
-    public function onError(msg:String):Void {
-        haxe.MainLoop.runInMainThread(function() {
-            if (cb_err != null) cb_err(msg);
-        });
     }
 }
